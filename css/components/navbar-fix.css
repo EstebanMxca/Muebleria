@@ -1,0 +1,63 @@
+/* Correcciones para el botón de cotización */
+.premium-button {
+    white-space: nowrap;
+    padding: 10px 24px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-content {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 991.98px) {
+    .premium-button {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    
+    .button-icon {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Añadir al final de navbar-fix.css */
+/* Correcciones específicas para el modal de cotización */
+#cotizacionModal .modal-dialog {
+    max-width: 800px !important;
+    margin: 1.75rem auto !important;
+}
+
+#cotizacionModal .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+#cotizacionModal .modal-body {
+    padding: 1rem !important;
+}
+
+/* Asegurar que no haya overflow horizontal */
+#cotizacionWizard {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* Corregir específicamente estilos para las tarjetas de categoría en el modal */
+#cotizacionModal .category-card {
+    height: auto !important;
+    width: 100% !important;
+}

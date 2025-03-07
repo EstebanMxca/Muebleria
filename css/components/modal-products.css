@@ -1,0 +1,258 @@
+/**
+ * Mueblería Cabañas - Estilos para modales de producto
+ * Mejora la visualización de productos con múltiples imágenes
+ */
+
+/* Estilos generales para los modales de producto */
+.modal-dialog.modal-lg {
+    max-width: 900px;
+}
+
+/* Ajustes para el encabezado del modal */
+.modal-header {
+    border-bottom: 1px solid rgba(166, 124, 82, 0.2);
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Ajustes para el cuerpo del modal */
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Ajustes para el pie del modal */
+.modal-footer {
+    border-top: 1px solid rgba(166, 124, 82, 0.2);
+    padding: 1rem 1.5rem;
+}
+
+/* Estilos para carrusel de imágenes mejorado */
+.carousel {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.carousel-inner {
+    border-radius: 8px;
+    background-color: #f8f8f8;
+}
+
+.carousel-item {
+    height: 350px;
+    text-align: center;
+    background-color: #f8f8f8;
+}
+
+.carousel-item img {
+    max-height: 350px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+}
+
+.carousel-control-prev {
+    left: 10px;
+}
+
+.carousel-control-next {
+    right: 10px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(166, 124, 82, 0.8);
+    opacity: 1;
+}
+
+.carousel-indicators {
+    margin-bottom: 0.5rem;
+}
+
+.carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(166, 124, 82, 0.5);
+    margin: 0 5px;
+}
+
+.carousel-indicators button.active {
+    background-color: var(--primary);
+}
+
+/* Estilos para imágenes individuales en modales */
+.modal-body .img-fluid {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-height: 350px;
+    width: 100%;
+    object-fit: contain;
+    background-color: #f8f8f8;
+}
+
+/* Estilos mejorados para etiquetas de características */
+.caracteristicas-lista {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.caracteristicas-lista li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 5px;
+}
+
+.caracteristicas-lista li::before {
+    content: "•";
+    color: var(--primary);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* Estilos para descuentos en el modal */
+.descuento-container {
+    display: inline-block;
+}
+
+.descuento {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+}
+
+/* Estilos para botones de acción en el modal */
+.modal-footer .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #8E6A45;
+    border-color: #8E6A45;
+}
+
+.modal-footer .btn-success {
+    background-color: #25D366;
+    border-color: #25D366;
+}
+
+.modal-footer .btn-success:hover {
+    background-color: #128C7E;
+    border-color: #128C7E;
+}
+
+/* Estilos responsivos */
+@media (max-width: 767.98px) {
+    .carousel-item {
+        height: 250px;
+    }
+    
+    .carousel-item img,
+    .modal-body .img-fluid {
+        max-height: 250px;
+    }
+    
+    .modal-dialog.modal-lg {
+        margin: 0.5rem;
+    }
+}
+
+/* Modo oscuro */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    background-color: #FAF7F2; /* Usar el tono crema claro que usas en el sitio */
+}
+    
+.modal-header {
+    border-bottom: 1px solid rgba(166, 124, 82, 0.2);
+    padding: 1.5rem;
+    background: linear-gradient(to right, #FAF7F2, #F8F6F0);
+}
+    
+.modal-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+    font-weight: 700;
+    position: relative;
+    padding-left: 15px;
+}
+    
+.modal-title:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background-color: var(--primary);
+    border-radius: 2px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    background-color: #ffffff;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(166, 124, 82, 0.2);
+    padding: 1.5rem;
+    background: linear-gradient(to right, #FAF7F2, #F8F6F0);
+}
+
+/* Añade un botón con mayor visibilidad para cerrar */
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    z-index: 10;
+}
+
+.modal-close-btn:hover {
+    transform: rotate(90deg);
+    background-color: #8E6A45;
+}
+
+/* Mejorar el fondo del modal */
+.modal-backdrop {
+    background-color: rgba(36, 36, 36, 0.7);
+    backdrop-filter: blur(5px);
+}

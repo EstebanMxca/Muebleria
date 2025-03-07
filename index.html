@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mueblería Cabañas</title>
+    
+    <!-- CSS Bootstrap y fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- AOS CSS para animaciones de scroll -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Componentes CSS -->
+    <link rel="stylesheet" href="css/components/categories-showcase.css">
+    <link rel="stylesheet" href="css/components/featured-products.css">
+    <link rel="stylesheet" href="css/components/navbar-fix.css">
+    <link rel="stylesheet" href="css/components/pagination-styles.css">
+    <link rel="stylesheet" href="css/components/contact-form.css">
+    <link rel="stylesheet" href="css/components/modal-products.css">
+    
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+<body>
+    <!-- Incluir Navbar -->
+    <include src="templates/navbar.html"></include>
+
+    <!-- Hero Section Premium con Experiencia Inmersiva -->
+    <section id="hero" class="premium-hero">
+        <!-- Canvas para efectos de fondo -->
+        <div class="hero-canvas-container">
+            <div class="hero-overlay-pattern"></div>
+        </div>
+        
+        <!-- Slider de imágenes de fondo con transiciones suaves -->
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: url('assets/hero-image.jpg')"></div>
+            <div class="hero-slide" style="background-image: url('assets/img-slider/1..webp')"></div>
+            <div class="hero-slide" style="background-image: url('assets/img-slider/model_image_1614623597685.jpeg')"></div>
+        </div>
+        
+        <!-- Capa de superposición con gradiente sofisticado -->
+        <div class="hero-overlay">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-lg-7 col-md-9">
+                        <!-- Elementos decorativos -->
+                        <div class="decorative-line"></div>
+                        
+                        <!-- Contenido principal con animaciones de entrada -->
+                        <div class="hero-content">
+                            <span class="hero-tagline">Diseño · Elegancia · Confort</span>
+                            <h1 class="hero-title">Transformamos espacios en <span class="highlight-text">experiencias</span></h1>
+                            <p class="hero-description">Muebles exclusivos que combinan artesanía, diseño contemporáneo y materiales premium para crear ambientes que inspiran.</p>
+                            
+                            <!-- Botones de acción premium -->
+                            <div class="hero-buttons">
+                                <a href="#seccion-catalogo" class="btn-hero-primary" id="verCatalogoBtn">
+                                    <span class="btn-text">Explorar catalogo</span>
+                                    <span class="btn-icon"><i class="bi bi-arrow-right"></i></span>
+                                </a>
+                                <a href="#productos-destacados" class="btn-hero-secondary">
+                                    <span class="btn-text">Productos destacados</span>
+                                </a>
+                            </div>
+                            
+                            <!-- Indicadores de confianza -->
+                            <div class="trust-indicators">
+                                <div class="trust-item">
+                                    <div class="trust-icon"><i class="bi bi-stars"></i></div>
+                                    <div class="trust-text">Calidad premium</div>
+                                </div>
+                                <div class="trust-item">
+                                    <div class="trust-icon"><i class="bi bi-shield-check"></i></div>
+                                    <div class="trust-text">Garantía extendida</div>
+                                </div>
+                                <div class="trust-item">
+                                    <div class="trust-icon"><i class="bi bi-truck"></i></div>
+                                    <div class="trust-text">Envío a domicilio</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel visual con beneficios destacados en diseño 3D -->
+                    <div class="col-lg-5 d-none d-lg-flex justify-content-end">
+                        <div class="features-3d-container">
+                            <div class="rotating-cube">
+                                <div class="cube-face front">
+                                    <div class="feature-card">
+                                        <div class="feature-icon">
+                                            <i class="bi bi-stars"></i>
+                                        </div>
+                                        <h4>Diseño exclusivo</h4>
+                                        <p>Muebles que combinan estética y funcionalidad</p>
+                                    </div>
+                                </div>
+                                <div class="cube-face back">
+                                    <div class="feature-card">
+                                        <div class="feature-icon">
+                                            <i class="bi bi-tools"></i>
+                                        </div>
+                                        <h4>Artesanía Premium</h4>
+                                        <p>Acabados perfectos con atención al detalle</p>
+                                    </div>
+                                </div>
+                                <div class="cube-face right">
+                                    <div class="feature-card">
+                                        <div class="feature-icon">
+                                            <i class="bi bi-patch-check"></i>
+                                        </div>
+                                        <h4>Materiales selectos</h4>
+                                        <p>Durabilidad y elegancia garantizada</p>
+                                    </div>
+                                </div>
+                                <div class="cube-face left">
+                                    <div class="feature-card">
+                                        <div class="feature-icon">
+                                            <i class="bi bi-layout-text-window"></i>
+                                        </div>
+                                        <h4>Espacios armónicos</h4>
+                                        <p>Ambientes que inspiran bienestar</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="decorative-circle"></div>
+                            <div class="decorative-dots"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Indicadores de navegación del slider -->
+        <div class="hero-slider-controls">
+            <div class="slider-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+            <div class="slider-arrows">
+                <button class="arrow-prev"><i class="bi bi-chevron-left"></i></button>
+                <button class="arrow-next"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-text">Desplaza para descubrir</div>
+            <div class="scroll-icon"><i class="bi bi-mouse"></i></div>
+            <div class="scroll-arrow"><i class="bi bi-chevron-down"></i></div>
+        </div>
+    </section>
+
+    <!-- Sección Nosotros Premium para Mueblería -->
+    <section id="nosotros" class="premium-about">
+        <div class="container">
+            <!-- Encabezado elegante con separador distintivo -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="about-header">
+                        <div class="header-divider"></div>
+                        <h2 class="about-title">Nuestra Esencia</h2>
+                        <p class="about-subtitle">15 años transformando espacios con artesanía y diseño</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historia & Misión - Layout optimizado -->
+            <div class="row about-main-row">
+                <!-- Columna visual de calidad superior -->
+                <div class="col-lg-6">
+                    <div class="main-visual">
+                        <div class="visual-overlay"></div>
+                        <img src="assets/img-slider/1..webp" alt="Artesanía de calidad" class="main-image">
+                        <div class="experience-badge">
+                            <span class="badge-number">15</span>
+                            <span class="badge-text">años de<br>excelencia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Columna de contenido con detalles de la empresa -->
+                <div class="col-lg-6">
+                    <div class="main-content">
+                        <h3 class="content-title">Tradición & Innovación</h3>
+                        <p class="content-text">En <span class="highlight">Mueblería Cabañas</span> fusionamos técnicas artesanales tradicionales con diseño contemporáneo, creando piezas únicas que transforman espacios ordinarios en extraordinarios.</p>
+                        <p class="content-text">Nuestro compromiso con la calidad nos ha convertido en referentes en el mercado, con más de 1000 clientes satisfechos que han confiado en nosotros para crear ambientes que inspiran y perduran.</p>
+                        
+                        <!-- Estadísticas integradas con diseño eficiente -->
+                        <div class="stats-container">
+                            <div class="stat-item">
+                                <div class="stat-number">1000+</div>
+                                <div class="stat-label">Clientes satisfechos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">30+</div>
+                                <div class="stat-label">Artesanos expertos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">5+</div>
+                                <div class="stat-label">Premios de diseño</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Call to action integrado en la historia -->
+                        <div class="content-cta">
+                            <a href="#contacto" class="btn-about">Consulta con nosotros</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección Proceso de Creación - Diseño compacto y visual -->
+            <div class="row process-row">
+                <div class="col-lg-12">
+                    <h3 class="section-title">Nuestro Proceso</h3>
+                </div>
+                
+                <!-- Pasos del proceso con íconos e imágenes -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">01</div>
+                        <div class="step-icon">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <h4 class="step-title">Diseño</h4>
+                        <p class="step-text">Conceptualizamos cada pieza para que armonice perfectamente con tu espacio y estilo.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">02</div>
+                        <div class="step-icon">
+                            <i class="bi bi-palette2"></i>
+                        </div>
+                        <h4 class="step-title">Selección</h4>
+                        <p class="step-text">Elegimos cuidadosamente las maderas y materiales de la más alta calidad.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">03</div>
+                        <div class="step-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <h4 class="step-title">Fabricación</h4>
+                        <p class="step-text">Nuestros artesanos trabajan cada detalle con precisión y técnicas refinadas.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="process-step">
+                        <div class="step-number">04</div>
+                        <div class="step-icon">
+                            <i class="bi bi-house-heart"></i>
+                        </div>
+                        <h4 class="step-title">Entrega</h4>
+                        <p class="step-text">Instalamos cada pieza en tu hogar, asegurando la perfecta integración.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Valores y Filosofía - Display tipo galería -->
+            <div class="row values-row">
+                <div class="col-lg-5">
+                    <div class="values-content">
+                        <h3 class="content-title">Nuestros Valores</h3>
+                        <p class="content-text">Más que muebles, creamos espacios que inspiran y perduran. Cada pieza que sale de nuestro taller refleja nuestro compromiso con:</p>
+                        
+                        <!-- Lista de valores con diseño elegante -->
+                        <ul class="values-list">
+                            <li class="value-item">
+                                <div class="value-icon"><i class="bi bi-gem"></i></div>
+                                <div class="value-content">
+                                    <h4>Calidad Inigualable</h4>
+                                    <p>Materiales premium y acabados perfectos en cada pieza.</p>
+                                </div>
+                            </li>
+                            <li class="value-item">
+                                <div class="value-icon"><i class="bi bi-stars"></i></div>
+                                <div class="value-content">
+                                    <h4>Diseño Distintivo</h4>
+                                    <p>Piezas únicas que combinan estética y funcionalidad.</p>
+                                </div>
+                            </li>
+                            <li class="value-item">
+                                <div class="value-icon"><i class="bi bi-heart"></i></div>
+                                <div class="value-content">
+                                    <h4>Pasión Artesanal</h4>
+                                    <p>Amor por el oficio que se refleja en cada detalle.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Galería visual integrada con los valores -->
+                <div class="col-lg-7">
+                    <div class="values-gallery">
+                        <div class="gallery-grid">
+                            <div class="gallery-item item-1">
+                                <img src="assets/img-slider/model_image_1614623597685.jpeg" alt="Diseño de interiores">
+                            </div>
+                            <div class="gallery-item item-2">
+                                <img src="assets/img-slider/recamara-moderna-ks-marbella-gris-decorada-dc-15rn_20__1.jpg" alt="Muebles de calidad">
+                            </div>
+                            <div class="gallery-item item-3">
+                                <img src="assets/hero-image.jpg" alt="Espacios transformados">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cita del fundador - Diseño compacto e impactante -->
+            <div class="row founder-row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="founder-quote">
+                        <div class="quote-icon"><i class="bi bi-quote"></i></div>
+                        <blockquote>
+                            "No creamos simplemente muebles; diseñamos experiencias que transforman el concepto de hogar, combinando belleza, funcionalidad y el alma de la madera en cada pieza."
+                        </blockquote>
+                        <div class="quote-author">
+                            <div class="author-name">Carlos Cabañas</div>
+                            <div class="author-title">Fundador & Director Creativo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Productos Destacados Premium -->
+    <section id="productos-destacados" class="py-5 bg-light">
+        <div class="container">
+            <!-- El contenido se generará dinámicamente desde JavaScript -->
+            <div id="featured-products-container" data-lazy-container="true" data-lazy-function="loadFeaturedProducts">
+                <div class="text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando productos destacados...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Showcase de Categorías Premium -->
+    <section id="seccion-catalogo" class="categories-showcase">
+        <div class="container">
+            <div class="showcase-header">
+                <h2 class="showcase-title">Explora Nuestras Colecciones</h2>
+                <p class="showcase-subtitle">Descubre el mobiliario perfecto para cada espacio de tu hogar, creado con la excelencia artesanal que nos distingue</p>
+            </div>
+            
+            <div class="categories-grid" id="categories-showcase-container" data-lazy-container="true" data-lazy-function="loadCategoriesShowcase">
+                <div class="text-center py-3">
+                    <div class="spinner-border" style="color: var(--primary);" role="status">
+                        <span class="visually-hidden">Cargando categorías...</span>
+                    </div>
+                    <p class="mt-2">Cargando colecciones...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Parallax -->
+    <section id="parallax" class="py-0">
+        <div class="parallax-container d-flex align-items-center justify-content-center">
+            <div class="container text-center py-5">
+                <h2 class="display-4 text-white mb-4">Diseño y Confort</h2>
+                <p class="lead text-white mb-4">Nosotros vamos a tu domicilio a tomar medidas</p>
+                <a href="#sucursal" class="btn btn-light btn-lg">Agenda una cita</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Sucursal Modernizada -->
+    <section id="sucursal" class="py-5 bg-light">
+        <div class="container">
+            <div class="section-header position-relative mb-5 text-center">
+                <h2 class="display-5 fw-bold">Nuestra Sucursal</h2>
+                <div class="accent-line mx-auto"></div>
+                <p class="text-muted mt-3 mx-auto" style="max-width: 700px;">Te invitamos a visitar nuestro showroom donde podrás conocer y experimentar la calidad y el diseño de nuestros muebles</p>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                    <div class="location-card p-4 bg-white shadow-sm rounded">
+                        <div class="location-info mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="location-icon me-3">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Dirección</h4>
+                                    <p class="text-muted mb-0">Av. Principal #123, Col. Centro</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="location-icon me-3">
+                                    <i class="bi bi-clock-fill"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Horario</h4>
+                                    <p class="text-muted mb-0">Lunes a Viernes: 9:00 am - 7:00 pm<br>
+                                    Sábados: 10:00 am - 4:00 pm</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="location-icon me-3">
+                                    <i class="bi bi-telephone-fill"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Teléfono</h4>
+                                    <p class="text-muted mb-0">123-456-7890</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex">
+                            <a href="https://goo.gl/maps" target="_blank" class="btn btn-primary me-2">
+                                <i class="bi bi-map me-2"></i>Cómo llegar
+                            </a>
+                            <a href="https://wa.me/1234567890?text=Hola,%20me%20gustaría%20agendar%20una%20cita%20para%20visitar%20su%20showroom" 
+                               class="btn btn-outline-primary" target="_blank">
+                                <i class="bi bi-calendar-check me-2"></i>Agendar visita
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="location-benefits mt-4">
+                        <h4 class="mb-3">¿Por qué visitarnos?</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="benefit-item d-flex align-items-center">
+                                    <div class="benefit-icon me-3">
+                                        <i class="bi bi-eye"></i>
+                                    </div>
+                                    <p class="mb-0">Ve y toca nuestros muebles</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="benefit-item d-flex align-items-center">
+                                    <div class="benefit-icon me-3">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <p class="mb-0">Asesoría personalizada</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="benefit-item d-flex align-items-center">
+                                    <div class="benefit-icon me-3">
+                                        <i class="bi bi-percent"></i>
+                                    </div>
+                                    <p class="mb-0">Promociones exclusivas</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="benefit-item d-flex align-items-center">
+                                    <div class="benefit-icon me-3">
+                                        <i class="bi bi-truck"></i>
+                                    </div>
+                                    <p class="mb-0">Coordina tu entrega</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="location-image position-relative">
+                        <img src="assets/Banco-del-Bienestar-mapa-sucursales.jpeg" class="img-fluid rounded shadow" alt="Nuestra Sucursal">
+                        <div class="image-overlay">
+                            <div class="map-pin">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto Modernizada -->
+    <section id="contacto" class="py-5 position-relative">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="contact-wrapper p-0 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-5 contact-info-col">
+                                <div class="p-4 p-md-5 h-100 d-flex flex-column">
+                                    <h2 class="mb-4 text-white">Contáctanos</h2>
+                                    <p class="text-white mb-4">Estamos aquí para ayudarte a transformar tu hogar. Comunícate con nosotros para cualquier duda o cotización personalizada.</p>
+                                    
+                                    <div class="contact-info mt-auto">
+                                        <div class="d-flex mb-4">
+                                            <div class="contact-icon">
+                                                <i class="bi bi-geo-alt"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h5 class="text-white">Dirección</h5>
+                                                <p class="text-white-50 mb-0">Av. Principal #123, Col. Centro</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex mb-4">
+                                            <div class="contact-icon">
+                                                <i class="bi bi-telephone"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h5 class="text-white">Teléfono</h5>
+                                                <p class="text-white-50 mb-0">123-456-7890</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex mb-4">
+                                            <div class="contact-icon">
+                                                <i class="bi bi-envelope"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h5 class="text-white">Email</h5>
+                                                <p class="text-white-50 mb-0">contacto@muebleriacabanas.com</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="social-media mt-4">
+                                            <a href="#" class="me-3 social-icon"><i class="bi bi-facebook"></i></a>
+                                            <a href="#" class="me-3 social-icon"><i class="bi bi-instagram"></i></a>
+                                            <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7 contact-form-col">
+                                <div class="p-4 p-md-5">
+                                    <h3 class="mb-4">Envíanos un mensaje</h3>
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" id="nombreContacto" placeholder="Tu nombre">
+                                                    <label for="nombreContacto">Nombre</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-floating">
+                                                    <input type="email" class="form-control" id="emailContacto" placeholder="tucorreo@ejemplo.com">
+                                                    <label for="emailContacto">Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="asuntoContacto" placeholder="Asunto">
+                                                <label for="asuntoContacto">Asunto</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="form-floating">
+                                                <textarea class="form-control" id="mensajeContacto" style="height: 150px" placeholder="Tu mensaje"></textarea>
+                                                <label for="mensajeContacto">Mensaje</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                                <i class="bi bi-send me-2"></i>Enviar mensaje
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Incluir Footer -->
+    <include src="templates/footer.html"></include>
+
+    <!-- WhatsApp Button Mejorado -->
+    <div class="whatsapp-button">
+        <a href="https://wa.me/1234567890?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20muebles" target="_blank">
+            <img src="assets/whatsapp.svg" alt="WhatsApp">
+            <span>¿Diseño a medida? ¡Contáctanos!</span>
+        </a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS JS para animaciones de scroll -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <!-- Modal de cotización -->
+    <include src="templates/cotizacion-modal.html"></include>
+
+    <!-- Core JS - Orden importante para la inicialización correcta -->
+    <script src="js/core/app.js"></script>
+    <script src="js/core/loader.js"></script>
+    <script src="js/core/product-service.js"></script>
+    <script src="js/core/ui-utils.js"></script>
+
+    <!-- Componentes JS -->
+    <script src="js/components/navbar.js"></script>
+    <script src="js/components/product-modal.js"></script>
+    <script src="js/components/contact-form.js"></script>
+    <script src="js/components/cotizacion.js"></script>
+
+    <!-- Lógica de página -->
+    <script src="js/pages/index.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>

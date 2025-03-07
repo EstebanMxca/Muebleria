@@ -1,0 +1,138 @@
+/**
+ * Estilos de paginación para Mueblería Cabañas
+ * Diseño elegante y formal adecuado para una mueblería
+ */
+
+/* Contenedor principal de la paginación */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 2rem auto;
+}
+
+#pagination-controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Estilos de los controles de paginación */
+.product-pagination .pagination {
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.product-pagination .page-item .page-link {
+    width: 40px;
+    height: 40px;
+    line-height: 24px;
+    text-align: center;
+    margin: 0 3px;
+    border-radius: 50%;
+    color: #6a5b40;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-pagination .page-item .page-link:hover {
+    background-color: rgba(166, 124, 82, 0.1);
+    color: #a67c52;
+    transform: translateY(-2px);
+}
+
+.product-pagination .page-item.active .page-link {
+    background-color: #a67c52;
+    color: white;
+    border-color: #a67c52;
+    box-shadow: 0 4px 8px rgba(166, 124, 82, 0.3);
+}
+
+.product-pagination .page-item.active .page-link:hover {
+    transform: none;
+}
+
+/* Estilo para los botones de paginación deshabilitados */
+.product-pagination .page-item.disabled .page-link {
+    color: #ccc;
+    pointer-events: none;
+    background-color: #f8f9fa;
+}
+
+/* Animación al cambiar de página */
+.productos-container {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para indicador de carga */
+.spinner-border-lg {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+    color: #a67c52 !important;
+}
+
+/* Estilos para mensajes de error y sin resultados */
+.empty-results, .error-container {
+    padding: 3rem 1rem;
+    background-color: #f8f6f0;
+    border-radius: 8px;
+    border-left: 5px solid #a67c52;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-container {
+    border-left-color: #dc3545;
+}
+
+.empty-results i, .error-container i {
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Botones para reintentar y resetear */
+#resetFilters, #retryLoadProducts {
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+#resetFilters:hover, #retryLoadProducts:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 576px) {
+    .product-pagination .page-item .page-link {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+        margin: 0 2px;
+    }
+    
+    .pagination-container {
+        margin: 1.5rem 0;
+    }
+    
+    .empty-results, .error-container {
+        padding: 2rem 1rem;
+    }
+}
