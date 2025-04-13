@@ -21,7 +21,6 @@ const pool = mysql.createPool({
 });
 
 // Endpoint para obtener productos por categoría con paginación
-// Endpoint para obtener productos por categoría con paginación y filtros
 app.get('/api/productos/:categoria', async (req, res) => {
     const { categoria } = req.params;
     const page = parseInt(req.query.page) || 1;
@@ -140,6 +139,7 @@ app.get('/api/productos/:categoria', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
+
 // Endpoint para obtener categorías
 app.get('/api/categorias', async (req, res) => {
     try {
@@ -166,8 +166,7 @@ app.get('/api/productos-seleccion', async (req, res) => {
                 c.nombre AS categoria
             FROM productos p
             JOIN categorias c ON p.categoria_id = c.id
-            WHERE c.id = ?
-        `, [categoria]);
+        `);
         
         res.json(productos);
     } catch (error) {
@@ -193,7 +192,7 @@ app.get('/api/productos-destacados', async (req, res) => {
             JOIN productos p ON pd.producto_id = p.id
             JOIN categorias c ON p.categoria_id = c.id
             ORDER BY pd.orden
-            LIMIT 4
+            LIMIT 5
         `);
 
         // Consulta para obtener características y etiquetas
@@ -244,6 +243,62 @@ app.post('/api/productos-destacados', async (req, res) => {
         res.json({ mensaje: 'Productos destacados actualizados' });
     } catch (error) {
         console.error('Error al actualizar productos destacados:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Endpoint para obtener un producto específico por ID
+app.get('/api/productos/detalle/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        // Consultar el producto por ID con todas sus relaciones
+        const [producto] = await pool.query(`
+            SELECT 
+                p.id, 
+                p.nombre, 
+                p.descripcion, 
+                p.descuento, 
+                p.imagen_principal,
+                p.imagenes,
+                p.disponible,
+                c.nombre AS categoria
+            FROM productos p
+            JOIN categorias c ON p.categoria_id = c.id
+            WHERE p.id = ?
+        `, [id]);
+        
+        // Obtener características
+        const [caracteristicas] = await pool.query(`
+            SELECT descripcion 
+            FROM caracteristicas_producto 
+            WHERE producto_id = ?
+        `, [id]);
+        
+        // Obtener etiquetas
+        const [etiquetas] = await pool.query(`
+            SELECT etiqueta 
+            FROM etiquetas_producto 
+            WHERE producto_id = ?
+        `, [id]);
+        
+        // Verificar si se encontró el producto
+        if (!producto || producto.length === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        
+        // Combinar toda la información
+        const productoCompleto = {
+            ...producto[0],
+            caracteristicas: caracteristicas.map(c => c.descripcion),
+            etiquetas: etiquetas.map(e => e.etiqueta),
+            imagenes: JSON.parse(producto[0].imagenes || '[]')
+        };
+        
+        res.json(productoCompleto);
+        
+    } catch (error) {
+        console.error('Error al obtener producto por ID:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });

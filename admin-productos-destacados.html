@@ -83,12 +83,12 @@
                     // Botón para agregar a destacados
                     const agregarBtn = div.querySelector('.agregar-destacado');
                     agregarBtn.addEventListener('click', () => {
-                        // Limitar a 4 productos destacados
-                        if (productosDestacadosContainer.children.length < 4) {
+                        // Limitar a 5 productos destacados
+                        if (productosDestacadosContainer.children.length < 5) {
                             productosDestacadosContainer.appendChild(div);
                             agregarBtn.disabled = true;
                         } else {
-                            alert('Solo puedes seleccionar 4 productos destacados');
+                            alert('Solo puedes seleccionar 5 productos destacados');
                         }
                     });
 

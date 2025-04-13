@@ -6,17 +6,6 @@ h2, h3 {
     font-family: 'Playfair Display', serif;
 }
 
-#productos-destacados .carousel-item img {
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-#productos-destacados .carousel-item img:hover {
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-}
-
-
-
-
 
 /* Parallax Section */
 .parallax-container {
@@ -742,58 +731,6 @@ body {
     margin-left: -1em;
 }
 
-
-
-
-/* Estilos para productos destacados modernos */
-.featured-product {
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: white;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.featured-product:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-}
-
-.featured-product-img-container {
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-    min-height: 300px;
-}
-
-.featured-product-img {
-    height: 100%;
-    min-height: 300px;
-    position: relative;
-}
-
-.featured-product-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.featured-product:hover .featured-product-img img {
-    transform: scale(1.05);
-}
-
-.featured-product-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.featured-product-specs {
-    margin-top: 10px;
-    font-size: 0.9rem;
-}
 
 /* Estilos para sección de contacto modernizada */
 .contact-wrapper {
@@ -2882,4 +2819,249 @@ body.modal-cleanup {
     .gallery-item {
         height: 200px;
     }
+}
+
+/* Optimizaciones para rendimiento en Diseños Selectos */
+.featured-showcase {
+    contain: content;
+}
+
+.featured-card {
+    will-change: transform;
+    contain: layout style;
+}
+
+.featured-image {
+    backface-visibility: hidden;
+}
+
+/* Reducir animaciones durante el scroll */
+@media (prefers-reduced-motion: reduce), 
+       (update: slow) {
+    .featured-card,
+    .featured-image-container,
+    .featured-image,
+    .featured-content {
+        transition-duration: 0.1s !important;
+        animation-duration: 0.1s !important;
+    }
+}
+
+/* Clases para modo de rendimiento */
+.scrolling .featured-card {
+    transition: none !important;
+    transform: none !important;
+}
+
+.scrolling .featured-image {
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Versión ultra optimizada de Diseños Selectos */
+.featured-optimized {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    contain: strict;
+}
+
+.featured-card-simple {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    contain: content;
+}
+
+.featured-img {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.featured-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.featured-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.featured-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-info h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.featured-info p {
+    margin: 0 0 15px;
+    color: #666;
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.featured-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.featured-btns button,
+.featured-btns a {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    flex: 1;
+}
+
+.featured-btns button {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.featured-btns a {
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: white;
+}
+
+/* Desactivar todas las animaciones durante el scroll */
+html.scrolling * {
+    transition-property: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Optimizaciones para rendimiento en Diseños Selectos */
+.featured-showcase {
+    contain: content;
+}
+
+.featured-card {
+    will-change: transform;
+    contain: layout style;
+    transition: transform 0.3s ease;
+}
+
+.featured-image {
+    backface-visibility: hidden;
+}
+
+/* Reducir animaciones durante el scroll */
+html.scrolling * {
+    transition-property: none !important;
+    animation-play-state: paused !important;
+}
+
+/* Versión ultra optimizada de Diseños Selectos */
+.featured-optimized {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.featured-card-simple {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-img {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.featured-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.featured-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.featured-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-info h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.featured-info p {
+    margin: 0 0 15px;
+    color: #666;
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.featured-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.featured-btns button,
+.featured-btns a {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    flex: 1;
+}
+
+.featured-btns button {
+    background: none;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.featured-btns a {
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: white;
 }

@@ -16,7 +16,7 @@ class AdminPage {
         // Configuración
         this.config = {
             apiUrl: 'http://localhost:3000/api',
-            maxDestacados: 4
+            maxDestacados: 5
         };
         
         // Estado

@@ -26,6 +26,26 @@
     
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
+
+<script>
+    // Priorizar carga crítica
+    document.addEventListener('DOMContentLoaded', function() {
+        // Dejar que la página se renderice primero
+        setTimeout(function() {
+            // Cargar scripts no críticos después
+            const deferScripts = document.querySelectorAll('script[data-defer]');
+            deferScripts.forEach(script => {
+                const newScript = document.createElement('script');
+                if (script.src) newScript.src = script.src;
+                if (script.textContent) newScript.textContent = script.textContent;
+                document.body.appendChild(newScript);
+                script.remove();
+            });
+        }, 1000);
+    });
+    </script>
+
+<script src="js/components/lightweight-animations.js" data-defer></script>
 <body>
     <!-- Incluir Navbar -->
     <include src="templates/navbar.html"></include>
@@ -338,20 +358,30 @@
         </div>
     </section>
 
-    <!-- Sección Productos Destacados Premium -->
-    <section id="productos-destacados" class="py-5 bg-light">
-        <div class="container">
-            <!-- El contenido se generará dinámicamente desde JavaScript -->
-            <div id="featured-products-container" data-lazy-container="true" data-lazy-function="loadFeaturedProducts">
-                <div class="text-center py-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando...</span>
-                    </div>
-                    <p class="mt-2">Cargando productos destacados...</p>
+<!-- Sección Productos Destacados Premium -->
+<section id="productos-destacados" class="py-5">
+    <div class="container">
+        <!-- El contenido se generará dinámicamente desde JavaScript -->
+        <noscript>
+            <!-- Versión simple para navegadores sin JavaScript -->
+            <div class="featured-header">
+                <h2 class="featured-title">Diseños Selectos</h2>
+                <p class="featured-subtitle">Piezas excepcionales meticulosamente seleccionadas</p>
+            </div>
+            <div class="text-center">
+                <a href="categorias.html" class="btn btn-primary">Ver Catálogo</a>
+            </div>
+        </noscript>
+        <div id="featured-products-container" data-lazy-container="true" data-lazy-function="loadFeaturedProducts" data-priority="high">
+            <div class="text-center py-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
                 </div>
+                <p class="mt-2">Cargando diseños destacados...</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Sección Showcase de Categorías Premium -->
     <section id="seccion-catalogo" class="categories-showcase">
@@ -627,15 +657,23 @@
     <script src="js/pages/index.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof AOS !== 'undefined') {
-                AOS.init({
-                    duration: 800,
-                    easing: 'ease-in-out',
-                    once: true
-                });
-            }
+   document.addEventListener('DOMContentLoaded', function() {
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 600,
+            easing: 'ease-out',
+            once: true,
+            disable: window.innerWidth < 992 ? true : false, // Desactivar en móviles
+            startEvent: 'load',
+            throttleDelay: 99
         });
+        
+        // Desactivar AOS específicamente en la sección productos-destacados
+        document.querySelectorAll('#productos-destacados *[data-aos]').forEach(el => {
+            el.removeAttribute('data-aos');
+        });
+    }
+});
     </script>
 </body>
 </html>

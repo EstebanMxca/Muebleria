@@ -19,7 +19,64 @@ class ProductService {
             categories: null,
             featuredProducts: null
         };
+
+        // NUEVO: Transformar a Map
+        this.cache.products = new Map();
     }
+
+    // Añadir después del constructor en ProductService
+preloadFeaturedProducts() {
+    console.log('Intentando precargar productos destacados...');
+    if (this.cache.featuredProducts) {
+        console.log('Ya hay productos destacados en caché');
+        return Promise.resolve(this.cache.featuredProducts);
+    }
+    
+    return fetch(`${this.config.apiUrl}/productos-destacados`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Productos destacados precargados exitosamente');
+            this.cache.featuredProducts = data;
+            return data;
+        })
+        .catch(error => {
+            console.error('Error precargando productos destacados:', error);
+            return null;
+        });
+}
+
+    async getProductDetails(productId) {
+        // Primero, verificar si el producto ya está en caché
+        if (this.cache.products.has(productId)) {
+            console.log('Producto obtenido desde caché');
+            return this.cache.products.get(productId);
+        }
+
+        try {
+            // Si no está en caché, hacer la solicitud a la API
+            const response = await fetch(`${this.config.apiUrl}/productos/detalle/${productId}`);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const producto = await response.json();
+            
+            // Almacenar en caché
+            this.cache.products.set(productId, producto);
+
+            return producto;
+        } catch (error) {
+            console.error('Error al cargar detalles del producto:', error);
+            throw error;
+        }
+    }
+
     
     /**
      * Inicializa el servicio de productos
@@ -35,6 +92,9 @@ class ProductService {
                         window.location.pathname.endsWith('index.html');
         
         if (isIndex) {
+            // Precargar productos destacados en la página principal
+            this.preloadFeaturedProducts();
+            
             // Configurar contenedores para lazy loading en la página principal
             this.setupIndexPage();
         } else {
@@ -296,6 +356,11 @@ class ProductService {
      * Carga los productos destacados
      */
     async loadFeaturedProducts(container) {
+
+        console.log("loadFeaturedProducts llamado", { 
+            hasLoader: !!window.loader, 
+            hasLoaderFunction: window.loader && typeof window.loader.loadFeaturedProducts === 'function' 
+        });
         // Si tenemos un loader, utilizarlo (prioridad)
         if (window.loader && typeof window.loader.loadFeaturedProducts === 'function') {
             return window.loader.loadFeaturedProducts(container);
@@ -350,114 +415,105 @@ class ProductService {
     /**
      * Renderiza los productos destacados en un contenedor
      */
-    renderFeaturedProducts(container, products) {
-        // Verificar si hay productos
-        if (!products || products.length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center">
-                    <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
-                    </div>
+    /**
+ * Renderiza los productos destacados en un contenedor
+ */
+/**
+ * Renderiza los productos destacados en un contenedor
+ */
+/**
+ * Renderiza los productos destacados en un contenedor con un diseño de vanguardia
+ */
+renderFeaturedProducts(container, products) {
+    console.log("renderFeaturedProducts con optimización máxima");
+    
+    // Verificar si hay productos
+    if (!products || products.length === 0) {
+        container.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
                 </div>
-            `;
-            return;
-        }
-        
-        // Transformar el diseño y estructura del contenedor
-        const sectionParent = container.parentElement.parentElement;
-        if (sectionParent) {
-            sectionParent.classList.add('featured-section');
-        }
-        
-        // Buscar si ya existe el encabezado para evitar duplicaciones
-        const existingHeader = sectionParent?.querySelector('.featured-header');
-        
-        // Limpiar contenedor actual
-        container.innerHTML = '';
-        
-        // Crear nueva estructura HTML para el encabezado solo si no existe
-        if (!existingHeader && sectionParent) {
-            const headerHTML = `
-                <div class="featured-header">
-                    <h2 class="featured-title">Productos Destacados</h2>
-                    <p class="featured-subtitle">Descubre nuestras piezas más exclusivas seleccionadas para ti</p>
-                </div>
-            `;
-            
-            // Insertar encabezado antes del contenedor
-            container.insertAdjacentHTML('beforebegin', headerHTML);
-        }
-        
-        // Crear contenedor para la nueva estructura de grid
-        container.className = 'featured-products';
-        
-        // Generar HTML para cada producto destacado con nuevo diseño
-        let productosHTML = '';
-        
-        // Generar todos los productos con el mismo tamaño en una grid 2x2
-        for (let i = 0; i < Math.min(products.length, 4); i++) {
-            const producto = products[i];
-            
-            const categoriaURL = this.getCategoryUrl(producto.categoria);
-            const descripcionCorta = producto.descripcion ? 
-                (producto.descripcion.length > 100 ? producto.descripcion.substring(0, 100) + '...' : producto.descripcion) : 
-                'Descripción no disponible.';
-            
-            // Asegurar imagen principal
-            const imagenPrincipal = producto.imagen_principal || this.config.imagePlaceholder;
-            
-            productosHTML += `
-            <div class="featured-product-item" data-aos="fade-up" data-aos-delay="${i * 100}">
-                <div class="featured-product-img-wrap">
-                    ${this.generateProductTagHTML(producto)}
-                    ${this.generateDiscountBadgeHTML(producto.descuento)}
-                    <img src="${imagenPrincipal}" alt="${producto.nombre}" class="featured-product-img">
-                </div>
-                <div class="featured-product-info">
-                    <div class="featured-product-category">${producto.categoria}</div>
-                    <h3 class="featured-product-title">${producto.nombre}</h3>
-                    <p class="featured-product-desc">${descripcionCorta}</p>
-                    <div class="featured-product-attributes">
-                        ${this.generateAttributesHTML(producto.caracteristicas)}
-                    </div>
-                    <div class="featured-product-actions">
-                        <button type="button" class="featured-action-btn featured-action-btn-secondary ver-detalles" 
-                            data-producto-id="${producto.id}">
-                            <i class="bi bi-eye"></i>Ver detalles
-                        </button>
-                        <a href="${categoriaURL}" class="featured-action-btn featured-action-btn-primary">
-                            <i class="bi bi-arrow-right-circle"></i>Ver más
-                        </a>
-                    </div>
-                </div>
-            </div>`;
-        }
-        
-        // Agregar elementos decorativos
-        productosHTML += `
-            <div class="featured-decor-dot featured-decor-dot-1"></div>
-            <div class="featured-decor-dot featured-decor-dot-2"></div>
+            </div>
         `;
-        
-        // Insertar HTML en el contenedor
-        container.innerHTML = productosHTML;
-        
-        // Generar modales para los productos destacados
-        products.forEach(producto => {
-            this.generateProductModal(producto);
-        });
-        
-        // Configurar eventos para botones de detalles
-        this.setupProductEvents(container);
-        
-        // Inicializar AOS si está disponible
-        if (typeof AOS !== 'undefined') {
-            setTimeout(() => {
-                AOS.refresh();
-            }, 100);
-        }
+        return;
     }
+    
+    // Limitar a solo 3 productos para rendimiento máximo
+    const productosLimitados = products.slice(0, 3);
+    
+    // Configurar contenedor
+    const sectionParent = container.parentElement.parentElement;
+    if (sectionParent) {
+        sectionParent.classList.add('featured-section');
+    }
+    
+    // Crear encabezado sin animaciones
+    const existingHeader = sectionParent?.querySelector('.featured-header');
+    
+    // Limpiar contenedor
+    container.innerHTML = '';
+    
+    // Crear encabezado si no existe
+    if (!existingHeader && sectionParent) {
+        const headerHTML = `
+            <div class="featured-header">
+                <h2 class="featured-title">Diseños <span class="featured-title-accent">Selectos</span></h2>
+                <p class="featured-subtitle">Piezas excepcionales meticulosamente seleccionadas por nuestros expertos en diseño</p>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforebegin', headerHTML);
+    }
+    
+    // Crear contenedor simplificado
+    container.className = 'featured-showcase featured-optimized';
+    
+    // Crear HTML simplificado de todos los productos (reduciendo DOM nodes)
+    let allProductsHTML = '';
+    
+    productosLimitados.forEach((producto, index) => {
+        const descripcion = producto.descripcion 
+            ? (producto.descripcion.length > 80 ? producto.descripcion.substring(0, 80) + '...' : producto.descripcion) 
+            : 'Descripción no disponible.';
+            
+        const categoriaURL = this.getCategoryUrl(producto.categoria);
+        const imagenProducto = producto.imagen_principal || this.config.imagePlaceholder;
+        
+        // HTML ultra simplificado
+        allProductsHTML += `
+        <div class="featured-card-simple">
+            <div class="featured-img">
+                <img src="${imagenProducto}" alt="${producto.nombre}" loading="lazy" width="300" height="200">
+                ${producto.descuento > 0 ? `<span class="featured-tag">-${producto.descuento}%</span>` : ''}
+            </div>
+            <div class="featured-info">
+                <h3>${producto.nombre}</h3>
+                <p>${descripcion}</p>
+                <div class="featured-btns">
+                    <button type="button" class="ver-detalles" data-producto-id="${producto.id}">Ver detalles</button>
+                    <a href="${categoriaURL}">Ver colección</a>
+                </div>
+            </div>
+        </div>`;
+    });
+    
+    // Insertar todo el HTML de una sola vez (mejor rendimiento)
+    container.innerHTML = allProductsHTML;
+    
+    // Configurar eventos de manera optimizada
+    const detallesBtns = container.querySelectorAll('.ver-detalles');
+    detallesBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const productoId = e.currentTarget.getAttribute('data-producto-id');
+            if (productoId) {
+                window.location.href = `product-detail.html?id=${productoId}`;
+            }
+        });
+    });
+}
+
+
     
     /**
      * Renderiza productos en el contenedor de una categoría
@@ -541,7 +597,7 @@ class ProductService {
         
         // Generar modales para cada producto
         products.forEach(producto => {
-            this.generateProductModal(producto);
+            //this.generateProductModal(producto);
         });
         
         // Configurar eventos para los productos
@@ -559,178 +615,33 @@ class ProductService {
         }
     }
     
-    /**
-     * Configura eventos para elementos de producto
-     */
-    setupProductEvents(container) {
-        // Configurar eventos para botones de detalles
-        container.querySelectorAll('.ver-detalles').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const productoId = e.currentTarget.getAttribute('data-producto-id');
-                const modalElement = document.getElementById(`modal${productoId}`);
-                if (modalElement && typeof bootstrap !== 'undefined') {
-                    const modal = new bootstrap.Modal(modalElement);
-                    modal.show();
-                }
-            });
-        });
-        
-        // Configurar eventos para botones de consultar disponibilidad
-        container.querySelectorAll('.consultar-disponibilidad').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const productoId = e.currentTarget.getAttribute('data-producto-id');
-                // Intentar obtener el nombre del producto del DOM cercano
-                const productCard = e.currentTarget.closest('.product-card, .featured-product-item');
-                let nombreProducto = 'un producto';
-                
-                if (productCard) {
-                    nombreProducto = productCard.querySelector('.card-title, .featured-product-title')?.textContent || 'un producto';
-                }
-                
-                window.open(`https://wa.me/1234567890?text=Hola,%20me%20interesa%20conocer%20la%20disponibilidad%20de:%20${encodeURIComponent(nombreProducto)}`, '_blank');
-            });
-        });
-    }
+  
+
+
+setupProductEvents(container) {
+
     
-    /**
-     * Genera un modal para un producto
-     */
-    generateProductModal(producto) {
-        // Verificar si el modal ya existe
-        if (document.getElementById(`modal${producto.id}`)) {
-            return;
-        }
-        
-        // Determinar el contenido de las imágenes (carrusel o imagen única)
-        let imagesHTML = '';
-        
-        // Si el producto tiene múltiples imágenes
-        if (Array.isArray(producto.imagenes) && producto.imagenes.length > 1) {
-            // Limitar a máximo 4 imágenes
-            const imagenes = producto.imagenes.slice(0, this.config.maxImagesPerProduct);
-            
-            // Generar indicadores para el carrusel
-            const indicators = imagenes.map((_, index) => `
-                <button type="button" data-bs-target="#carousel${producto.id}" data-bs-slide-to="${index}" 
-                ${index === 0 ? 'class="active" aria-current="true"' : ''} aria-label="Slide ${index + 1}"></button>
-            `).join('');
-            
-            // Generar elementos del carrusel
-            const items = imagenes.map((img, index) => `
-                <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                    <img src="${img}" class="d-block w-100" alt="${producto.nombre} - Vista ${index + 1}">
-                </div>
-            `).join('');
-            
-            // Construir el carrusel completo
-            imagesHTML = `
-            <div id="carousel${producto.id}" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    ${indicators}
-                </div>
-                <div class="carousel-inner">
-                    ${items}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carousel${producto.id}" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carousel${producto.id}" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
-            </div>
-            `;
-        } 
-        // Si solo hay una imagen o imagen_principal
-        else {
-            const imagen = (Array.isArray(producto.imagenes) && producto.imagenes.length > 0) 
-                ? producto.imagenes[0] 
-                : (producto.imagen_principal || this.config.imagePlaceholder);
-                
-            imagesHTML = `<img src="${imagen}" class="img-fluid rounded" alt="${producto.nombre}">`;
-        }
-        
-        // Características del producto
-        const caracteristicasHTML = Array.isArray(producto.caracteristicas) && producto.caracteristicas.length > 0 
-            ? `
-            <div class="mt-4">
-                <h6>Características:</h6>
-                <ul class="caracteristicas-lista">
-                    ${producto.caracteristicas.map(car => `<li>${car}</li>`).join('')}
-                </ul>
-            </div>`
-            : '';
-        
-        // Etiquetas del producto
-        const etiquetasHTML = Array.isArray(producto.etiquetas) && producto.etiquetas.length > 0
-            ? producto.etiquetas.map(tag => `<span class="badge bg-primary me-2">${tag}</span>`).join('')
-            : '';
-        
-        // Información de descuento
-        const descuentoHTML = producto.descuento > 0 
-            ? `<div class="descuento-container mt-3">
-                <span class="descuento ${this.getDiscountClass(producto.descuento)}">
-                    -${producto.descuento}% OFF
-                </span>
-              </div>`
-            : '';
-        
-        // Determinar si estamos en la página de la misma categoría que el producto
-        const currentCategory = this.detectCurrentCategory();
-        const isOnCategoryPage = currentCategory === this.getNormalizedCategoryId(producto.categoria);
-        
-        // Botón para ver más productos de la categoría (solo si no estamos en esa categoría)
-        const categoriaBtn = !isOnCategoryPage ? `
-            <a href="${this.getCategoryUrl(producto.categoria)}" class="btn btn-primary">
-                <i class="bi bi-list me-2"></i>Ver más en ${producto.categoria}
-            </a>
-        ` : '';
-        
-        // Crear el modal HTML
-        const modalHTML = `
-        <div class="modal fade" id="modal${producto.id}" tabindex="-1" aria-labelledby="modalLabel${producto.id}" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel${producto.id}">${producto.nombre}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                ${imagesHTML}
-                            </div>
-                            <div class="col-md-6">
-                                <p>${producto.descripcion || 'Sin descripción disponible.'}</p>
-                                ${descuentoHTML}
-                                ${caracteristicasHTML}
-                                <div class="mt-4">
-                                    <span class="badge bg-${producto.disponible ? 'success' : 'danger'} me-2">
-                                        ${producto.disponible ? 'Disponible' : 'No disponible'}
-                                    </span>
-                                    ${etiquetasHTML}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        ${categoriaBtn}
-                        <a href="https://wa.me/1234567890?text=Hola,%20me%20interesa%20el%20producto:%20${encodeURIComponent(producto.nombre)}" 
-                           class="btn btn-success" target="_blank">
-                            <i class="bi bi-whatsapp me-2"></i>Consultar por WhatsApp
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-        
-        // Añadir modal al body
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
+    if (!container) return;
+
+    const verDetallesButtons = container.querySelectorAll('.ver-detalles');
     
+    verDetallesButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const productoId = e.currentTarget.getAttribute('data-producto-id');
+            
+            if (productoId) {
+                // Opcional: Pre-cargar datos del producto en caché
+                this.getProductDetails(productoId)
+                    .catch(error => {
+                        console.error('Error pre-cargando producto:', error);
+                    });
+                
+                // Redirigir a la página de detalles
+                window.location.href = `product-detail.html?id=${productoId}`;
+            }
+        });
+    });
+}
     /**
      * Obtiene la URL para una categoría específica
      */

@@ -1,0 +1,946 @@
+/**
+ * Mueblería Cabañas - Estilos modernizados para página de detalle de producto
+ * Un diseño sofisticado y elegante que mejora la experiencia visual sin sacrificar funcionalidad
+ */
+
+ :root {
+    --primary: #8A6D4B;
+    --primary-dark: #6A543A;
+    --primary-light: #D4C0A7;
+    --secondary: #2C3642;
+    --secondary-light: #4D5967;
+    --accent: #C7A17A;
+    --light: #F9F7F4;
+    --light-gray: #E9E5E0;
+    --dark: #282420;
+    --text: #3E3630;
+    --text-light: #6B635D;
+    --white: #FFFFFF;
+    --success: #4A7A6D;
+    --danger: #A65B5B;
+    --transition-smooth: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  /* Animaciones generales */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeInUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from { 
+      opacity: 0; 
+      transform: scale(0.95);
+    }
+    to { 
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-in-out forwards;
+  }
+  
+  .scale-in {
+    animation: scaleIn 0.6s ease-in-out forwards;
+  }
+  
+  /* Configuración general de la página */
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+    background-color: var(--light);
+    line-height: 1.6;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c0a7' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  /* Container principal del detalle de producto */
+  .product-detail-section {
+    background-color: var(--light);
+    padding: 60px 0;
+    position: relative;
+  }
+  
+  .product-detail-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, var(--light), transparent);
+    z-index: 0;
+  }
+  
+  .product-detail-container {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(40, 36, 32, 0.06);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s ease;
+  }
+  
+  .product-detail-container:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Breadcrumb rediseñado */
+  .product-breadcrumb {
+    margin-bottom: 25px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-light);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--light);
+    padding: 8px 16px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  }
+  
+  .product-breadcrumb a {
+    color: var(--text);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    position: relative;
+  }
+  
+  .product-breadcrumb a:hover {
+    color: var(--primary);
+  }
+  
+  .product-breadcrumb a:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--primary);
+    transition: var(--transition-smooth);
+  }
+  
+  .product-breadcrumb a:hover:after {
+    width: 100%;
+  }
+  
+  .product-breadcrumb .separator {
+    margin: 0 10px;
+    color: var(--text-light);
+    opacity: 0.5;
+  }
+  
+  /* Grid principal con ajustes */
+  .product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    padding: 30px;
+  }
+  
+  /* Galería de imágenes mejorada */
+  .product-image-gallery {
+    position: relative;
+    height: 100%;
+    padding: 20px;
+  }
+  
+  /* Imagen principal grande con efectos */
+  .product-main-image {
+    width: 100%;
+    height: 550px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(40, 36, 32, 0.08);
+    margin-bottom: 25px;
+    background-color: var(--light);
+    transition: var(--transition-smooth);
+    cursor: zoom-in;
+  }
+  
+  .product-main-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  
+  .product-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: center center;
+  }
+  
+  /* Estilos para el efecto de zoom */
+  .product-main-image.zoomed {
+    cursor: zoom-out;
+  }
+  
+  .product-main-image.zoomed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+  }
+  
+  .product-main-image.zoomed img {
+    will-change: transform; /* Optimización para rendimiento */
+  }
+  
+  /* Ocultar controles de navegación durante el zoom */
+  .product-main-image.zoomed .image-nav-btn {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Indicador de zoom personalizado */
+  .zoom-indicator {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+  }
+  
+  .product-main-image:hover .zoom-indicator {
+    opacity: 0.8;
+  }
+  
+  .product-main-image.zoomed .zoom-indicator {
+    opacity: 0.8;
+    background-color: var(--primary);
+    color: white;
+  }
+  
+  /* Efecto de reflejos en imágenes */
+  .product-main-image::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(45deg);
+    z-index: 10;
+    pointer-events: none;
+    transition: all 1.5s ease;
+    opacity: 0;
+  }
+  
+  .product-main-image:hover::before {
+    animation: reflectionEffect 2s ease infinite;
+    opacity: 1;
+  }
+  
+  @keyframes reflectionEffect {
+    0% {
+      top: -50%;
+      left: -50%;
+    }
+    100% {
+      top: 150%;
+      left: 150%;
+    }
+  }
+  
+  /* Miniaturas de imágenes adicionales con efecto de diseño */
+  .product-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  
+  .product-thumbnail {
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(40, 36, 32, 0.05);
+    background-color: var(--light);
+    transition: var(--transition-smooth);
+  }
+  
+  .product-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: var(--transition-smooth);
+  }
+  
+  .product-thumbnail:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(40, 36, 32, 0.08);
+  }
+  
+  .product-thumbnail.active {
+    border: 2px solid var(--primary);
+    transform: translateY(-2px) scale(1.05);
+  }
+  
+  .product-thumbnail.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(138, 109, 75, 0.08);
+  }
+  
+  /* Estilos para iconos de navegación de imágenes */
+  .image-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(40, 36, 32, 0.1);
+    z-index: 5;
+    transition: var(--transition-smooth);
+    color: var(--secondary);
+    backdrop-filter: blur(5px);
+  }
+  
+  .image-nav-btn:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .image-nav-btn.active-nav {
+    background-color: var(--primary);
+    color: white;
+  }
+  
+  .image-nav-prev {
+    left: 20px;
+  }
+  
+  .image-nav-next {
+    right: 20px;
+  }
+  
+  /* Información del producto */
+  .product-info {
+    position: relative;
+    padding: 30px 0;
+  }
+  
+  .product-category {
+    display: inline-block;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    position: relative;
+    padding-left: 15px;
+  }
+  
+  .product-category::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+  }
+  
+  .product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 20px;
+    line-height: 1.2;
+    position: relative;
+  }
+  
+  .product-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary);
+  }
+  
+  .product-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 35px;
+    max-width: 90%;
+  }
+  
+  /* Status badges de disponibilidad y estilos */
+  .product-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: var(--transition-smooth);
+  }
+  
+  .badge-availability {
+    background-color: var(--light);
+    border-left: none;
+    padding-left: 16px;
+  }
+  
+  .badge-availability.available {
+    color: var(--success);
+    background-color: rgba(74, 122, 109, 0.1);
+  }
+  
+  .badge-availability.unavailable {
+    color: var(--danger);
+    background-color: rgba(166, 91, 91, 0.1);
+  }
+  
+  .badge-style {
+    background-color: rgba(138, 109, 75, 0.1);
+    color: var(--primary);
+  }
+  
+  .badge-tag {
+    background-color: var(--secondary-light);
+    color: white;
+  }
+  
+  /* Sección de características del producto */
+  .product-features {
+    margin: 35px 0;
+    padding: 30px;
+    background-color: var(--light);
+    border-radius: 12px;
+    border-left: none;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(40, 36, 32, 0.03);
+    overflow: hidden;
+  }
+  
+  .product-features::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--primary);
+  }
+  
+  .features-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dark);
+    position: relative;
+  }
+  
+  .features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: rgba(138, 109, 75, 0.15);
+    color: var(--primary);
+    border-radius: 50%;
+    margin-right: 15px;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  
+  .feature-text {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  
+  /* Sección de acciones del producto */
+  .product-actions {
+    margin-top: 40px;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .product-action-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .btn-primary-action {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 8px 20px rgba(138, 109, 75, 0.25);
+  }
+  
+  .btn-primary-action:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(138, 109, 75, 0.35);
+    color: white;
+  }
+  
+  .btn-secondary-action {
+    background-color: var(--light);
+    color: var(--text);
+    border: 1px solid var(--light-gray);
+  }
+  
+  .btn-secondary-action:hover {
+    background-color: var(--light);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(40, 36, 32, 0.1);
+    border-color: var(--primary-light);
+  }
+  
+  /* Mantener el estilo del botón de WhatsApp según lo solicitado */
+  .btn-whatsapp-action {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+  }
+  
+  .btn-whatsapp-action:hover {
+    background-color: #1CB055;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(37, 211, 102, 0.35);
+    color: white;
+  }
+  
+  .product-action-btn i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+  }
+  
+  /* Sección de descuento destacado */
+  .product-discount-section {
+    margin: 30px 0;
+  }
+  
+  .discount-badge-large {
+    display: inline-block;
+    padding: 12px 30px 12px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    position: relative;
+    color: white;
+    background-color: var(--danger);
+    clip-path: polygon(0 0, 100% 0, 93% 100%, 0 100%);
+    box-shadow: 0 8px 25px rgba(166, 91, 91, 0.25);
+  }
+  
+  .discount-badge-large.high-discount {
+    background-color: var(--danger);
+  }
+  
+  .discount-badge-large.medium-discount {
+    background-color: var(--primary);
+  }
+  
+  .discount-badge-large.low-discount {
+    background-color: var(--secondary);
+  }
+  
+  .discount-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+  }
+  
+  /* Sección más detalles (acordeón) */
+  .product-accordion {
+    margin-top: 50px;
+  }
+  
+  .accordion-item {
+    border: none;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 15px;
+    transition: var(--transition-smooth);
+  }
+  
+  .accordion-button {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--dark);
+    background-color: transparent;
+    border-radius: 0;
+    padding: 20px 0;
+    transition: var(--transition-smooth);
+  }
+  
+  .accordion-button:not(.collapsed) {
+    background-color: transparent;
+    color: var(--primary);
+    box-shadow: none;
+  }
+  
+  .accordion-button:focus {
+    box-shadow: none;
+    border-color: transparent;
+  }
+  
+  .accordion-button::after {
+    background-size: 15px;
+    color: var(--primary);
+    transition: var(--transition-smooth);
+  }
+  
+  .accordion-body {
+    padding: 5px 0 25px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  
+  .accordion-body ul {
+    padding-left: 20px;
+  }
+  
+  .accordion-body li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 5px;
+  }
+  
+  /* Spinner de carga personalizado */
+  .spinner {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+  }
+  
+  .spinner-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-color: var(--primary);
+    border-right-color: transparent;
+  }
+  
+  .spinner-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .loading-text {
+    color: var(--text);
+    font-weight: 500;
+    opacity: 0.8;
+    margin-top: 15px;
+  }
+  
+  /* Mensaje de error personalizado */
+  .alert-custom {
+    display: flex;
+    align-items: center;
+    background-color: #FFF6F6;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(166, 91, 91, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .alert-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(166, 91, 91, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    color: var(--danger);
+    font-size: 1.5rem;
+  }
+  
+  .alert-content {
+    flex-grow: 1;
+  }
+  
+  .alert-title {
+    font-weight: 600;
+    color: var(--danger);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+  }
+  
+  .alert-message {
+    color: var(--text);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+  
+  /* Estilos para modal de cotización */
+  .modal-content {
+    box-shadow: 0 15px 50px rgba(40, 36, 32, 0.15);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .modal-header {
+    background-color: var(--light);
+    border-bottom: none;
+    padding: 25px 25px 15px;
+  }
+  
+  .modal-body {
+    padding: 20px 25px 30px;
+  }
+  
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--dark);
+    font-weight: 600;
+  }
+  
+  .modal-footer {
+    border-top: none;
+    padding: 0 25px 25px;
+  }
+  
+  .fade-in-animation {
+    animation: modalFadeIn 0.3s ease-out forwards;
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Estilos para responsividad */
+  @media (max-width: 991.98px) {
+    .product-detail-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .product-main-image {
+      height: 450px;
+    }
+    
+    .features-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .product-title {
+      font-size: 2.25rem;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .product-title {
+      font-size: 2rem;
+    }
+    
+    .product-actions {
+      flex-direction: column;
+    }
+    
+    .product-action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .product-main-image {
+      height: 380px;
+    }
+    
+    .product-thumbnail {
+      height: 80px;
+    }
+    
+    .product-detail-section {
+      padding: 30px 0;
+    }
+    
+    .product-breadcrumb {
+      margin-bottom: 15px;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .product-main-image {
+      height: 320px;
+    }
+    
+    .product-thumbnail {
+      height: 70px;
+    }
+    
+    .product-thumbnails {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .discount-badge-large {
+      font-size: 1.3rem;
+      padding: 10px 20px 10px 15px;
+    }
+    
+    .product-category {
+      font-size: 0.8rem;
+    }
+    
+    .product-title {
+      font-size: 1.8rem;
+    }
+    
+    .features-title {
+      font-size: 1.1rem;
+    }
+    
+    .product-features {
+      padding: 20px;
+    }
+  }
+  
+  /* Estilos adicionales para mejorar la experiencia táctil en dispositivos móviles */
+  @media (hover: none) {
+    .product-action-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .product-thumbnail:active {
+      transform: scale(0.95);
+    }
+    
+    .image-nav-btn {
+      opacity: 0.9;
+    }
+    
+    .zoom-indicator {
+      opacity: 0.6;
+    }
+  }

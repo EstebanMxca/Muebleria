@@ -117,6 +117,16 @@ class Loader {
      * Inicializa el sistema de lazy loading
      */
     initLazyLoading() {
+        // Observer para elementos de alta prioridad
+        this.priorityObserver = new IntersectionObserver(
+            (entries, observer) => this.handlePriorityIntersection(entries, observer),
+            {
+                threshold: 0.01,
+                rootMargin: '300px 0px 300px 0px' // Cargar mucho antes
+            }
+        );
+        
+        // Observer normal para el resto de elementos
         this.observer = new IntersectionObserver(
             this.handleIntersection.bind(this), 
             {
@@ -131,10 +141,31 @@ class Loader {
             this.observer.observe(img);
         });
         
-        // Observar contenedores con lazy loading
+        // Observar contenedores con lazy loading y manejar prioridades
         document.querySelectorAll('[data-lazy-container]').forEach(container => {
             container.classList.add('lazy-container');
-            this.observer.observe(container);
+            if (container.dataset.priority === 'high') {
+                this.priorityObserver.observe(container);
+            } else {
+                this.observer.observe(container);
+            }
+        });
+    }
+    
+    // Nueva función para manejar elementos prioritarios
+    handlePriorityIntersection(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const containerId = element.id || 'container-' + Math.random().toString(36).substr(2, 9);
+                
+                if (!this.state.loadedContainers.has(containerId)) {
+                    this.state.loadedContainers.add(containerId);
+                    this.loadLazyContainer(element);
+                }
+                
+                observer.unobserve(element);
+            }
         });
     }
     
@@ -394,6 +425,7 @@ class Loader {
         console.log(`Cargando categoría ${categoryId}, página ${page} con filtros:`, filters);
         
         try {
+            // Usar el contenedor de la categoría específica
             const productsContainer = document.getElementById(categoryId);
             if (!productsContainer) {
                 throw new Error(`No se encontró el contenedor para la categoría ${categoryId}`);
@@ -444,7 +476,7 @@ class Loader {
                 return;
             }
             
-            // Renderizar productos (delegando al servicio de productos si está disponible)
+            // Renderizar productos usando el servicio de productos si está disponible
             if (window.productService && typeof window.productService.renderProducts === 'function') {
                 window.productService.renderProducts(productsContainer, data.productos, categoryId);
             } else {
@@ -472,7 +504,11 @@ class Loader {
             return data;
         } catch (error) {
             console.error('Error al cargar productos:', error);
-            this.showErrorMessage(productsContainer, error.message);
+            // Asegurarse de usar el contenedor correcto
+            const productsContainer = document.getElementById(categoryId);
+            if (productsContainer) {
+                this.showErrorMessage(productsContainer, error.message);
+            }
         } finally {
             this.state.isLoading = false;
             this.toggleGlobalLoader(false);
@@ -488,11 +524,11 @@ class Loader {
         productsRow.className = 'row productos-container';
         
         // Generar HTML para cada producto
-        products.forEach(product => {
+        products.forEach(producto => {
             // Determinar si hay etiqueta y su clase
             let tagHTML = '';
-            if (product.etiquetas && product.etiquetas.length > 0) {
-                const tag = product.etiquetas[0];
+            if (producto.etiquetas && producto.etiquetas.length > 0) {
+                const tag = producto.etiquetas[0];
                 let tagClass = '';
                 
                 if (tag.toLowerCase().includes('promoción')) {
@@ -511,8 +547,8 @@ class Loader {
                 return 'low-discount';
             };
             
-            const discountHTML = product.descuento > 0 
-                ? `<span class="descuento ${getDiscountClass(product.descuento)}">-${product.descuento}% </span>`
+            const discountHTML = producto.descuento > 0 
+                ? `<span class="descuento ${getDiscountClass(producto.descuento)}">-${producto.descuento}% </span>`
                 : '';
             
             // Generar HTML del producto
@@ -520,16 +556,16 @@ class Loader {
                 <div class="col-md-4 mb-4">
                     <div class="card product-card h-100 position-relative">
                         ${tagHTML}
-                        <img src="${product.imagen_principal || 'assets/placeholder.jpg'}" class="card-img-top img-fluid" alt="${product.nombre}">
+                        <img src="${producto.imagen_principal || 'assets/placeholder.jpg'}" class="card-img-top img-fluid" alt="${producto.nombre}">
                         <div class="card-body">
-                            <h5 class="card-title">${product.nombre}</h5>
-                            <p class="card-text">${product.descripcion || ''}</p>
+                            <h5 class="card-title">${producto.nombre}</h5>
+                            <p class="card-text">${producto.descripcion || ''}</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-outline-secondary ver-detalles" 
-                                            data-producto-id="${product.id}">Ver detalles</button>
+                                            data-producto-id="${producto.id}">Ver detalles</button>
                                     <button type="button" class="btn btn-sm btn-outline-primary consultar-disponibilidad"
-                                            data-producto-id="${product.id}">Consultar disponibilidad</button>
+                                            data-producto-id="${producto.id}">Consultar disponibilidad</button>
                                     ${discountHTML}
                                 </div>
                             </div>
@@ -546,8 +582,8 @@ class Loader {
         container.appendChild(productsRow);
         
         // Generar modales para cada producto
-        products.forEach(product => {
-            this.generateProductModal(product);
+        products.forEach(producto => {
+            this.generateProductModal(producto);
         });
         
         // Configurar eventos para los productos
@@ -815,7 +851,15 @@ class Loader {
                     // Scroll hasta el inicio de los productos
                     const productsContainer = document.getElementById(categoryId);
                     if (productsContainer) {
-                        productsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Calculamos un offset para no quedar exactamente debajo del navbar
+                        const headerOffset = 160; // Ajusta este valor según la altura de tu navbar
+                        const elementPosition = productsContainer.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
                     }
                 }
             });
@@ -895,212 +939,93 @@ class Loader {
     /**
      * Cargar productos destacados
      */
-    async loadFeaturedProducts(container) {
-        try {
-            // Verificar si el contenedor existe
-            if (!container) {
-                console.error("No se encontró el contenedor para productos destacados");
-                return;
-            }
-            
-            // Mostrar indicador de carga
-            container.innerHTML = `
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando...</span>
-                    </div>
-                    <p class="mt-2">Cargando productos destacados...</p>
-                </div>
-            `;
-            
-            // Cargar productos destacados desde la API
-            const response = await fetch(`${this.config.apiUrl}/productos-destacados`);
-            
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
-            }
-            
-            const productosDestacados = await response.json();
-            
-            // Verificar si hay productos
-            if (!productosDestacados || productosDestacados.length === 0) {
-                container.innerHTML = `
-                    <div class="col-12 text-center">
-                        <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
-                            <i class="bi bi-info-circle me-2"></i>
-                            <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Transformar el diseño y estructura del contenedor
-            const sectionParent = container.parentElement.parentElement;
-            if (sectionParent) {
-                sectionParent.classList.add('featured-section');
-            }
-            
-            // Buscar si ya existe el encabezado para evitar duplicaciones
-            const existingHeader = sectionParent?.querySelector('.featured-header');
-            
-            // Limpiar contenedor actual
-            container.innerHTML = '';
-            
-            // Crear nueva estructura HTML para el encabezado solo si no existe
-            if (!existingHeader && sectionParent) {
-                const headerHTML = `
-                    <div class="featured-header">
-                        <h2 class="featured-title">Productos Destacados</h2>
-                        <p class="featured-subtitle">Descubre nuestras piezas más exclusivas seleccionadas para ti</p>
-                    </div>
-                `;
-                
-                // Insertar encabezado antes del contenedor
-                container.insertAdjacentHTML('beforebegin', headerHTML);
-            }
-            
-            // Crear contenedor para la nueva estructura de grid
-            container.className = 'featured-products';
-            
-            // Generar HTML para cada producto destacado con nuevo diseño
-            let productosHTML = '';
-            
-            // Generar todos los productos con el mismo tamaño en una grid 2x2
-            for (let i = 0; i < Math.min(productosDestacados.length, 4); i++) {
-                const producto = productosDestacados[i];
-                
-                // Función para generar etiqueta basada en etiquetas del producto
-                const generarEtiquetaHTML = (producto) => {
-                    if (!producto.etiquetas || producto.etiquetas.length === 0) return '';
-                    
-                    const etiqueta = producto.etiquetas[0];
-                    let claseEtiqueta = '';
-                    
-                    if (etiqueta.toLowerCase().includes('promoción')) {
-                        claseEtiqueta = 'sale';
-                    } else if (etiqueta.toLowerCase().includes('último')) {
-                        claseEtiqueta = 'last';
-                    } else {
-                        claseEtiqueta = 'new';
-                    }
-                    
-                    return `<div class="featured-product-tag ${claseEtiqueta}">${etiqueta}</div>`;
-                };
-                
-                // Función para generar badge de descuento
-                const generarDescuentoHTML = (descuento) => {
-                    if (!descuento || descuento <= 0) return '';
-                    return `<div class="featured-discount">-${descuento}%</div>`;
-                };
-                
-                // Función para generar atributos/características 
-                const generarAtributosHTML = (caracteristicas) => {
-                    if (!caracteristicas || !Array.isArray(caracteristicas) || caracteristicas.length === 0) {
-                        return '';
-                    }
-                    
-                    return caracteristicas.slice(0, 3).map(car => 
-                        `<div class="featured-attribute">
-                            <i class="bi bi-check-circle-fill"></i>
-                            <span>${car}</span>
-                        </div>`
-                    ).join('');
-                };
-                
-                // Función para obtener la URL de categoría correcta
-                const obtenerURLCategoria = (categoria) => {
-                    // Normalizar nombres de categoría para rutas URL
-                    const categoriasMapping = {
-                        'Salas': 'salas',
-                        'Comedores': 'comedores',
-                        'Recámaras': 'recamaras',
-                        'Cabeceras': 'cabeceras',
-                        'Mesas de Centro': 'mesas-centro'
-                    };
-                    
-                    // Buscar la URL correcta en el mapping
-                    const urlCategoria = categoriasMapping[categoria];
-                    if (urlCategoria) {
-                        return `${urlCategoria}.html`;
-                    }
-                    
-                    // Fallback: convertir a minúsculas y reemplazar espacios por guiones
-                    return categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-') + '.html';
-                };
-                
-                const categoriaURL = obtenerURLCategoria(producto.categoria);
-                const descripcionCorta = producto.descripcion ? 
-                    (producto.descripcion.length > 100 ? producto.descripcion.substring(0, 100) + '...' : producto.descripcion) : 
-                    'Descripción no disponible.';
-                
-                // Asegurar imagen principal
-                const imagenPrincipal = producto.imagen_principal || 'assets/placeholder.jpg';
-                
-                productosHTML += `
-                <div class="featured-product-item" data-aos="fade-up" data-aos-delay="${i * 100}">
-                    <div class="featured-product-img-wrap">
-                        ${generarEtiquetaHTML(producto)}
-                        ${generarDescuentoHTML(producto.descuento)}
-                        <img src="${imagenPrincipal}" alt="${producto.nombre}" class="featured-product-img">
-                    </div>
-                    <div class="featured-product-info">
-                        <div class="featured-product-category">${producto.categoria}</div>
-                        <h3 class="featured-product-title">${producto.nombre}</h3>
-                        <p class="featured-product-desc">${descripcionCorta}</p>
-                        <div class="featured-product-attributes">
-                            ${generarAtributosHTML(producto.caracteristicas)}
-                        </div>
-                        <div class="featured-product-actions">
-                            <button type="button" class="featured-action-btn featured-action-btn-secondary ver-detalles" 
-                                data-producto-id="${producto.id}">
-                                <i class="bi bi-eye"></i>Ver detalles
-                            </button>
-                            <a href="${categoriaURL}" class="featured-action-btn featured-action-btn-primary">
-                                <i class="bi bi-arrow-right-circle"></i>Ver más
-                            </a>
-                        </div>
-                    </div>
-                </div>`;
-            }
-            
-            // Agregar elementos decorativos
-            productosHTML += `
-                <div class="featured-decor-dot featured-decor-dot-1"></div>
-                <div class="featured-decor-dot featured-decor-dot-2"></div>
-            `;
-            
-            // Insertar HTML en el contenedor
-            container.innerHTML = productosHTML;
-            
-            // Generar modales para los productos destacados
-            productosDestacados.forEach(producto => {
-                this.generateProductModal(producto);
-            });
-            
-            // Configurar eventos para botones de detalles
-            this.setupProductEvents(container);
-            
-            // Inicializar AOS si está disponible
-            if (typeof AOS !== 'undefined') {
-                setTimeout(() => {
-                    AOS.refresh();
-                }, 100);
-            }
-            
-            return productosDestacados;
-        } catch (error) {
-            console.error("Error al cargar productos destacados:", error);
+   /**
+ * Cargar productos destacados
+ */
+async loadFeaturedProducts(container) {
+    try {
+        console.log("Loader.loadFeaturedProducts: redirigiendo a productService");
+        
+        // Verificar si el contenedor existe
+        if (!container) {
+            console.error("No se encontró el contenedor para productos destacados");
+            return;
+        }
+        
+        // Verificar si existe productService
+        if (!window.productService) {
+            console.error("No se encontró window.productService");
             container.innerHTML = `
                 <div class="col-12 text-center">
                     <div class="alert alert-danger">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        Ocurrió un error al cargar los productos destacados. Por favor, intenta más tarde.
+                        Error: Servicio de productos no encontrado.
                     </div>
                 </div>
             `;
+            return;
         }
+        
+        // Mostrar indicador de carga
+        container.innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border" style="color: var(--primary);" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando diseños destacados...</p>
+            </div>
+        `;
+        
+        // Intentar cargar desde caché primero
+        if (window.productService && window.productService.cache.featuredProducts) {
+            console.log('Utilizando productos destacados en caché');
+            window.productService.renderFeaturedProducts(container, window.productService.cache.featuredProducts);
+            return window.productService.cache.featuredProducts;
+        }
+        
+        // Cargar productos destacados desde la API
+        const response = await fetch(`${this.config.apiUrl}/productos-destacados`);
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const productosDestacados = await response.json();
+        
+        // Guardar en caché para futuras solicitudes
+        if (window.productService) {
+            window.productService.cache.featuredProducts = productosDestacados;
+        }
+        
+        // Verificar si hay productos
+        if (!productosDestacados || productosDestacados.length === 0) {
+            container.innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
+        // Usar la implementación de productService
+        window.productService.renderFeaturedProducts(container, productosDestacados);
+        
+        return productosDestacados;
+    } catch (error) {
+        console.error("Error al cargar productos destacados:", error);
+        container.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Ocurrió un error al cargar los productos destacados. Por favor, intenta más tarde.
+                </div>
+            </div>
+        `;
     }
+}
 
     
 }

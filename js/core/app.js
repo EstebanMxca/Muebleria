@@ -47,6 +47,17 @@ class App {
             // Cargar contenido específico de la página
             this.loadPageSpecificContent();
             
+            // Optimizaciones de rendimiento para scroll
+            let scrollTimer;
+            window.addEventListener('scroll', () => {
+                document.documentElement.classList.add('scrolling');
+                if (scrollTimer) clearTimeout(scrollTimer);
+                
+                scrollTimer = setTimeout(() => {
+                    document.documentElement.classList.remove('scrolling');
+                }, 200);
+            }, { passive: true });
+            
             // Marcar como inicializado
             this.state.initialized = true;
             
@@ -84,10 +95,6 @@ class App {
         // Inicializar cargador
         this.components.loader = new Loader();
         window.loader = this.components.loader;
-        
-        // Inicializar ProductModal
-        this.components.productModal = new ProductModal();
-        window.productModal = this.components.productModal;
         
         // Inicializar componentes específicos según la página
         if (this.state.pageType === 'home' || this.state.pageType === 'category') {
