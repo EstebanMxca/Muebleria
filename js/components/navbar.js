@@ -399,6 +399,32 @@ class NavbarComponent {
             return;
         }
         
+        // IMPORTANTE: Inicializar correctamente - el menú debe estar cerrado por defecto
+        catalogoMenu.classList.remove('show');
+        catalogoBtn.setAttribute('aria-expanded', 'false');
+        
+        // Eliminar cualquier estilo inline que pueda estar causando problemas
+        catalogoMenu.style.display = '';
+        
+        // Aplicar configuraciones específicas según el tamaño de pantalla
+        if (window.innerWidth >= 992) {
+            // Configuraciones para escritorio
+            catalogoDropdown.classList.add('position-static');
+            catalogoMenu.classList.add('w-100');
+            catalogoMenu.classList.add('premium-dropdown');
+            
+            // Estilos para posicionamiento correcto
+            catalogoMenu.style.left = '0';
+            catalogoMenu.style.right = '0';
+        } else {
+            // Configuraciones para móvil - eliminar estilos que causan problemas
+            catalogoMenu.style.left = '';
+            catalogoMenu.style.right = '';
+            
+            // Asegurarnos que el menú esté realmente cerrado en móvil
+            catalogoMenu.style.display = '';
+        }
+        
         // Clave de la solución: Asegurar que solo tengamos un event listener
         // Remover cualquier event listener existente creando un clon
         const newBtn = catalogoBtn.cloneNode(true);
@@ -407,34 +433,56 @@ class NavbarComponent {
         }
         catalogoBtn = newBtn;
         
-        // Limpiar cualquier estado previo
-        catalogoMenu.classList.remove('show');
-        catalogoBtn.setAttribute('aria-expanded', 'false');
-        
         // Eliminar cualquier clase o atributo Bootstrap que pueda interferir
         catalogoBtn.removeAttribute('data-bs-toggle');
         catalogoBtn.removeAttribute('data-bs-auto-close');
         
-        // Definir función de toggle clara y directa
+        // Comportamiento diferente para móvil y desktop pero SOLO con clic
         const toggleCatalogoMenu = (e) => {
             e.preventDefault();
             e.stopPropagation();
             
-            // Alternar clase 'show' en el menú
-            if (catalogoMenu.classList.contains('show')) {
-                catalogoMenu.classList.remove('show');
-                catalogoBtn.setAttribute('aria-expanded', 'false');
+            // En dispositivos móviles, simplemente alternar la clase show
+            if (window.innerWidth < 992) {
+                if (catalogoMenu.classList.contains('show')) {
+                    catalogoMenu.classList.remove('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'false');
+                    // Eliminar display inline para móvil
+                    catalogoMenu.style.display = '';
+                } else {
+                    catalogoMenu.classList.add('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'true');
+                    // No establecer display block en móvil, dejar que el CSS lo maneje
+                }
             } else {
-                catalogoMenu.classList.add('show');
-                catalogoBtn.setAttribute('aria-expanded', 'true');
+                // En dispositivos de escritorio
+                if (catalogoMenu.classList.contains('show')) {
+                    catalogoMenu.classList.remove('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'false');
+                    catalogoMenu.style.display = '';
+                } else {
+                    // Aplicar configuración para escritorio
+                    catalogoMenu.style.left = '0';
+                    catalogoMenu.style.right = '0';
+                    catalogoDropdown.classList.add('position-static');
+                    catalogoMenu.classList.add('w-100');
+                    catalogoMenu.classList.add('premium-dropdown');
+                    
+                    // Mostrar el menú
+                    catalogoMenu.classList.add('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'true');
+                    catalogoMenu.style.display = 'block';
+                }
             }
             
             return false;
         };
         
-        // Agregar eventos directamente al botón
+        // Agregar evento directamente al botón - SOLO CLICK (NO HOVER)
         catalogoBtn.addEventListener('click', toggleCatalogoMenu);
         catalogoBtn.addEventListener('touchstart', toggleCatalogoMenu, {passive: false});
+        
+        // Ya no configuramos eventos de hover aquí
         
         // Cerrar el menú al hacer clic en cualquier otro lugar
         const closeMenuHandler = (e) => {
@@ -444,6 +492,7 @@ class NavbarComponent {
                     if (catalogoBtn) {
                         catalogoBtn.setAttribute('aria-expanded', 'false');
                     }
+                    catalogoMenu.style.display = '';
                 }
             }
         };
@@ -459,12 +508,39 @@ class NavbarComponent {
                 if (catalogoBtn) {
                     catalogoBtn.setAttribute('aria-expanded', 'false');
                 }
+                catalogoMenu.style.display = '';
             }
         };
         
         this.registerGlobalEvent(document, 'keydown', escapeHandler);
         
-        console.log('Dropdown de Catálogo configurado con gestión personalizada');
+        // Añadir manejador de redimensionamiento para mantener las clases correctas
+        const resizeHandler = () => {
+            // Ajustar posicionamiento al cambiar tamaño de ventana
+            if (window.innerWidth >= 992) {
+                // Ajustes para escritorio
+                catalogoDropdown.classList.add('position-static');
+                catalogoMenu.classList.add('w-100');
+                catalogoMenu.classList.add('premium-dropdown');
+                catalogoMenu.style.left = '0';
+                catalogoMenu.style.right = '0';
+            } else {
+                // Ajustes para móvil - quitar estilos inline
+                catalogoMenu.style.left = '';
+                catalogoMenu.style.right = '';
+                catalogoMenu.style.display = '';
+            }
+            
+            // Cerrar menú si está abierto cuando se redimensiona
+            if (catalogoMenu.classList.contains('show')) {
+                catalogoMenu.classList.remove('show');
+                catalogoBtn.setAttribute('aria-expanded', 'false');
+            }
+        };
+        
+        this.registerGlobalEvent(window, 'resize', resizeHandler);
+        
+        console.log('Dropdown de Catálogo configurado con gestión personalizada (solo clic)');
     }
     
     /**
