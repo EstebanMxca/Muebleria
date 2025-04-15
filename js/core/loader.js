@@ -8,7 +8,7 @@ class Loader {
     constructor() {
         // Configuración principal
         this.config = {
-            apiUrl: 'http://localhost:3000/api',
+            apiUrl: '/api',
             productsPerPage: 18,
             lazyLoadThreshold: 0.1,
             lazyLoadMargin: '0px 0px 200px 0px',

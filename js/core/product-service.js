@@ -8,7 +8,7 @@ class ProductService {
     constructor() {
         // Configuración del servicio
         this.config = {
-            apiUrl: 'http://localhost:3000/api',
+            apiUrl: '/api',
             imagePlaceholder: 'assets/placeholder.jpg',
             maxImagesPerProduct: 4
         };
