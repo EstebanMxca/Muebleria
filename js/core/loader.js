@@ -353,12 +353,6 @@ class Loader {
                     AOS.refresh();
                 }
                 break;
-            case 'categories-showcase-container':
-                // Inicializar animaciones AOS si está disponible
-                if (typeof AOS !== 'undefined') {
-                    AOS.refresh();
-                }
-                break;
             default:
                 // Para otros contenedores, simplemente refrescar AOS
                 if (typeof AOS !== 'undefined') {

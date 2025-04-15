@@ -1,0 +1,118 @@
+/* Estilos optimizados para la sección de categorías */
+.optimized-categories-section {
+    background-color: var(--light);
+    position: relative;
+    overflow: hidden;
+}
+
+.optimized-categories-section .accent-line {
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary);
+}
+
+.optimized-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    will-change: transform; /* Optimización GPU */
+    contain: content; /* Mejora rendimiento */
+}
+
+.optimized-category-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.optimized-category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.category-image {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.5s ease;
+}
+
+.optimized-category-card:hover .category-image img {
+    transform: scale(1.05);
+}
+
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.category-overlay h3 {
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    margin: 0;
+}
+
+.category-details {
+    padding: 20px;
+}
+
+.category-details p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.category-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.category-link i {
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+.category-link:hover {
+    color: #8E6A45;
+}
+
+.category-link:hover i {
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .optimized-categories-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .optimized-categories-grid {
+        grid-template-columns: 1fr;
+    }
+}

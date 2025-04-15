@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="styles.css">
     
     <!-- Componentes CSS -->
-    <link rel="stylesheet" href="css/components/categories-showcase.css">
+    <link rel="stylesheet" href="css/optimized-categories.css">
     <link rel="stylesheet" href="css/components/featured-products.css">
     <link rel="stylesheet" href="css/components/navbar-fix.css">
     <link rel="stylesheet" href="css/components/pagination-styles.css">
@@ -25,6 +25,11 @@
     <link rel="stylesheet" href="css/components/modal-products.css">
     
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <!-- Optimizaciones de rendimiento -->
+<link rel="preload" href="assets/img-rec/sala_recomendacion.webp" as="image">
+<link rel="preload" href="assets/img-rec/comedores_recomendacion.webp" as="image">
+<meta name="description" content="Mueblería Cabañas - Diseños exclusivos que transforman espacios ordinarios en extraordinarios">
 </head>
 
 <script>
@@ -384,19 +389,83 @@
 </section>
 
     <!-- Sección Showcase de Categorías Premium -->
-    <section id="seccion-catalogo" class="categories-showcase">
+    <section id="seccion-catalogo" class="py-5 optimized-categories-section">
         <div class="container">
-            <div class="showcase-header">
-                <h2 class="showcase-title">Explora Nuestras Colecciones</h2>
-                <p class="showcase-subtitle">Descubre el mobiliario perfecto para cada espacio de tu hogar, creado con la excelencia artesanal que nos distingue</p>
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Nuestras Colecciones</h2>
+                <div class="accent-line mx-auto"></div>
+                <p class="text-muted mt-3">Encuentra la perfecta combinación de estilo y funcionalidad para tu hogar</p>
             </div>
             
-            <div class="categories-grid" id="categories-showcase-container" data-lazy-container="true" data-lazy-function="loadCategoriesShowcase">
-                <div class="text-center py-3">
-                    <div class="spinner-border" style="color: var(--primary);" role="status">
-                        <span class="visually-hidden">Cargando categorías...</span>
+            <div class="optimized-categories-grid">
+                <!-- Categoría 1: Salas -->
+                <div class="optimized-category-card">
+                    <div class="category-image">
+                        <img src="assets/img-rec/sala_recomendacion.webp" alt="Salas" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>Salas</h3>
+                        </div>
                     </div>
-                    <p class="mt-2">Cargando colecciones...</p>
+                    <div class="category-details">
+                        <p>Diseños exclusivos que transformarán el centro de convivencia de tu hogar</p>
+                        <a href="salas.html" class="category-link">Explorar <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Categoría 2: Comedores -->
+                <div class="optimized-category-card">
+                    <div class="category-image">
+                        <img src="assets/img-rec/comedores_recomendacion.webp" alt="Comedores" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>Comedores</h3>
+                        </div>
+                    </div>
+                    <div class="category-details">
+                        <p>Espacios para compartir momentos especiales con diseños contemporáneos</p>
+                        <a href="comedores.html" class="category-link">Explorar <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Categoría 3: Recámaras -->
+                <div class="optimized-category-card">
+                    <div class="category-image">
+                        <img src="assets/img-rec/recamara-recomendacion.jpg" alt="Recámaras" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>Recámaras</h3>
+                        </div>
+                    </div>
+                    <div class="category-details">
+                        <p>Espacios de descanso con estilo que harán de tu habitación un santuario</p>
+                        <a href="recamaras.html" class="category-link">Explorar <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Categoría 4: Cabeceras -->
+                <div class="optimized-category-card">
+                    <div class="category-image">
+                        <img src="assets/img-rec/cabaceras_recomendacion.jpg" alt="Cabeceras" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>Cabeceras</h3>
+                        </div>
+                    </div>
+                    <div class="category-details">
+                        <p>El toque elegante para tu habitación que transformará tu espacio de descanso</p>
+                        <a href="cabeceras.html" class="category-link">Explorar <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Categoría 5: Mesas de Centro -->
+                <div class="optimized-category-card">
+                    <div class="category-image">
+                        <img src="assets/img-rec/mesa-centro-recomendacion.webp" alt="Mesas de Centro" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>Mesas de Centro</h3>
+                        </div>
+                    </div>
+                    <div class="category-details">
+                        <p>Complementos perfectos para tu sala que combinan funcionalidad y diseño</p>
+                        <a href="mesas-centro.html" class="category-link">Explorar <i class="bi bi-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
