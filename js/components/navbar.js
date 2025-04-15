@@ -16,71 +16,50 @@ class NavbarComponent {
         this.state = {
             scrolled: false,
             mobileMenuOpen: false,
-            initialized: false  // Agregar bandera de inicialización
+            initialized: false  // Bandera de inicialización
         };
         
         // Crear un nuevo objeto con handlers de limpieza global
         window.navbarCleanupHandlers = window.navbarCleanupHandlers || [];
     
+        // Configurar eventos de inicialización
+        this.setupInitListeners();
+    }
+    
+    /**
+     * Configura los listeners para inicialización
+     */
+    setupInitListeners() {
         // Intentar inicializar inmediatamente
-        this.initElements();
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(() => this.initElements(), 100);
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => this.initElements(), 100);
+            });
+        }
         
-        // Eventos para asegurar inicialización
+        // Intento adicional después de eventos específicos
         document.addEventListener('components:loaded', () => {
-            console.log('Evento components:loaded recibido en NavbarComponent');
             if (!this.state.initialized) {
-                this.initElements();
-            }
-        });
-    
-        document.addEventListener('component:loaded', (event) => {
-            if (event.detail && event.detail.component === 'templates/navbar.html' && !this.state.initialized) {
-                console.log('Evento específico de carga del navbar recibido');
-                this.initElements();
-            }
-        });
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!this.state.initialized) {
-                setTimeout(() => {
-                    this.initElements();
-                }, 100);
+                console.log('Evento components:loaded recibido, intentando inicializar navbar');
+                setTimeout(() => this.initElements(), 100);
             }
         });
         
-        // Intento adicional después de que todo esté cargado
         window.addEventListener('load', () => {
             if (!this.state.initialized) {
-                this.initElements();
+                console.log('Evento load disparado, intentando inicializar navbar');
+                setTimeout(() => this.initElements(), 100);
             }
-            
-            // Configurar event listener para click en enlace de salas dentro del dropdown
-            const setupLinks = () => {
-                const dropdownLinks = document.querySelectorAll('#catalogo-menu a, .premium-dropdown a');
-                dropdownLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        // Cerrar el menú después de hacer clic en un elemento
-                        const catalogoMenu = document.querySelector('#catalogo-menu, .premium-dropdown');
-                        const catalogoBtn = document.querySelector('#catalogo-btn, .dropdown-toggle');
-                        
-                        if (catalogoMenu) {
-                            catalogoMenu.classList.remove('show');
-                        }
-                        
-                        if (catalogoBtn) {
-                            catalogoBtn.setAttribute('aria-expanded', 'false');
-                        }
-                    });
-                });
-            };
-            
-            // Ejecutar configuración de enlaces
-            setupLinks();
-            
-            // Si se realiza navegación por SPA o se cambia contenido dinámicamente
-            document.addEventListener('navbar:ready', () => {
-                setupLinks();
-            });
+        });
+        
+        // Listener para manejar recargas o cambios de página con SPA
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && !this.state.initialized) {
+                console.log('Página visible de nuevo, verificando inicialización del navbar');
+                setTimeout(() => this.initElements(), 100);
+            }
         });
     }
     
@@ -97,28 +76,36 @@ class NavbarComponent {
      */
     initElements() {
         console.log('Intentando inicializar elementos del navbar');
-        // Buscar elementos en el DOM
-        this.elements.navbar = document.querySelector('.stunning-navbar, .custom-navbar, nav');
+        
+        // Buscar elemento navbar principal con selector más amplio
+        this.elements.navbar = document.querySelector('nav, .navbar, .stunning-navbar, .custom-navbar');
         
         if (this.elements.navbar) {
             console.log('Navbar encontrado en el DOM:', this.elements.navbar);
+            
+            // Buscar dropdowns de manera más consistente
             this.elements.dropdowns = this.elements.navbar.querySelectorAll('.dropdown-toggle');
             this.elements.cotizacionBtn = document.getElementById('cotizacionBtn');
             
-            // Inicializar componente
-            this.init();
+            // Inicializar solo si no está ya inicializado
+            if (!this.state.initialized) {
+                this.init();
+            } else {
+                console.log('Navbar ya inicializado, verificando estado del catálogo dropdown');
+                // Reinicializar específicamente el dropdown de catálogo si es necesario
+                setTimeout(() => this.setupCatalogoDropdown(), 200);
+            }
         } else {
-            console.warn('Navbar no encontrado en la página');
-            // Intentar nuevamente después de un breve retraso
+            console.warn('Navbar no encontrado en la página, reintentando en 300ms');
             setTimeout(() => {
-                this.elements.navbar = document.querySelector('.stunning-navbar, .custom-navbar, nav');
+                this.elements.navbar = document.querySelector('nav, .navbar, .stunning-navbar, .custom-navbar');
                 if (this.elements.navbar) {
                     console.log('Navbar encontrado en segundo intento');
                     this.elements.dropdowns = this.elements.navbar.querySelectorAll('.dropdown-toggle');
                     this.elements.cotizacionBtn = document.getElementById('cotizacionBtn');
                     this.init();
                 }
-            }, 500);
+            }, 300);
         }
     }
     
@@ -165,10 +152,10 @@ class NavbarComponent {
         this.setupMobileMenuClose();
         
         // Configuración especial para el dropdown de catálogo
-        // Es importante que se ejecute después de un pequeño retraso
+        // Usar un retraso para asegurar que el DOM está listo
         setTimeout(() => {
             this.setupCatalogoDropdown();
-        }, 50);
+        }, 200);
         
         // Actualizar elementos activos
         this.updateActiveItem();
@@ -179,36 +166,13 @@ class NavbarComponent {
         document.dispatchEvent(new CustomEvent('navbar:ready', { 
             detail: { timestamp: Date.now() } 
         }));
-        
-        // Técnica de depuración: Agregar un mensaje visual en modo desarrollo
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            const debugEl = document.createElement('div');
-            debugEl.style.position = 'fixed';
-            debugEl.style.bottom = '10px';
-            debugEl.style.right = '10px';
-            debugEl.style.background = 'rgba(0,255,0,0.2)';
-            debugEl.style.padding = '5px';
-            debugEl.style.borderRadius = '5px';
-            debugEl.style.fontSize = '10px';
-            debugEl.style.zIndex = '9999';
-            debugEl.textContent = 'Navbar inicializado ✓';
-            document.body.appendChild(debugEl);
-            
-            setTimeout(() => {
-                debugEl.style.opacity = '0';
-                setTimeout(() => {
-                    if (debugEl.parentNode) {
-                        debugEl.parentNode.removeChild(debugEl);
-                    }
-                }, 500);
-            }, 3000);
-        }
     }
     
     /**
      * Configura el efecto de scroll para el navbar
      */
     setupScrollEffect() {
+        // Código existente para el efecto de scroll
         const scrollHandler = () => {
             const scrolled = window.scrollY > 50;
             
@@ -237,7 +201,11 @@ class NavbarComponent {
      * Configura los dropdowns del navbar
      */
     setupDropdowns() {
-        if (!this.elements.dropdowns) return;
+        // Código existente para setup de dropdowns
+        if (!this.elements.dropdowns || this.elements.dropdowns.length === 0) {
+            console.warn('No se encontraron dropdowns para configurar');
+            return;
+        }
         
         // Función para manejar el comportamiento en móvil
         const handleMobileDropdown = (e, dropdown) => {
@@ -248,6 +216,7 @@ class NavbarComponent {
                 
                 // Encontrar el menú desplegable asociado
                 const dropdownMenu = dropdown.nextElementSibling;
+                if (!dropdownMenu) return false;
                 
                 // Cerrar todos los otros menús abiertos primero
                 this.elements.dropdowns.forEach(otherDropdown => {
@@ -287,7 +256,10 @@ class NavbarComponent {
         // Agregar nuestros propios listeners para móvil
         this.elements.dropdowns.forEach(dropdown => {
             // No procesamos el dropdown de catálogo aquí, tiene su propia gestión
-            if (dropdown.closest('#catalogo-dropdown')) {
+            if (dropdown.closest('#catalogo-dropdown') || 
+                dropdown.id === 'catalogo-btn' || 
+                dropdown.textContent.trim().includes('Catálogo')) {
+                console.log('Dropdown de catálogo detectado, se configurará por separado');
                 return;
             }
             
@@ -367,110 +339,149 @@ class NavbarComponent {
     }
     
     /**
-     * Configura específicamente el dropdown de Catálogo con una solución a prueba de fallos
+     * Configura específicamente el dropdown de Catálogo con una solución robusta
      */
     setupCatalogoDropdown() {
-        console.log('Configurando manejo especial para dropdown de Catálogo');
+        console.log('Configurando manejo específico del dropdown de Catálogo');
         
-        // Primero intentar con los IDs específicos
+        // --------- ENCONTRAR ELEMENTOS POR MÚLTIPLES MÉTODOS ---------
+        
+        // 1. Buscar por ID específico
         let catalogoDropdown = document.getElementById('catalogo-dropdown');
         let catalogoBtn = document.getElementById('catalogo-btn');
         let catalogoMenu = document.getElementById('catalogo-menu');
         
-        // Si no se encuentran por ID, buscar por selector más genérico
+        // 2. Si no encuentra por ID, buscar por contenido de texto
         if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
-            console.log('No se encontraron elementos por ID, buscando por selector');
+            console.log('No se encontraron elementos por ID, buscando por texto "Catálogo"');
             
             // Buscar el item del navbar que contenga el texto "Catálogo"
             const navItems = document.querySelectorAll('.nav-item');
             for (let item of navItems) {
-                const text = item.textContent.trim();
-                if (text.includes('Catálogo')) {
+                const textContent = item.textContent.trim();
+                if (textContent.includes('Catálogo')) {
                     catalogoDropdown = item;
-                    catalogoBtn = item.querySelector('.dropdown-toggle');
+                    catalogoBtn = item.querySelector('.dropdown-toggle, [data-bs-toggle="dropdown"]');
                     catalogoMenu = item.querySelector('.dropdown-menu');
+                    console.log('Dropdown de catálogo encontrado por texto:', catalogoDropdown);
                     break;
                 }
             }
         }
         
+        // 3. Método de respaldo: buscar por estructura
         if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
-            console.warn('No se encontraron elementos del dropdown de Catálogo');
+            console.log('Buscando dropdown por estructura', this.elements.dropdowns);
+            
+            // Buscar cualquier dropdown en el navbar
+            if (this.elements.dropdowns && this.elements.dropdowns.length > 0) {
+                for (let dropdown of this.elements.dropdowns) {
+                    const menu = dropdown.nextElementSibling;
+                    if (menu && menu.classList.contains('dropdown-menu')) {
+                        // Verificar si contiene items que parecen categorías (sala, comedor, etc.)
+                        const menuItems = menu.querySelectorAll('a');
+                        for (let item of menuItems) {
+                            const itemText = item.textContent.trim().toLowerCase();
+                            if (itemText.includes('sala') || 
+                                itemText.includes('comedor') || 
+                                itemText.includes('recámara') || 
+                                itemText.includes('cabecera')) {
+                                
+                                catalogoDropdown = dropdown.closest('.nav-item') || dropdown.parentElement;
+                                catalogoBtn = dropdown;
+                                catalogoMenu = menu;
+                                console.log('Dropdown de catálogo encontrado por estructura:', catalogoDropdown);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (catalogoBtn) break;
+                }
+            }
+        }
+        
+        // Verificar si encontramos los elementos
+        if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
+            console.error('No se encontraron elementos del dropdown de Catálogo');
             return;
         }
         
-        // IMPORTANTE: Inicializar correctamente - el menú debe estar cerrado por defecto
-        catalogoMenu.classList.remove('show');
-        catalogoBtn.setAttribute('aria-expanded', 'false');
+        // --------- ASIGNAR IDS PARA REFERENCIA FUTURA ---------
+        if (!catalogoDropdown.id) catalogoDropdown.id = 'catalogo-dropdown';
+        if (!catalogoBtn.id) catalogoBtn.id = 'catalogo-btn';
+        if (!catalogoMenu.id) catalogoMenu.id = 'catalogo-menu';
         
-        // Eliminar cualquier estilo inline que pueda estar causando problemas
-        catalogoMenu.style.display = '';
+        console.log('Elementos del dropdown de Catálogo encontrados y con IDs asignados');
         
-        // Aplicar configuraciones específicas según el tamaño de pantalla
-        if (window.innerWidth >= 992) {
-            // Configuraciones para escritorio
-            catalogoDropdown.classList.add('position-static');
-            catalogoMenu.classList.add('w-100');
-            catalogoMenu.classList.add('premium-dropdown');
-            
-            // Estilos para posicionamiento correcto
-            catalogoMenu.style.left = '0';
-            catalogoMenu.style.right = '0';
-        } else {
-            // Configuraciones para móvil - eliminar estilos que causan problemas
-            catalogoMenu.style.left = '';
-            catalogoMenu.style.right = '';
-            
-            // Asegurarnos que el menú esté realmente cerrado en móvil
-            catalogoMenu.style.display = '';
+        // --------- REMOVER CONFIGURACIÓN EXISTENTE ---------
+        
+        // 1. Eliminar cualquier instancia de Bootstrap
+        if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+            const instance = bootstrap.Dropdown.getInstance(catalogoBtn);
+            if (instance) {
+                console.log('Eliminando instancia de Bootstrap Dropdown');
+                instance.dispose();
+            }
         }
         
-        // Clave de la solución: Asegurar que solo tengamos un event listener
-        // Remover cualquier event listener existente creando un clon
+        // 2. Eliminar atributos de control de Bootstrap
+        catalogoBtn.removeAttribute('data-bs-toggle');
+        catalogoBtn.removeAttribute('data-bs-auto-close');
+        
+        // 3. Clonar para eliminar eventos existentes
         const newBtn = catalogoBtn.cloneNode(true);
         if (catalogoBtn.parentNode) {
             catalogoBtn.parentNode.replaceChild(newBtn, catalogoBtn);
         }
         catalogoBtn = newBtn;
         
-        // Eliminar cualquier clase o atributo Bootstrap que pueda interferir
-        catalogoBtn.removeAttribute('data-bs-toggle');
-        catalogoBtn.removeAttribute('data-bs-auto-close');
+        // --------- REINICIAR ESTADO ---------
         
-        // Comportamiento diferente para móvil y desktop pero SOLO con clic
+        // Ocultar el menú inicialmente
+        catalogoMenu.classList.remove('show');
+        catalogoBtn.setAttribute('aria-expanded', 'false');
+        catalogoMenu.style.display = '';
+        
+        // --------- APLICAR CONFIGURACIÓN SEGÚN DISPOSITIVO ---------
+        this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
+        
+        // --------- CONFIGURAR EVENTOS ESPECÍFICOS ---------
+        
+        // Función para alternar el menú
         const toggleCatalogoMenu = (e) => {
             e.preventDefault();
             e.stopPropagation();
             
-            // En dispositivos móviles, simplemente alternar la clase show
-            if (window.innerWidth < 992) {
-                if (catalogoMenu.classList.contains('show')) {
-                    catalogoMenu.classList.remove('show');
-                    catalogoBtn.setAttribute('aria-expanded', 'false');
-                    // Eliminar display inline para móvil
-                    catalogoMenu.style.display = '';
-                } else {
-                    catalogoMenu.classList.add('show');
-                    catalogoBtn.setAttribute('aria-expanded', 'true');
-                    // No establecer display block en móvil, dejar que el CSS lo maneje
+            console.log('Toggle catalogo menu');
+            
+            const isCurrentlyOpen = catalogoMenu.classList.contains('show');
+            
+            // Cerrar todos los demás dropdowns primero
+            document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                if (openMenu !== catalogoMenu) {
+                    openMenu.classList.remove('show');
+                    const openBtn = openMenu.previousElementSibling;
+                    if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+                    openMenu.style.display = '';
                 }
+            });
+            
+            // Alternar estado
+            if (isCurrentlyOpen) {
+                catalogoMenu.classList.remove('show');
+                catalogoBtn.setAttribute('aria-expanded', 'false');
+                catalogoMenu.style.display = '';
             } else {
-                // En dispositivos de escritorio
-                if (catalogoMenu.classList.contains('show')) {
-                    catalogoMenu.classList.remove('show');
-                    catalogoBtn.setAttribute('aria-expanded', 'false');
-                    catalogoMenu.style.display = '';
-                } else {
-                    // Aplicar configuración para escritorio
-                    catalogoMenu.style.left = '0';
-                    catalogoMenu.style.right = '0';
-                    catalogoDropdown.classList.add('position-static');
-                    catalogoMenu.classList.add('w-100');
-                    catalogoMenu.classList.add('premium-dropdown');
-                    
-                    // Mostrar el menú
-                    catalogoMenu.classList.add('show');
-                    catalogoBtn.setAttribute('aria-expanded', 'true');
+                // Reconfigurar estilos antes de mostrar
+                this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
+                
+                // Mostrar
+                catalogoMenu.classList.add('show');
+                catalogoBtn.setAttribute('aria-expanded', 'true');
+                
+                // En móvil no establecemos display:block explícitamente
+                if (window.innerWidth >= 992) {
                     catalogoMenu.style.display = 'block';
                 }
             }
@@ -478,77 +489,101 @@ class NavbarComponent {
             return false;
         };
         
-        // Agregar evento directamente al botón - SOLO CLICK (NO HOVER)
+        // Evento de click/tap
         catalogoBtn.addEventListener('click', toggleCatalogoMenu);
-        catalogoBtn.addEventListener('touchstart', toggleCatalogoMenu, {passive: false});
         
-        // Ya no configuramos eventos de hover aquí
+        // Prevenir eventos fantasma en móviles
+        catalogoBtn.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        }, {passive: true});
         
-        // Cerrar el menú al hacer clic en cualquier otro lugar
+        // Manejar click fuera para cerrar
         const closeMenuHandler = (e) => {
-            if (catalogoDropdown && !catalogoDropdown.contains(e.target)) {
-                if (catalogoMenu && catalogoMenu.classList.contains('show')) {
-                    catalogoMenu.classList.remove('show');
-                    if (catalogoBtn) {
-                        catalogoBtn.setAttribute('aria-expanded', 'false');
-                    }
-                    catalogoMenu.style.display = '';
-                }
+            if (!catalogoDropdown.contains(e.target) && 
+                !e.target.closest('.dropdown-menu') && 
+                catalogoMenu.classList.contains('show')) {
+                
+                catalogoMenu.classList.remove('show');
+                catalogoBtn.setAttribute('aria-expanded', 'false');
+                catalogoMenu.style.display = '';
             }
         };
         
-        // Registrar eventos globales usando nuestro método de limpieza
+        // Registrar eventos globales
         this.registerGlobalEvent(document, 'click', closeMenuHandler);
         this.registerGlobalEvent(document, 'touchstart', closeMenuHandler, {passive: true});
         
-        // Cerrar el menú al presionar la tecla Escape
+        // Cerrar con Escape
         const escapeHandler = (e) => {
-            if (e.key === 'Escape' && catalogoMenu && catalogoMenu.classList.contains('show')) {
+            if (e.key === 'Escape' && catalogoMenu.classList.contains('show')) {
                 catalogoMenu.classList.remove('show');
-                if (catalogoBtn) {
-                    catalogoBtn.setAttribute('aria-expanded', 'false');
-                }
+                catalogoBtn.setAttribute('aria-expanded', 'false');
                 catalogoMenu.style.display = '';
             }
         };
         
         this.registerGlobalEvent(document, 'keydown', escapeHandler);
         
-        // Añadir manejador de redimensionamiento para mantener las clases correctas
+        // Manejar resize
         const resizeHandler = () => {
-            // Ajustar posicionamiento al cambiar tamaño de ventana
-            if (window.innerWidth >= 992) {
-                // Ajustes para escritorio
-                catalogoDropdown.classList.add('position-static');
-                catalogoMenu.classList.add('w-100');
-                catalogoMenu.classList.add('premium-dropdown');
-                catalogoMenu.style.left = '0';
-                catalogoMenu.style.right = '0';
-            } else {
-                // Ajustes para móvil - quitar estilos inline
-                catalogoMenu.style.left = '';
-                catalogoMenu.style.right = '';
-                catalogoMenu.style.display = '';
-            }
+            // Reconfigurar estilos
+            this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
             
-            // Cerrar menú si está abierto cuando se redimensiona
+            // Cerrar menú al redimensionar
             if (catalogoMenu.classList.contains('show')) {
                 catalogoMenu.classList.remove('show');
                 catalogoBtn.setAttribute('aria-expanded', 'false');
+                catalogoMenu.style.display = '';
             }
         };
         
         this.registerGlobalEvent(window, 'resize', resizeHandler);
         
-        console.log('Dropdown de Catálogo configurado con gestión personalizada (solo clic)');
+        // Configurar delegación de eventos para los enlaces dentro del menú
+        catalogoMenu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A' || e.target.closest('a')) {
+                // Al hacer clic en un enlace, cerrar el menú
+                setTimeout(() => {
+                    catalogoMenu.classList.remove('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'false');
+                    catalogoMenu.style.display = '';
+                }, 100);
+            }
+        });
+        
+        console.log('Dropdown de Catálogo configurado correctamente');
+    }
+    
+    /**
+     * Aplica estilos al dropdown de catálogo según el tamaño de la pantalla
+     */
+    applyCatalogoStyles(dropdown, btn, menu) {
+        if (!dropdown || !btn || !menu) return;
+        
+        if (window.innerWidth >= 992) {
+            // Estilos para desktop
+            dropdown.classList.add('position-static');
+            menu.classList.add('w-100');
+            menu.classList.add('premium-dropdown');
+            menu.style.left = '0';
+            menu.style.right = '0';
+        } else {
+            // Estilos para móvil
+            dropdown.classList.remove('position-static');
+            menu.style.left = '';
+            menu.style.right = '';
+        }
     }
     
     /**
      * Configura el botón de cotización
      */
     setupCotizacionButton() {
+        // Buscar el botón nuevamente para mayor seguridad
+        this.elements.cotizacionBtn = document.getElementById('cotizacionBtn');
+        
         if (!this.elements.cotizacionBtn) {
-            console.warn('No se pudo configurar el botón de cotización: no se encontró el elemento');
+            console.warn('No se encontró el botón de cotización');
             return;
         }
         
