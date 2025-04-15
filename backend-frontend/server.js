@@ -21,6 +21,25 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
+// Añadir después de crear el pool
+console.log('Intentando conectar a la base de datos con configuración:', {
+    host: process.env.DB_HOST || 'no definido',
+    user: process.env.DB_USER || 'no definido',
+    database: process.env.DB_NAME || 'no definido',
+    // No mostrar la contraseña por seguridad
+});
+
+// Probar conexión al inicio
+pool.getConnection()
+    .then(connection => {
+        console.log('✅ Conexión a la base de datos establecida correctamente');
+        connection.release();
+    })
+    .catch(err => {
+        console.error('❌ Error al conectar con la base de datos:', err);
+        console.error('Verifique sus variables de entorno en el archivo .env');
+    });
+
 // Endpoint para obtener productos por categoría con paginación
 app.get('/api/productos/:categoria', async (req, res) => {
     const { categoria } = req.params;
