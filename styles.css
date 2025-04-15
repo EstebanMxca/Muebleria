@@ -2847,16 +2847,8 @@ body.modal-cleanup {
     }
 }
 
-/* Clases para modo de rendimiento */
-.scrolling .featured-card {
-    transition: none !important;
-    transform: none !important;
-}
 
-.scrolling .featured-image {
-    transform: none !important;
-    transition: none !important;
-}
+
 
 /* Versión ultra optimizada de Diseños Selectos */
 .featured-optimized {
@@ -2949,12 +2941,7 @@ body.modal-cleanup {
     color: white;
 }
 
-/* Desactivar todas las animaciones durante el scroll */
-html.scrolling * {
-    transition-property: none !important;
-    animation: none !important;
-    transform: none !important;
-}
+
 
 /* Optimizaciones para rendimiento en Diseños Selectos */
 .featured-showcase {
@@ -2971,11 +2958,52 @@ html.scrolling * {
     backface-visibility: hidden;
 }
 
-/* Reducir animaciones durante el scroll */
+/* Optimizaciones suaves durante el scroll */
 html.scrolling * {
-    transition-property: none !important;
-    animation-play-state: paused !important;
+    /* Reducir duración sin eliminar por completo */
+    transition-duration: 0.05s !important;
+    animation-duration: 0.05s !important;
 }
+
+/* Estabilizar tarjetas de productos */
+.product-card {
+    /* Usar aceleración por hardware */
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    
+    /* Prevenir cambios de altura */
+    min-height: 350px;
+    
+    /* Transiciones más suaves */
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+}
+
+/* Mejorar rendimiento de imágenes */
+.product-card img.card-img-top {
+    /* Dimensiones estables */
+    height: 200px;
+    object-fit: cover;
+    
+    /* Optimizar para GPU */
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Optimizar vista de lista */
+@media (max-width: 768px) {
+    .product-card {
+        min-height: 330px;
+    }
+    
+    .product-card-list {
+        min-height: 180px;
+    }
+    
+    .product-img-list {
+        height: 150px !important;
+    }
+}
+
 
 /* Versión ultra optimizada de Diseños Selectos */
 .featured-optimized {

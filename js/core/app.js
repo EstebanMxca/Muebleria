@@ -49,14 +49,20 @@ class App {
             
             // Optimizaciones de rendimiento para scroll
             let scrollTimer;
-            window.addEventListener('scroll', () => {
-                document.documentElement.classList.add('scrolling');
-                if (scrollTimer) clearTimeout(scrollTimer);
-                
-                scrollTimer = setTimeout(() => {
-                    document.documentElement.classList.remove('scrolling');
-                }, 200);
-            }, { passive: true });
+window.addEventListener('scroll', () => {
+    // No aplicar scrolling class en páginas de categoría para evitar parpadeo
+    const isCategoryPage = /salas|comedores|recamaras|cabeceras|mesas-centro/.test(window.location.pathname);
+    
+    if (!isCategoryPage) {
+        // Aplicar optimizaciones solo en páginas que no son de categoría
+        document.documentElement.classList.add('scrolling');
+        if (scrollTimer) clearTimeout(scrollTimer);
+        
+        scrollTimer = setTimeout(() => {
+            document.documentElement.classList.remove('scrolling');
+        }, 150); // Tiempo reducido para mejor experiencia
+    }
+}, { passive: true });
             
             // Marcar como inicializado
             this.state.initialized = true;

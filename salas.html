@@ -25,6 +25,20 @@
     <link rel="stylesheet" href="css/components/modal-products.css">
     
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <script>
+        // Activar lazy loading de imágenes
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.card-img-top');
+            if ('loading' in HTMLImageElement.prototype) {
+                images.forEach(img => {
+                    if (!img.hasAttribute('loading')) {
+                        img.loading = 'lazy';
+                    }
+                });
+            }
+        });
+        </script>
 </head>
 <body>
     <!-- Incluir Navbar -->
