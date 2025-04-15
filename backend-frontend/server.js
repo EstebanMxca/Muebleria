@@ -5,7 +5,8 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:5500', 'http://127.0.0.1:5500']  // URL de Live Server
+    // Si CORS_ORIGINS existe en .env, úsalo. Si no, permite todos los orígenes en producción
+    origin: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : '*'
 }));
 app.use(express.json());
 
