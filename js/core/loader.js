@@ -929,16 +929,12 @@ class Loader {
         
         return categoriasMapping[categoria] || '#';
     }
-    
-    /**
-     * Cargar productos destacados
-     */
-   /**
- * Cargar productos destacados
+/**
+ * Carga productos destacados de manera optimizada
  */
 async loadFeaturedProducts(container) {
     try {
-        console.log("Loader.loadFeaturedProducts: redirigiendo a productService");
+        console.log("Iniciando carga optimizada de productos destacados");
         
         // Verificar si el contenedor existe
         if (!container) {
@@ -946,23 +942,9 @@ async loadFeaturedProducts(container) {
             return;
         }
         
-        // Verificar si existe productService
-        if (!window.productService) {
-            console.error("No se encontró window.productService");
-            container.innerHTML = `
-                <div class="col-12 text-center">
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        Error: Servicio de productos no encontrado.
-                    </div>
-                </div>
-            `;
-            return;
-        }
-        
-        // Mostrar indicador de carga
+        // Mostrar indicador de carga minimalista
         container.innerHTML = `
-            <div class="text-center py-5">
+            <div class="loading-indicator">
                 <div class="spinner-border" style="color: var(--primary);" role="status">
                     <span class="visually-hidden">Cargando...</span>
                 </div>
@@ -970,15 +952,22 @@ async loadFeaturedProducts(container) {
             </div>
         `;
         
-        // Intentar cargar desde caché primero
+        // Intentar usar caché primero para respuesta inmediata
         if (window.productService && window.productService.cache.featuredProducts) {
             console.log('Utilizando productos destacados en caché');
             window.productService.renderFeaturedProducts(container, window.productService.cache.featuredProducts);
             return window.productService.cache.featuredProducts;
         }
         
-        // Cargar productos destacados desde la API
-        const response = await fetch(`${this.config.apiUrl}/productos-destacados`);
+        // Cargar productos destacados desde la API con timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundos timeout
+        
+        const response = await fetch(`${this.config.apiUrl}/productos-destacados`, {
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
@@ -994,14 +983,14 @@ async loadFeaturedProducts(container) {
         // Verificar si hay productos
         if (!productosDestacados || productosDestacados.length === 0) {
             container.innerHTML = `
-                <div class="col-12 text-center">
-                    <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
+                <div class="text-center py-4">
+                    <div class="alert alert-info">
                         <i class="bi bi-info-circle me-2"></i>
-                        <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
+                        No se encontraron productos destacados. Por favor, revisa más tarde.
                     </div>
                 </div>
             `;
-            return;
+            return [];
         }
         
         // Usar la implementación de productService
@@ -1009,15 +998,18 @@ async loadFeaturedProducts(container) {
         
         return productosDestacados;
     } catch (error) {
+        // Manejo de error amigable
         console.error("Error al cargar productos destacados:", error);
         container.innerHTML = `
-            <div class="col-12 text-center">
+            <div class="text-center py-4">
                 <div class="alert alert-danger">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Ocurrió un error al cargar los productos destacados. Por favor, intenta más tarde.
+                    No se pudieron cargar los productos destacados. 
+                    <button class="btn btn-sm btn-outline-danger ms-2" onclick="window.location.reload()">Reintentar</button>
                 </div>
             </div>
         `;
+        return [];
     }
 }
 

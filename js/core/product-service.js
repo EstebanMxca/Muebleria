@@ -412,105 +412,115 @@ preloadFeaturedProducts() {
         }
     }
     
-    /**
-     * Renderiza los productos destacados en un contenedor
-     */
-    /**
- * Renderiza los productos destacados en un contenedor
- */
 /**
- * Renderiza los productos destacados en un contenedor
- */
-/**
- * Renderiza los productos destacados en un contenedor con un diseño de vanguardia
+ * Renderiza los productos destacados en un contenedor de manera optimizada
  */
 renderFeaturedProducts(container, products) {
-    console.log("renderFeaturedProducts con optimización máxima");
+    console.log("Renderizando productos destacados con versión optimizada");
     
     // Verificar si hay productos
     if (!products || products.length === 0) {
         container.innerHTML = `
-            <div class="col-12 text-center">
-                <div class="alert" style="background-color: rgba(166, 124, 82, 0.1); border-left: 4px solid var(--primary); border-radius: 0;">
+            <div class="text-center py-4">
+                <div class="alert alert-info">
                     <i class="bi bi-info-circle me-2"></i>
-                    <span>No se encontraron productos destacados. Por favor, regresa más tarde para descubrir nuestra selección.</span>
+                    No se encontraron productos destacados. Por favor, revisa más tarde.
                 </div>
             </div>
         `;
         return;
     }
     
-    // Limitar a solo 3 productos para rendimiento máximo
-    const productosLimitados = products.slice(0, 3);
-    
-    // Configurar contenedor
-    const sectionParent = container.parentElement.parentElement;
-    if (sectionParent) {
-        sectionParent.classList.add('featured-section');
+    // Modificar la clase del contenedor
+    const parentSection = container.closest('section');
+    if (parentSection) {
+        parentSection.classList.add('optimized-featured-section');
     }
     
-    // Crear encabezado sin animaciones
-    const existingHeader = sectionParent?.querySelector('.featured-header');
-    
-    // Limpiar contenedor
+    // Limpiar el contenedor
     container.innerHTML = '';
     
-    // Crear encabezado si no existe
-    if (!existingHeader && sectionParent) {
-        const headerHTML = `
-            <div class="featured-header">
-                <h2 class="featured-title">Diseños <span class="featured-title-accent">Selectos</span></h2>
-                <p class="featured-subtitle">Piezas excepcionales meticulosamente seleccionadas por nuestros expertos en diseño</p>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforebegin', headerHTML);
-    }
+    // Crear el contenedor de la cuadrícula
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'optimized-featured-grid';
     
-    // Crear contenedor simplificado
-    container.className = 'featured-showcase featured-optimized';
-    
-    // Crear HTML simplificado de todos los productos (reduciendo DOM nodes)
-    let allProductsHTML = '';
-    
-    productosLimitados.forEach((producto, index) => {
-        const descripcion = producto.descripcion 
-            ? (producto.descripcion.length > 80 ? producto.descripcion.substring(0, 80) + '...' : producto.descripcion) 
-            : 'Descripción no disponible.';
-            
-        const categoriaURL = this.getCategoryUrl(producto.categoria);
-        const imagenProducto = producto.imagen_principal || this.config.imagePlaceholder;
+    // Generar HTML para cada producto de forma eficiente
+    const productsHTML = products.map(product => {
+        // Obtener la URL de la imagen de manera segura
+        const imageUrl = this.getProductImage(product);
         
-        // HTML ultra simplificado
-        allProductsHTML += `
-        <div class="featured-card-simple">
-            <div class="featured-img">
-                <img src="${imagenProducto}" alt="${producto.nombre}" loading="lazy" width="300" height="200">
-                ${producto.descuento > 0 ? `<span class="featured-tag">-${producto.descuento}%</span>` : ''}
-            </div>
-            <div class="featured-info">
-                <h3>${producto.nombre}</h3>
-                <p>${descripcion}</p>
-                <div class="featured-btns">
-                    <button type="button" class="ver-detalles" data-producto-id="${producto.id}">Ver detalles</button>
-                    <a href="${categoriaURL}">Ver colección</a>
+        // Obtener la URL de la categoría
+        const categoryUrl = this.getCategoryUrl(product.categoria);
+        
+        // Preparar descripción recortada
+        const shortDescription = product.descripcion ? 
+            (product.descripcion.length > 100 ? 
+                product.descripcion.substring(0, 100) + '...' : 
+                product.descripcion) : 
+            'Sin descripción disponible';
+            
+        // Generar etiqueta de descuento si aplica
+        const discountTag = product.descuento > 0 ? 
+            `<div class="product-tag">-${product.descuento}%</div>` : '';
+        
+        // Retornar HTML de la tarjeta
+        return `
+            <div class="product-card-simple">
+                <div class="product-img">
+                    <img src="${imageUrl}" alt="${product.nombre}" loading="lazy">
+                    ${discountTag}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.nombre}</h3>
+                    <p class="product-description">${shortDescription}</p>
+                    <div class="product-actions">
+                        <button type="button" class="btn-view" data-product-id="${product.id}">
+                            Ver detalles
+                        </button>
+                        <a href="${categoryUrl}" class="btn-category">
+                            Ver colección
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>`;
-    });
+        `;
+    }).join('');
     
-    // Insertar todo el HTML de una sola vez (mejor rendimiento)
-    container.innerHTML = allProductsHTML;
+    // Insertar el HTML en el contenedor (una sola operación DOM)
+    gridContainer.innerHTML = productsHTML;
+    container.appendChild(gridContainer);
     
-    // Configurar eventos de manera optimizada
-    const detallesBtns = container.querySelectorAll('.ver-detalles');
-    detallesBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const productoId = e.currentTarget.getAttribute('data-producto-id');
-            if (productoId) {
-                window.location.href = `product-detail.html?id=${productoId}`;
+    // Configurar eventos de manera eficiente usando delegación
+    container.addEventListener('click', (e) => {
+        const viewButton = e.target.closest('.btn-view');
+        if (viewButton) {
+            const productId = viewButton.getAttribute('data-product-id');
+            if (productId) {
+                // Redirigir a la página de detalle
+                window.location.href = `product-detail.html?id=${productId}`;
             }
-        });
+        }
     });
+    
+    console.log('Productos destacados renderizados correctamente');
+}
+
+/**
+ * Obtiene la imagen de un producto de manera segura
+ */
+getProductImage(product) {
+    // Verificar si hay imágenes en el array
+    if (product.imagenes && Array.isArray(product.imagenes) && product.imagenes.length > 0) {
+        return product.imagenes[0];
+    }
+    
+    // Verificar si hay imagen principal
+    if (product.imagen_principal) {
+        return product.imagen_principal;
+    }
+    
+    // Imagen por defecto
+    return 'assets/placeholder.jpg';
 }
 
 
