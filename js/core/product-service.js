@@ -459,9 +459,11 @@ renderFeaturedProducts(container, products) {
                 product.descripcion) : 
             'Sin descripción disponible';
             
-        // Generar etiqueta de descuento si aplica
-        const discountTag = product.descuento > 0 ? 
-            `<div class="product-tag">-${product.descuento}%</div>` : '';
+       // Generar etiqueta de descuento si aplica
+const discountTag = product.descuento > 0 ? 
+`<div class="discount-splash">
+    <span class="discount-value">-${product.descuento}%</span>
+</div>` : '';
         
         // Retornar HTML de la tarjeta
         return `
@@ -740,30 +742,18 @@ setupProductEvents(container) {
         return `<div class="featured-product-tag ${claseEtiqueta}">${etiqueta}</div>`;
     }
     
-    /**
-     * Genera el HTML para el badge de descuento en productos destacados
-     */
-    generateDiscountBadgeHTML(descuento) {
-        if (!descuento || descuento <= 0) return '';
-        return `<div class="featured-discount">-${descuento}%</div>`;
-    }
+/**
+ * Genera el HTML para el badge de descuento - versión impactante
+ */
+generateNewDiscountBadgeHTML(descuento) {
+    if (!descuento || descuento <= 0) return '';
     
-    /**
-     * Genera el HTML para el span de descuento en tarjetas de producto normales
-     */
-    generateDiscountSpanHTML(descuento) {
-        if (!descuento || descuento <= 0) return '';
-        return `<span class="descuento ${this.getDiscountClass(descuento)}">-${descuento}% </span>`;
-    }
-    
-    /**
-     * Obtiene la clase CSS para un porcentaje de descuento
-     */
-    getDiscountClass(descuento) {
-        if (descuento >= 30) return 'high-discount';
-        if (descuento >= 15) return 'medium-discount';
-        return 'low-discount';
-    }
+    return `
+        <div class="discount-splash">
+            <span class="discount-value">-${descuento}%</span>
+        </div>
+    `;
+}
     
     /**
      * Genera el HTML para las características de un producto en formato destacado

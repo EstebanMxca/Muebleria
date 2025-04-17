@@ -2850,7 +2850,7 @@ html.scrolling * {
 /* Mejorar rendimiento de imágenes */
 .product-card img.card-img-top {
     /* Dimensiones estables */
-    height: 200px;
+    height: 250px;
     object-fit: cover;
     
     /* Optimizar para GPU */
@@ -2976,4 +2976,75 @@ html.scrolling * {
     background: var(--primary);
     border: 1px solid var(--primary);
     color: white;
+}
+
+
+/* Diseño de etiqueta de descuento impactante */
+.discount-splash {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 48px; /* Tamaño reducido */
+    height: 48px; /* Tamaño reducido */
+    background-color: #c00; /* Rojo más fuerte */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-15deg);
+    z-index: 10;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.discount-splash::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background-color: #c00;
+    border-radius: 50%;
+    z-index: -1;
+    transform: rotate(20deg);
+}
+
+.discount-value {
+    color: #ffffff; /* Blanco puro */
+    font-weight: 900; /* Extra bold para mayor contraste */
+    font-size: 0.9rem; /* Tamaño reducido */
+    font-family: 'Montserrat', sans-serif; /* Fuente más legible */
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); /* Sombra más fuerte */
+    letter-spacing: -0.5px; /* Acercar un poco las letras */
+}
+
+/* Versión más grande para la página de detalle */
+.discount-splash-large {
+    width: 65px; /* Tamaño reducido pero aún más grande que la versión normal */
+    height: 65px;
+}
+
+.discount-splash-large .discount-value {
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+    .discount-splash {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .discount-value {
+        font-size: 0.8rem;
+    }
+    
+    .discount-splash-large {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .discount-splash-large .discount-value {
+        font-size: 1rem;
+    }
 }

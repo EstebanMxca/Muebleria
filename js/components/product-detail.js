@@ -511,20 +511,15 @@ class ProductDetail {
         
         // Construir HTML para descuento si aplica
         let discountHtml = '';
-        if (product.descuento && product.descuento > 0) {
-            let discountClass = 'medium-discount';
-            if (product.descuento >= 30) discountClass = 'high-discount';
-            else if (product.descuento < 15) discountClass = 'low-discount';
-            
-            discountHtml = `
-                <div class="product-discount-section">
-                    <div class="discount-badge-large ${discountClass}">
-                        <span class="discount-label">Descuento</span>
-                        ${product.descuento}% OFF
-                    </div>
-                </div>
-            `;
-        }
+if (product.descuento && product.descuento > 0) {
+    discountHtml = `
+        <div class="product-discount-section">
+            <div class="discount-splash discount-splash-large">
+                <span class="discount-value">-${product.descuento}%</span>
+            </div>
+        </div>
+    `;
+}
         
         // Construir HTML para la galería de imágenes con mejoras visuales
         const galleryHtml = `
