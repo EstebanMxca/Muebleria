@@ -579,27 +579,22 @@ getProductImage(product) {
         // Generar HTML para cada producto
         products.forEach(producto => {
             const productCardHTML = `
-                <div class="col-md-4 mb-4">
-                    <div class="card product-card h-100 position-relative">
-                        ${this.generateProductTagHTML(producto)}
-                        <img src="${producto.imagen_principal || this.config.imagePlaceholder}" class="card-img-top img-fluid" alt="${producto.nombre}">
-                        <div class="card-body">
-                            <h5 class="card-title">${producto.nombre}</h5>
-                            <p class="card-text">${producto.descripcion || ''}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary ver-detalles" 
-                                            data-producto-id="${producto.id}">Ver detalles</button>
-                                    <button type="button" class="btn btn-sm btn-outline-primary consultar-disponibilidad"
-                                            data-producto-id="${producto.id}">Consultar disponibilidad</button>
-                                    ${this.generateDiscountSpanHTML(producto.descuento)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card product-card h-100 position-relative">
+            ${this.generateProductTagHTML(producto)}
+            <img src="${producto.imagen_principal || this.config.imagePlaceholder}" class="card-img-top img-fluid" alt="${producto.nombre}">
+            ${producto.descuento > 0 ? this.generateNewDiscountBadgeHTML(producto.descuento) : ''}
+            <div class="card-body">
+                <h5 class="card-title">${producto.nombre}</h5>
+                <p class="card-text">${producto.descripcion || ''}</p>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary w-100 ver-detalles" 
+                            data-producto-id="${producto.id}">Ver detalles</button>
                 </div>
-            `;
-            
+            </div>
+        </div>
+    </div>
+`;    
             productsRow.innerHTML += productCardHTML;
         });
         
