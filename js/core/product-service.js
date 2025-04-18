@@ -784,27 +784,27 @@ generateNewDiscountBadgeHTML(descuento) {
             'salas': {
                 nombre: 'Salas',
                 descripcion: 'Diseños elegantes para convertir tu sala en un espacio acogedor',
-                imagen: 'assets/img-rec/sala_recomendacion.webp'
+                imagen: 'assets/img-categorias/sala-ct.webp'
             },
             'comedores': {
                 nombre: 'Comedores',
                 descripcion: 'Espacios para compartir momentos especiales con diseños contemporáneos',
-                imagen: 'assets/img-rec/comedores_recomendacion.webp'
+                imagen: 'assets/img-categorias/comedor-ct.webp'
             },
             'recamaras': {
                 nombre: 'Recámaras',
                 descripcion: 'Espacios de descanso con estilo que harán de tu habitación un santuario',
-                imagen: 'assets/img-rec/recamara-recomendacion.jpg'
+                imagen: 'assets/img-categorias/recamara-ct.webp'
             },
             'cabeceras': {
                 nombre: 'Cabeceras',
                 descripcion: 'El toque elegante para tu habitación que transformará tu espacio de descanso',
-                imagen: 'assets/img-rec/cabaceras_recomendacion.jpg'
+                imagen: 'assets/img-categorias/cabecera-ct.webp'
             },
             'mesas-centro': {
                 nombre: 'Mesas de Centro',
                 descripcion: 'Complementos perfectos para tu sala que combinan funcionalidad y diseño',
-                imagen: 'assets/img-rec/mesa-centro-recomendacion.webp'
+                imagen: 'assets/img-categorias/mesa-centro-ct.webp'
             }
         };
         
