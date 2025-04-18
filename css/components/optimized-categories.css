@@ -1,118 +1,340 @@
-/* Estilos optimizados para la sección de categorías */
-.optimized-categories-section {
-    background-color: var(--light);
+/* Estilos para Catálogo 2x3 de Mueblería */
+.furniture-catalog {
+    padding: 60px 0;
+    background-color: #FFFFFF;
     position: relative;
-    overflow: hidden;
 }
 
-.optimized-categories-section .accent-line {
-    width: 60px;
-    height: 3px;
-    background-color: var(--primary);
-}
-
-.optimized-categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    will-change: transform; /* Optimización GPU */
-    contain: content; /* Mejora rendimiento */
-}
-
-.optimized-category-card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    height: 100%;
-}
-
-.optimized-category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-
-.category-image {
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-}
-
-.category-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scale(1);
-    transition: transform 0.5s ease;
-}
-
-.optimized-category-card:hover .category-image img {
-    transform: scale(1.05);
-}
-
-.category-overlay {
+/* Textura sutil de fondo */
+.furniture-catalog::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C6B41' fill-opacity='0.03'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+    z-index: 0;
+}
+
+.furniture-catalog .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Encabezado con acento de madera */
+.catalog-header {
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.wood-accent {
     display: flex;
-    align-items: flex-end;
-    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    max-width: 120px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.category-overlay h3 {
-    color: white;
+.accent-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #8B5A2B, #A67C52);
+}
+
+.accent-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #8B5A2B;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.catalog-title {
     font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #5D4037; /* Marrón más oscuro */
+    margin-bottom: 12px;
 }
 
-.category-details {
+.catalog-description {
+    font-size: 1.05rem;
+    color: #7D5A50; /* Café medio */
+    margin-bottom: 0;
+}
+
+/* Grid de 2 columnas para las categorías */
+.furniture-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+/* Cuando haya 5 elementos, el último ocupa toda una fila */
+.furniture-grid .furniture-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Categoría de mueble individual */
+.furniture-item {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(139, 90, 43, 0.1);
+    transition: all 0.3s ease;
+    background-color: #FAF7F2; /* Tono crema muy claro */
+}
+
+.furniture-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(139, 90, 43, 0.15);
+}
+
+.item-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Imagen principal de la categoría */
+.item-image {
+    height: 280px;
+    width: 100%;
+    position: relative;
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.furniture-item:hover .item-image img {
+    transform: scale(1.05);
+}
+
+/* Overlay con información */
+.item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     padding: 20px;
+    background: linear-gradient(to top, rgba(93, 64, 55, 0.9), rgba(93, 64, 55, 0));
+    color: #FFF8EE;
+    z-index: 2;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 50%;
 }
 
-.category-details p {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
+.item-overlay h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.item-overlay p {
+    font-size: 0.95rem;
     margin-bottom: 15px;
+    opacity: 0.9;
 }
 
-.category-link {
+/* Botón de acción */
+.item-button {
     display: inline-flex;
     align-items: center;
-    color: var(--primary);
-    font-weight: 500;
+    gap: 8px;
+    background-color: #8B5A2B;
+    color: #FFF8EE;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    max-width: fit-content;
 }
 
-.category-link i {
-    margin-left: 5px;
+.item-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.1), rgba(255,255,255,0));
+    transition: left 0.6s ease;
+}
+
+.item-button:hover {
+    background-color: #6D4C24; /* Un poco más oscuro */
+    color: #FFF8EE;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.item-button:hover::before {
+    left: 100%;
+}
+
+.item-button i {
     transition: transform 0.3s ease;
 }
 
-.category-link:hover {
-    color: #8E6A45;
+.item-button:hover i {
+    transform: translateX(3px);
 }
 
-.category-link:hover i {
-    transform: translateX(5px);
+/* Elemento decorativo de cierre */
+.section-footer {
+    text-align: center;
+    margin: 40px 0 10px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .optimized-categories-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+.footer-decoration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.decoration-line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(139, 90, 43, 0), rgba(139, 90, 43, 0.5), rgba(139, 90, 43, 0));
+    flex-grow: 1;
+}
+
+.decoration-emblem {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(139, 90, 43, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+    background-color: #FAF7F2;
+    color: #8B5A2B;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 15px rgba(139, 90, 43, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .catalog-title {
+        font-size: 2rem;
+    }
+    
+    .item-image {
+        height: 250px;
+    }
+    
+    .item-overlay h3 {
+        font-size: 1.6rem;
     }
 }
 
-@media (max-width: 576px) {
-    .optimized-categories-grid {
+@media (max-width: 767.98px) {
+    .furniture-catalog {
+        padding: 50px 0;
+    }
+    
+    .catalog-title {
+        font-size: 1.8rem;
+    }
+    
+    .furniture-grid {
         grid-template-columns: 1fr;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Reset the last-child rule for mobile */
+    .furniture-grid .furniture-item:last-child:nth-child(odd) {
+        grid-column: 1;
+        max-width: none;
+    }
+    
+    .item-image {
+        height: 280px;
+    }
+    
+    .custom-service {
+        padding: 20px;
+    }
+    
+    .service-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .furniture-catalog {
+        padding: 40px 0;
+    }
+    
+    .catalog-header {
+        margin-bottom: 30px;
+    }
+    
+    .catalog-title {
+        font-size: 1.6rem;
+    }
+    
+    .wood-accent {
+        max-width: 80px;
+    }
+    
+    .accent-line {
+        width: 40px;
+    }
+    
+    .accent-dot {
+        width: 4px;
+        height: 4px;
+        margin: 0 3px;
+    }
+    
+    .item-image {
+        height: 220px;
+    }
+    
+    .item-overlay h3 {
+        font-size: 1.4rem;
+    }
+    
+    .item-overlay p {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .item-button {
+        padding: 6px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .decoration-emblem {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        margin: 0 15px;
     }
 }
