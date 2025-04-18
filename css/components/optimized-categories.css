@@ -1,12 +1,15 @@
-/* Estilos para Catálogo 2x3 de Mueblería */
-.furniture-catalog {
+/* Estilos para Catálogo 2x3 de Mueblería - Corregidos para no interferir con navbar */
+/* Usamos un prefijo específico en todos los selectores para evitar colisiones */
+
+/* Contenedor principal - aislado para no afectar otros elementos */
+#seccion-catalogo.furniture-catalog {
     padding: 60px 0;
     background-color: #FFFFFF;
     position: relative;
 }
 
-/* Textura sutil de fondo */
-.furniture-catalog::before {
+/* Textura sutil de fondo - con selector específico */
+#seccion-catalogo.furniture-catalog::before {
     content: '';
     position: absolute;
     top: 0;
@@ -18,18 +21,19 @@
     z-index: 0;
 }
 
-.furniture-catalog .container {
+/* Contenedor - aislado para no afectar otros contenedores */
+#seccion-catalogo .furniture-container {
     position: relative;
     z-index: 1;
 }
 
 /* Encabezado con acento de madera */
-.catalog-header {
+#seccion-catalogo .catalog-header {
     margin-bottom: 40px;
     position: relative;
 }
 
-.wood-accent {
+#seccion-catalogo .wood-accent {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,13 +43,13 @@
     margin-right: auto;
 }
 
-.accent-line {
+#seccion-catalogo .wood-accent-line {
     width: 60px;
     height: 2px;
     background: linear-gradient(90deg, #8B5A2B, #A67C52);
 }
 
-.accent-dot {
+#seccion-catalogo .wood-accent-dot {
     width: 6px;
     height: 6px;
     background-color: #8B5A2B;
@@ -53,7 +57,7 @@
     margin: 0 5px;
 }
 
-.catalog-title {
+#seccion-catalogo .catalog-title {
     font-family: 'Playfair Display', serif;
     font-size: 2.2rem;
     font-weight: 700;
@@ -61,14 +65,14 @@
     margin-bottom: 12px;
 }
 
-.catalog-description {
+#seccion-catalogo .catalog-description {
     font-size: 1.05rem;
     color: #7D5A50; /* Café medio */
     margin-bottom: 0;
 }
 
 /* Grid de 2 columnas para las categorías */
-.furniture-grid {
+#seccion-catalogo .furniture-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
@@ -76,14 +80,14 @@
 }
 
 /* Cuando haya 5 elementos, el último ocupa toda una fila */
-.furniture-grid .furniture-item:last-child:nth-child(odd) {
+#seccion-catalogo .furniture-grid .furniture-item:last-child:nth-child(odd) {
     grid-column: 1 / -1;
     max-width: 500px;
     margin: 0 auto;
 }
 
 /* Categoría de mueble individual */
-.furniture-item {
+#seccion-catalogo .furniture-item {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(139, 90, 43, 0.1);
@@ -91,37 +95,37 @@
     background-color: #FAF7F2; /* Tono crema muy claro */
 }
 
-.furniture-item:hover {
+#seccion-catalogo .furniture-item:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(139, 90, 43, 0.15);
 }
 
-.item-wrapper {
+#seccion-catalogo .item-wrapper {
     position: relative;
     overflow: hidden;
     height: 100%;
 }
 
 /* Imagen principal de la categoría */
-.item-image {
+#seccion-catalogo .item-image {
     height: 280px;
     width: 100%;
     position: relative;
 }
 
-.item-image img {
+#seccion-catalogo .item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.furniture-item:hover .item-image img {
+#seccion-catalogo .furniture-item:hover .item-image img {
     transform: scale(1.05);
 }
 
 /* Overlay con información */
-.item-overlay {
+#seccion-catalogo .item-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -137,21 +141,23 @@
     min-height: 50%;
 }
 
-.item-overlay h3 {
+#seccion-catalogo .item-overlay h3 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 10px;
+    color: #FFF8EE;
 }
 
-.item-overlay p {
+#seccion-catalogo .item-overlay p {
     font-size: 0.95rem;
     margin-bottom: 15px;
     opacity: 0.9;
+    color: #FFF8EE;
 }
 
-/* Botón de acción */
-.item-button {
+/* Botón de acción - completamente aislado del resto */
+#seccion-catalogo .catalog-action-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -171,7 +177,7 @@
     max-width: fit-content;
 }
 
-.item-button::before {
+#seccion-catalogo .catalog-action-button::before {
     content: '';
     position: absolute;
     top: 0;
@@ -182,32 +188,32 @@
     transition: left 0.6s ease;
 }
 
-.item-button:hover {
+#seccion-catalogo .catalog-action-button:hover {
     background-color: #6D4C24; /* Un poco más oscuro */
     color: #FFF8EE;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.item-button:hover::before {
+#seccion-catalogo .catalog-action-button:hover::before {
     left: 100%;
 }
 
-.item-button i {
+#seccion-catalogo .catalog-action-button i {
     transition: transform 0.3s ease;
 }
 
-.item-button:hover i {
+#seccion-catalogo .catalog-action-button:hover i {
     transform: translateX(3px);
 }
 
 /* Elemento decorativo de cierre */
-.section-footer {
+#seccion-catalogo .section-footer {
     text-align: center;
     margin: 40px 0 10px;
 }
 
-.footer-decoration {
+#seccion-catalogo .footer-decoration {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,13 +221,13 @@
     margin: 0 auto;
 }
 
-.decoration-line {
+#seccion-catalogo .decoration-line {
     height: 1px;
     background: linear-gradient(90deg, rgba(139, 90, 43, 0), rgba(139, 90, 43, 0.5), rgba(139, 90, 43, 0));
     flex-grow: 1;
 }
 
-.decoration-emblem {
+#seccion-catalogo .decoration-emblem {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -236,31 +242,45 @@
     box-shadow: 0 4px 15px rgba(139, 90, 43, 0.1);
 }
 
-/* Responsive Design */
+/* Responsive Design - Aislado con el prefijo de sección */
 @media (max-width: 991.98px) {
-    .catalog-title {
+    #seccion-catalogo .catalog-title {
         font-size: 2rem;
     }
     
-    .item-image {
+    #seccion-catalogo .item-image {
         height: 250px;
     }
     
-    .item-overlay h3 {
+    #seccion-catalogo .item-overlay h3 {
         font-size: 1.6rem;
     }
 }
 
 @media (max-width: 767.98px) {
-    .furniture-catalog {
+    #seccion-catalogo.furniture-catalog {
         padding: 50px 0;
     }
     
-    .catalog-title {
+    #seccion-catalogo .catalog-title {
         font-size: 1.8rem;
     }
     
-    .furniture-grid {
+    #seccion-catalogo .wood-accent {
+        max-width: 100px;
+    }
+    
+    #seccion-catalogo .wood-accent-line {
+        width: 50px;
+    }
+    
+    #seccion-catalogo .wood-accent-dot {
+        width: 5px;
+        height: 5px;
+        margin: 0 4px;
+    }
+    
+    #seccion-catalogo .furniture-grid {
         grid-template-columns: 1fr;
         max-width: 500px;
         margin-left: auto;
@@ -268,70 +288,62 @@
     }
     
     /* Reset the last-child rule for mobile */
-    .furniture-grid .furniture-item:last-child:nth-child(odd) {
+    #seccion-catalogo .furniture-grid .furniture-item:last-child:nth-child(odd) {
         grid-column: 1;
         max-width: none;
     }
     
-    .item-image {
+    #seccion-catalogo .item-image {
         height: 280px;
-    }
-    
-    .custom-service {
-        padding: 20px;
-    }
-    
-    .service-content p {
-        font-size: 1rem;
     }
 }
 
 @media (max-width: 575.98px) {
-    .furniture-catalog {
+    #seccion-catalogo.furniture-catalog {
         padding: 40px 0;
     }
     
-    .catalog-header {
+    #seccion-catalogo .catalog-header {
         margin-bottom: 30px;
     }
     
-    .catalog-title {
+    #seccion-catalogo .catalog-title {
         font-size: 1.6rem;
     }
     
-    .wood-accent {
+    #seccion-catalogo .wood-accent {
         max-width: 80px;
     }
     
-    .accent-line {
+    #seccion-catalogo .wood-accent-line {
         width: 40px;
     }
     
-    .accent-dot {
+    #seccion-catalogo .wood-accent-dot {
         width: 4px;
         height: 4px;
         margin: 0 3px;
     }
     
-    .item-image {
+    #seccion-catalogo .item-image {
         height: 220px;
     }
     
-    .item-overlay h3 {
+    #seccion-catalogo .item-overlay h3 {
         font-size: 1.4rem;
     }
     
-    .item-overlay p {
+    #seccion-catalogo .item-overlay p {
         font-size: 0.9rem;
         margin-bottom: 12px;
     }
     
-    .item-button {
+    #seccion-catalogo .catalog-action-button {
         padding: 6px 15px;
         font-size: 0.85rem;
     }
     
-    .decoration-emblem {
+    #seccion-catalogo .decoration-emblem {
         width: 50px;
         height: 50px;
         font-size: 1.5rem;
