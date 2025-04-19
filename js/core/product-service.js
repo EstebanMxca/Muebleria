@@ -853,4 +853,78 @@ generateNewDiscountBadgeHTML(descuento) {
             }, 100);
         }
     }
+
+
+/**
+ * Carga productos relacionados basados en la categoría del producto actual
+ * @param {Object} currentProduct - Producto actual
+ * @param {number} limit - Número máximo de productos a mostrar
+ * @returns {Promise<Array>} - Promesa que resuelve a un array de productos relacionados
+ */
+async loadRelatedProducts(currentProduct, limit = 4) {
+    if (!currentProduct || !currentProduct.categoria) {
+        console.error('Se requiere un producto con categoría para cargar productos relacionados');
+        return [];
+    }
+    
+    try {
+        // Primero intentamos obtener la categoría del producto para mapearla a su ID
+        const categorias = await this.loadCategories();
+        let categoriaId = null;
+        
+        // Buscar ID de categoría basado en el nombre
+        for (const categoria of categorias) {
+            if (categoria.nombre === currentProduct.categoria) {
+                categoriaId = categoria.id;
+                break;
+            }
+        }
+        
+        if (!categoriaId) {
+            console.warn('No se pudo determinar el ID de la categoría:', currentProduct.categoria);
+            return [];
+        }
+        
+        // Solicitamos un número mayor de productos para tener suficientes para seleccionar al azar
+        // El límite en la API lo multiplicamos por 2 para tener más opciones
+        const apiLimit = limit * 2;
+        const url = `${this.config.apiUrl}/productos/${categoriaId}?limit=${apiLimit}`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Filtrar para no incluir el producto actual
+        let candidateProducts = data.productos.filter(producto => 
+            producto.id !== currentProduct.id
+        );
+        
+        // Si no hay suficientes productos, devolvemos todos los disponibles
+        if (candidateProducts.length <= limit) {
+            return candidateProducts;
+        }
+        
+        // Seleccionar productos al azar usando el algoritmo Fisher-Yates (también conocido como Knuth shuffle)
+        // Este algoritmo mezcla el array de manera eficiente y sin sesgo
+        const shuffleArray = (array) => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Intercambio de elementos
+            }
+            return array;
+        };
+        
+        // Mezclar el array y tomar los primeros 'limit' elementos
+        const randomProducts = shuffleArray(candidateProducts).slice(0, limit);
+        
+        return randomProducts;
+    } catch (error) {
+        console.error('Error al cargar productos relacionados:', error);
+        return [];
+    }
+}
 }

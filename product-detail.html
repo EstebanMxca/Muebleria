@@ -48,8 +48,24 @@
         </div>
     </section>
     
-    <!-- Sección de recomendados -->
-    <include src="templates/recomendaciones.html"></include>
+    <!-- Sección de productos relacionados -->
+<section class="container py-5">
+    <div class="section-header position-relative mb-4 text-center">
+        <h3 class="display-6 fw-bold">También te puede interesar</h3>
+        <div class="accent-line mx-auto"></div>
+        <p class="text-muted mt-3">Otros productos que podrían complementar tu espacio</p>
+    </div>
+    
+    <div id="related-products-container">
+        <!-- El contenido se generará dinámicamente mediante JavaScript -->
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando productos relacionados...</span>
+            </div>
+            <p class="mt-2">Cargando más productos como este...</p>
+        </div>
+    </div>
+</section>
 
     <!-- Incluir Footer -->
     <include src="templates/footer.html"></include>

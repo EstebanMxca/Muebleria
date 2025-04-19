@@ -30,7 +30,8 @@ class ProductDetail {
             currentImageIndex: 0,
             totalImages: 0,
             isLoading: true,
-            isAnimating: false
+            isAnimating: false,
+            relatedProducts: [] // Nueva propiedad para productos relacionados
         };
         
         // Bindear métodos al contexto actual
@@ -204,44 +205,72 @@ class ProductDetail {
         }
     }
     
-    /**
-     * Carga los detalles del producto desde la API con mejoras visuales
-     */
-    async loadProductDetails(productId) {
-        try {
-            this.state.isLoading = true;
-            
-            // Usar el servicio de productos para obtener detalles
-            const productService = window.productService || new ProductService();
-            
-            console.log(`Cargando detalles para producto ID: ${productId}`);
-            
-            // Medir tiempo de carga
-            const startTime = performance.now();
-            
-            // Obtener producto usando método con caché
-            const producto = await productService.getProductDetails(productId);
-            
-            const endTime = performance.now();
-            console.log(`Tiempo de carga del producto: ${(endTime - startTime).toFixed(2)} ms`);
-            
-            if (!producto || !producto.id) {
-                throw new Error('Producto no encontrado');
-            }
-            
-            this.state.product = producto;
-            
-            // Animar la aparición del contenido gradualmente
-            this.renderProductDetails();
-            setTimeout(() => this.fadeInContent(), 100);
-            
-        } catch (error) {
-            console.error('Error al cargar datos del producto:', error);
-            this.showError(`No se pudo cargar el producto: ${error.message}`);
-        } finally {
-            this.state.isLoading = false;
+   /**
+ * Carga los detalles del producto desde la API con mejoras visuales
+ */
+async loadProductDetails(productId) {
+    try {
+        this.state.isLoading = true;
+        
+        // Usar el servicio de productos para obtener detalles
+        const productService = window.productService || new ProductService();
+        
+        console.log(`Cargando detalles para producto ID: ${productId}`);
+        
+        // Medir tiempo de carga
+        const startTime = performance.now();
+        
+        // Obtener producto usando método con caché
+        const producto = await productService.getProductDetails(productId);
+        
+        const endTime = performance.now();
+        console.log(`Tiempo de carga del producto: ${(endTime - startTime).toFixed(2)} ms`);
+        
+        if (!producto || !producto.id) {
+            throw new Error('Producto no encontrado');
         }
+        
+        this.state.product = producto;
+        
+        // Animar la aparición del contenido gradualmente
+        this.renderProductDetails();
+        setTimeout(() => this.fadeInContent(), 100);
+        
+        // Cargar productos relacionados
+        this.loadRelatedProducts();
+        
+    } catch (error) {
+        console.error('Error al cargar datos del producto:', error);
+        this.showError(`No se pudo cargar el producto: ${error.message}`);
+    } finally {
+        this.state.isLoading = false;
     }
+}
+
+    /**
+ * Carga productos relacionados basados en la categoría del producto actual
+ */
+async loadRelatedProducts() {
+    try {
+        if (!this.state.product) {
+            console.warn('No hay producto actual para cargar relacionados');
+            return;
+        }
+        
+        // Usar el servicio de productos para obtener productos relacionados
+        const productService = window.productService || new ProductService();
+        const relatedProducts = await productService.loadRelatedProducts(this.state.product, 4);
+        
+        // Guardar productos en el estado
+        this.state.relatedProducts = relatedProducts;
+        
+        // Renderizar productos relacionados
+        this.renderRelatedProducts();
+        
+    } catch (error) {
+        console.error('Error al cargar productos relacionados:', error);
+    }
+}
     
     /**
      * Efecto de aparición gradual para el contenido
@@ -696,6 +725,73 @@ class ProductDetail {
             console.error('No se encontró el contenedor para el detalle del producto');
         }
     }
+
+    /**
+ * Renderiza la sección de productos relacionados
+ */
+renderRelatedProducts() {
+    // Obtener el contenedor de productos relacionados
+    const container = document.getElementById('related-products-container');
+    if (!container || this.state.relatedProducts.length === 0) {
+        return;
+    }
+    
+    // Limpiar el contenedor
+    container.innerHTML = '';
+    
+    // Crear fila para productos
+    const row = document.createElement('div');
+    row.className = 'row';
+    
+    // Generar HTML para cada producto relacionado
+    this.state.relatedProducts.forEach(product => {
+        // Determinar URL de la imagen
+        const imageUrl = product.imagen_principal || 'assets/placeholder.jpg';
+        
+        // Crear columna para el producto
+        const col = document.createElement('div');
+        col.className = 'col-md-3 col-sm-6 mb-4';
+        
+        // Generar HTML de la tarjeta
+        col.innerHTML = `
+    <div class="product-card h-100 position-relative">
+        ${product.descuento > 0 ? 
+            `<div class="discount-splash">
+                <span class="discount-value">-${product.descuento}%</span>
+            </div>` : ''}
+        <div class="card-img-top-container">
+            <img src="${imageUrl}" class="card-img-top" alt="${product.nombre}" loading="lazy">
+        </div>
+        ${product.categoria ? 
+            `<span class="product-category">${product.categoria}</span>` : ''}
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${product.nombre}</h5>
+            <p class="card-text flex-grow-1">${product.descripcion ? (product.descripcion.length > 60 ? product.descripcion.substring(0, 60) + '...' : product.descripcion) : ''}</p>
+            <div class="mt-auto">
+                <button class="btn btn-primary w-100 view-related-product" data-product-id="${product.id}">
+                    <i class="bi bi-eye me-2"></i>Ver detalles
+                </button>
+            </div>
+        </div>
+    </div>
+`;
+        
+        // Añadir a la fila
+        row.appendChild(col);
+    });
+    
+    // Añadir fila al contenedor
+    container.appendChild(row);
+    
+    // Configurar eventos para los botones de Ver detalles
+    const viewButtons = container.querySelectorAll('.view-related-product');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-product-id');
+            window.location.href = `product-detail.html?id=${productId}`;
+        });
+    });
+}
     
     /**
      * Inyecta estilos CSS específicos para el detalle de producto
