@@ -1,9 +1,140 @@
-<!-- Footer -->
-<footer class="bg-dark text-light text-center py-4">
-    <p>&copy; 2025 Mueblería Cabañas - Todos los derechos reservados</p>
-    <p>Síguenos en:
-        <a href="#" class="text-light mx-2">Facebook</a> |
-        <a href="#" class="text-light mx-2">Instagram</a> |
-        <a href="#" class="text-light mx-2">Twitter</a>
-    </p>
+<!-- Footer Moderno y Elegante -->
+<footer class="modern-footer">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <!-- Columna de información de la empresa -->
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-brand">
+                        <div class="brand-wrapper">
+                            <div class="brand-accent"></div>
+                            <span class="brand-first">MUEBLERÍA</span>
+                            <span class="brand-last">CABAÑAS</span>
+                        </div>
+                    </div>
+                    <p class="footer-about mt-3">Diseños exclusivos que transforman espacios ordinarios en extraordinarios. Calidad y elegancia en cada detalle de nuestros muebles.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Pinterest">
+                            <i class="bi bi-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Columna de enlaces rápidos -->
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <h4 class="footer-title">Navegación</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#nosotros">Nosotros</a></li>
+                        <li><a href="index.html#productos-destacados">Destacados</a></li>
+                        <li><a href="index.html#contacto">Contacto</a></li>
+                        <li><a href="index.html#sucursal">Sucursal</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna de categorías -->
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <h4 class="footer-title">Catálogo</h4>
+                    <ul class="footer-links">
+                        <li><a href="salas.html">Salas</a></li>
+                        <li><a href="comedores.html">Comedores</a></li>
+                        <li><a href="recamaras.html">Recámaras</a></li>
+                        <li><a href="cabeceras.html">Cabeceras</a></li>
+                        <li><a href="mesas-centro.html">Mesas de Centro</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Columna de contacto -->
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <h4 class="footer-title">Contáctanos</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <span>Av. Principal #123, Col. Centro</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-telephone-fill"></i>
+                            <span>123-456-7890</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-envelope-fill"></i>
+                            <span>contacto@muebleriacabanas.com</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-clock-fill"></i>
+                            <span>Lun - Vie: 9:00 - 19:00<br>Sáb: 10:00 - 16:00</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="btn-cotizacion mt-3">
+                        <i class="bi bi-chat-text-fill me-2"></i>Solicitar cotización
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Separador decorativo -->
+    <div class="footer-divider">
+        <div class="container">
+            <div class="divider-content">
+                <div class="divider-line"></div>
+                <div class="divider-icon">
+                    <i class="bi bi-house-heart"></i>
+                </div>
+                <div class="divider-line"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Inferior del footer -->
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="copyright">&copy; 2025 Mueblería Cabañas - Todos los derechos reservados</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-bottom-links">
+                        <a href="#">Política de Privacidad</a>
+                        <a href="#">Términos y Condiciones</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón de regreso arriba -->
+    <button id="scrollToTop" class="scroll-top-btn">
+        <i class="bi bi-arrow-up"></i>
+    </button>
 </footer>
+
+<script>
+// Script para el botón de regreso arriba
+document.addEventListener('DOMContentLoaded', function() {
+    var scrollToTopBtn = document.getElementById('scrollToTop');
+    
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.classList.add('show');
+        } else {
+            scrollToTopBtn.classList.remove('show');
+        }
+    });
+    
+    scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});</script>
