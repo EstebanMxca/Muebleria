@@ -31,7 +31,12 @@ class ProductDetail {
             totalImages: 0,
             isLoading: true,
             isAnimating: false,
-            relatedProducts: [] // Nueva propiedad para productos relacionados
+            isDragging: false,
+            dragStartX: 0,
+            dragStartY: 0,
+            currentTranslateX: 0,
+            currentTranslateY: 0,
+            relatedProducts: []
         };
         
         // Bindear métodos al contexto actual
@@ -39,6 +44,9 @@ class ProductDetail {
         this.handleKeyNavigation = this.handleKeyNavigation.bind(this);
         this.toggleImageZoom = this.toggleImageZoom.bind(this);
         this.handleZoomMove = this.handleZoomMove.bind(this);
+        this.handleZoomDragStart = this.handleZoomDragStart.bind(this);
+        this.handleZoomDragEnd = this.handleZoomDragEnd.bind(this);
+        this.handleZoomDragging = this.handleZoomDragging.bind(this);
         this.applyButtonHoverEffect = this.applyButtonHoverEffect.bind(this);
         this.removeButtonHoverEffect = this.removeButtonHoverEffect.bind(this);
     }
@@ -205,7 +213,7 @@ class ProductDetail {
         }
     }
     
-   /**
+ /**
  * Carga los detalles del producto desde la API con mejoras visuales
  */
 async loadProductDetails(productId) {
@@ -245,6 +253,73 @@ async loadProductDetails(productId) {
     } finally {
         this.state.isLoading = false;
     }
+}
+
+/**
+ * Renderiza la sección de productos relacionados
+ */
+renderRelatedProducts() {
+    // Obtener el contenedor de productos relacionados
+    const container = document.getElementById('related-products-container');
+    if (!container || this.state.relatedProducts.length === 0) {
+        return;
+    }
+    
+    // Limpiar el contenedor
+    container.innerHTML = '';
+    
+    // Crear fila para productos
+    const row = document.createElement('div');
+    row.className = 'row';
+    
+    // Generar HTML para cada producto relacionado
+    this.state.relatedProducts.forEach(product => {
+        // Determinar URL de la imagen
+        const imageUrl = product.imagen_principal || 'assets/placeholder.jpg';
+        
+        // Crear columna para el producto
+        const col = document.createElement('div');
+        col.className = 'col-md-3 col-sm-6 mb-4';
+        
+        // Generar HTML de la tarjeta
+        col.innerHTML = `
+        <div class="product-card h-100 position-relative">
+            ${product.descuento > 0 ? 
+                `<div class="discount-splash">
+                    <span class="discount-value">-${product.descuento}%</span>
+                </div>` : ''}
+            <div class="card-img-top-container">
+                <img src="${imageUrl}" class="card-img-top" alt="${product.nombre}" loading="lazy">
+            </div>
+            ${product.categoria ? 
+                `<span class="product-category">${product.categoria}</span>` : ''}
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${product.nombre}</h5>
+                <p class="card-text flex-grow-1">${product.descripcion ? (product.descripcion.length > 60 ? product.descripcion.substring(0, 60) + '...' : product.descripcion) : ''}</p>
+                <div class="mt-auto">
+                    <button class="btn btn-primary w-100 view-related-product" data-product-id="${product.id}">
+                        <i class="bi bi-eye me-2"></i>Ver detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+        
+        // Añadir a la fila
+        row.appendChild(col);
+    });
+    
+    // Añadir fila al contenedor
+    container.appendChild(row);
+    
+    // Configurar eventos para los botones de Ver detalles
+    const viewButtons = container.querySelectorAll('.view-related-product');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-product-id');
+            window.location.href = `product-detail.html?id=${productId}`;
+        });
+    });
 }
 
     /**
@@ -538,7 +613,6 @@ async loadRelatedProducts() {
             `).join('');
         }
         
-        // Construir HTML para descuento si aplica
         let discountHtml = '';
         if (product.descuento && product.descuento > 0) {
             discountHtml = `
@@ -725,73 +799,6 @@ async loadRelatedProducts() {
             console.error('No se encontró el contenedor para el detalle del producto');
         }
     }
-
-    /**
- * Renderiza la sección de productos relacionados
- */
-renderRelatedProducts() {
-    // Obtener el contenedor de productos relacionados
-    const container = document.getElementById('related-products-container');
-    if (!container || this.state.relatedProducts.length === 0) {
-        return;
-    }
-    
-    // Limpiar el contenedor
-    container.innerHTML = '';
-    
-    // Crear fila para productos
-    const row = document.createElement('div');
-    row.className = 'row';
-    
-    // Generar HTML para cada producto relacionado
-    this.state.relatedProducts.forEach(product => {
-        // Determinar URL de la imagen
-        const imageUrl = product.imagen_principal || 'assets/placeholder.jpg';
-        
-        // Crear columna para el producto
-        const col = document.createElement('div');
-        col.className = 'col-md-3 col-sm-6 mb-4';
-        
-        // Generar HTML de la tarjeta
-        col.innerHTML = `
-    <div class="product-card h-100 position-relative">
-        ${product.descuento > 0 ? 
-            `<div class="discount-splash">
-                <span class="discount-value">-${product.descuento}%</span>
-            </div>` : ''}
-        <div class="card-img-top-container">
-            <img src="${imageUrl}" class="card-img-top" alt="${product.nombre}" loading="lazy">
-        </div>
-        ${product.categoria ? 
-            `<span class="product-category">${product.categoria}</span>` : ''}
-        <div class="card-body d-flex flex-column">
-            <h5 class="card-title">${product.nombre}</h5>
-            <p class="card-text flex-grow-1">${product.descripcion ? (product.descripcion.length > 60 ? product.descripcion.substring(0, 60) + '...' : product.descripcion) : ''}</p>
-            <div class="mt-auto">
-                <button class="btn btn-primary w-100 view-related-product" data-product-id="${product.id}">
-                    <i class="bi bi-eye me-2"></i>Ver detalles
-                </button>
-            </div>
-        </div>
-    </div>
-`;
-        
-        // Añadir a la fila
-        row.appendChild(col);
-    });
-    
-    // Añadir fila al contenedor
-    container.appendChild(row);
-    
-    // Configurar eventos para los botones de Ver detalles
-    const viewButtons = container.querySelectorAll('.view-related-product');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-product-id');
-            window.location.href = `product-detail.html?id=${productId}`;
-        });
-    });
-}
     
     /**
      * Inyecta estilos CSS específicos para el detalle de producto
@@ -928,88 +935,130 @@ renderRelatedProducts() {
         }
     }
     
-    /**
-     * Configura los eventos para la galería de imágenes con interacciones mejoradas
-     */
-    setupImageGallery(images) {
-        // Configurar eventos para las miniaturas y navegación solo si hay más de una imagen
-        if (images.length > 1) {
-            // Configurar eventos para las miniaturas con efecto hover
-            this.elements.thumbnails.forEach(thumbnail => {
-                // Evento clic
-                thumbnail.addEventListener('click', () => {
-                    const index = parseInt(thumbnail.getAttribute('data-index'));
-                    this.changeMainImage(index);
-                });
-                
-                // Efectos hover
-                thumbnail.addEventListener('mouseenter', () => {
-                    if (!thumbnail.classList.contains('active')) {
-                        thumbnail.style.transform = 'translateY(-4px) scale(1.05)';
-                    }
-                });
-                
-                thumbnail.addEventListener('mouseleave', () => {
-                    if (!thumbnail.classList.contains('active')) {
-                        thumbnail.style.transform = '';
-                    }
-                });
+ /**
+ * Configura los eventos para la galería de imágenes con interacciones mejoradas
+ */
+setupImageGallery(images) {
+    // Configurar eventos para las miniaturas y navegación solo si hay más de una imagen
+    if (images.length > 1) {
+        // Configurar eventos para las miniaturas con efecto hover
+        this.elements.thumbnails.forEach(thumbnail => {
+            // Evento clic
+            thumbnail.addEventListener('click', () => {
+                const index = parseInt(thumbnail.getAttribute('data-index'));
+                this.changeMainImage(index);
             });
             
-            // Configurar botones de navegación con tooltips
-            if (this.elements.prevBtn) {
-                this.elements.prevBtn.setAttribute('title', 'Imagen anterior');
-                this.elements.prevBtn.addEventListener('click', () => {
-                    let newIndex = this.state.currentImageIndex - 1;
-                    if (newIndex < 0) newIndex = images.length - 1;
-                    this.changeMainImage(newIndex);
-                });
-                
-                // Efecto hover para botones
-                this.elements.prevBtn.addEventListener('mouseenter', this.applyButtonHoverEffect);
-                this.elements.prevBtn.addEventListener('mouseleave', this.removeButtonHoverEffect);
-            }
+            // Efectos hover
+            thumbnail.addEventListener('mouseenter', () => {
+                if (!thumbnail.classList.contains('active')) {
+                    thumbnail.style.transform = 'translateY(-4px) scale(1.05)';
+                }
+            });
             
-            if (this.elements.nextBtn) {
-                this.elements.nextBtn.setAttribute('title', 'Imagen siguiente');
-                this.elements.nextBtn.addEventListener('click', () => {
-                    let newIndex = this.state.currentImageIndex + 1;
-                    if (newIndex >= images.length) newIndex = 0;
-                    this.changeMainImage(newIndex);
-                });
-                
-                // Efecto hover para botones
-                this.elements.nextBtn.addEventListener('mouseenter', this.applyButtonHoverEffect);
-                this.elements.nextBtn.addEventListener('mouseleave', this.removeButtonHoverEffect);
-            }
+            thumbnail.addEventListener('mouseleave', () => {
+                if (!thumbnail.classList.contains('active')) {
+                    thumbnail.style.transform = '';
+                }
+            });
+        });
+        
+        // Configurar botones de navegación con tooltips
+        if (this.elements.prevBtn) {
+            this.elements.prevBtn.setAttribute('title', 'Imagen anterior');
+            this.elements.prevBtn.addEventListener('click', () => {
+                let newIndex = this.state.currentImageIndex - 1;
+                if (newIndex < 0) newIndex = images.length - 1;
+                this.changeMainImage(newIndex);
+            });
+            
+            // Efecto hover para botones
+            this.elements.prevBtn.addEventListener('mouseenter', this.applyButtonHoverEffect);
+            this.elements.prevBtn.addEventListener('mouseleave', this.removeButtonHoverEffect);
         }
         
-        // Configurar clic en imagen principal para activar zoom (para cualquier número de imágenes)
-        const mainImage = document.querySelector('.product-main-image');
-        if (mainImage) {
-            mainImage.addEventListener('click', this.toggleImageZoom);
-            
-            // Obtener el zoom indicator que ya creamos en el HTML
-            const zoomIndicator = mainImage.querySelector('.zoom-indicator');
-            
-            // Crear el zoom indicator si no existe
-            if (!zoomIndicator) {
-                const newZoomIndicator = document.createElement('div');
-                newZoomIndicator.className = 'zoom-indicator';
-                newZoomIndicator.innerHTML = '<i class="bi bi-zoom-in"></i>';
-                mainImage.appendChild(newZoomIndicator);
-            }
-            
-            // Mostrar indicador al pasar el mouse
-            mainImage.addEventListener('mouseenter', () => {
-                if (zoomIndicator) zoomIndicator.style.opacity = '0.8';
+        if (this.elements.nextBtn) {
+            this.elements.nextBtn.setAttribute('title', 'Imagen siguiente');
+            this.elements.nextBtn.addEventListener('click', () => {
+                let newIndex = this.state.currentImageIndex + 1;
+                if (newIndex >= images.length) newIndex = 0;
+                this.changeMainImage(newIndex);
             });
             
-            mainImage.addEventListener('mouseleave', () => {
-                if (zoomIndicator && !this.config.isZoomActive) zoomIndicator.style.opacity = '0';
-            });
+            // Efecto hover para botones
+            this.elements.nextBtn.addEventListener('mouseenter', this.applyButtonHoverEffect);
+            this.elements.nextBtn.addEventListener('mouseleave', this.removeButtonHoverEffect);
         }
     }
+    
+    // Configurar clic en imagen principal para activar zoom (para cualquier número de imágenes)
+    const mainImage = document.querySelector('.product-main-image');
+    if (mainImage) {
+        mainImage.addEventListener('click', this.toggleImageZoom);
+        
+        // Soporte táctil para dispositivos móviles
+        mainImage.addEventListener('touchstart', (e) => {
+            if (!this.config.isZoomActive) return;
+            
+            this.state.isDragging = true;
+            this.state.dragStartX = e.touches[0].clientX;
+            this.state.dragStartY = e.touches[0].clientY;
+            
+            const img = mainImage.querySelector('img');
+            if (img) {
+                const transform = new DOMMatrix(window.getComputedStyle(img).transform);
+                this.state.currentTranslateX = transform.m41;
+                this.state.currentTranslateY = transform.m42;
+            }
+        }, { passive: false });
+        
+        mainImage.addEventListener('touchmove', (e) => {
+            if (!this.config.isZoomActive || !this.state.isDragging) return;
+            e.preventDefault(); // Prevenir scroll
+            
+            const img = mainImage.querySelector('img');
+            if (!img) return;
+            
+            const deltaX = e.touches[0].clientX - this.state.dragStartX;
+            const deltaY = e.touches[0].clientY - this.state.dragStartY;
+            
+            const newX = this.state.currentTranslateX + deltaX * 0.5;
+            const newY = this.state.currentTranslateY + deltaY * 0.5;
+            
+            const limitX = mainImage.offsetWidth * 0.8;
+            const limitY = mainImage.offsetHeight * 0.8;
+            
+            const boundedX = Math.max(-limitX, Math.min(limitX, newX));
+            const boundedY = Math.max(-limitY, Math.min(limitY, newY));
+            
+            img.style.transform = `scale(2.5) translate(${boundedX / 2.5}px, ${boundedY / 2.5}px)`;
+        }, { passive: false });
+        
+        mainImage.addEventListener('touchend', () => {
+            this.state.isDragging = false;
+        });
+        
+        // Obtener el zoom indicator que ya creamos en el HTML
+        const zoomIndicator = mainImage.querySelector('.zoom-indicator');
+        
+        // Crear el zoom indicator si no existe
+        if (!zoomIndicator) {
+            const newZoomIndicator = document.createElement('div');
+            newZoomIndicator.className = 'zoom-indicator';
+            newZoomIndicator.innerHTML = '<i class="bi bi-zoom-in"></i>';
+            mainImage.appendChild(newZoomIndicator);
+        }
+        
+        // Mostrar indicador al pasar el mouse
+        mainImage.addEventListener('mouseenter', () => {
+            if (zoomIndicator) zoomIndicator.style.opacity = '0.8';
+        });
+        
+        mainImage.addEventListener('mouseleave', () => {
+            if (zoomIndicator && !this.config.isZoomActive) zoomIndicator.style.opacity = '0';
+        });
+    }
+}
     
     /**
      * Aplica efecto hover a los botones de navegación
@@ -1025,88 +1074,185 @@ renderRelatedProducts() {
         e.currentTarget.style.transform = 'translateY(-50%)';
     }
     
-    /**
-     * Activa/desactiva el zoom en la imagen principal
-     */
-    toggleImageZoom() {
-        if (this.state.isAnimating) return;
+   /**
+ * Activa/desactiva el zoom en la imagen principal
+ */
+toggleImageZoom() {
+    if (this.state.isAnimating) return;
+    
+    const mainImageContainer = document.querySelector('.product-main-image');
+    const mainImage = mainImageContainer?.querySelector('img');
+    
+    if (!mainImageContainer || !mainImage) return;
+    
+    this.state.isAnimating = true;
+    
+    if (this.config.isZoomActive) {
+        // Desactivar zoom
+        mainImage.style.transform = '';
+        mainImageContainer.classList.remove('zoomed');
         
-        const mainImageContainer = document.querySelector('.product-main-image');
-        const mainImage = mainImageContainer?.querySelector('img');
-        
-        if (!mainImageContainer || !mainImage) return;
-        
-        this.state.isAnimating = true;
-        
-        if (this.config.isZoomActive) {
-            // Desactivar zoom
-            mainImage.style.transform = '';
-            mainImageContainer.classList.remove('zoomed');
-            
-            // Cambiar ícono del zoom
-            const zoomIndicator = mainImageContainer.querySelector('.zoom-indicator i');
-            if (zoomIndicator) {
-                zoomIndicator.classList.remove('bi-zoom-out');
-                zoomIndicator.classList.add('bi-zoom-in');
-            }
-            
-            // Actualizar cursor
-            mainImageContainer.style.cursor = 'zoom-in';
-            
-            // Eliminar listener de movimiento
-            mainImageContainer.removeEventListener('mousemove', this.handleZoomMove);
-            
-            this.config.isZoomActive = false;
-        } else {
-            // Activar zoom
-            mainImageContainer.classList.add('zoomed');
-            
-            // Aplicar zoom inicial centrado
-            mainImage.style.transform = 'scale(2.5)';
-            
-            // Cambiar ícono del zoom
-            const zoomIndicator = mainImageContainer.querySelector('.zoom-indicator i');
-            if (zoomIndicator) {
-                zoomIndicator.classList.remove('bi-zoom-in');
-                zoomIndicator.classList.add('bi-zoom-out');
-            }
-            
-            // Actualizar cursor
-            mainImageContainer.style.cursor = 'zoom-out';
-            
-            // Agregar listener para mover la imagen según la posición del mouse
-            mainImageContainer.addEventListener('mousemove', this.handleZoomMove);
-            
-            this.config.isZoomActive = true;
+        // Cambiar ícono del zoom
+        const zoomIndicator = mainImageContainer.querySelector('.zoom-indicator i');
+        if (zoomIndicator) {
+            zoomIndicator.classList.remove('bi-zoom-out');
+            zoomIndicator.classList.add('bi-zoom-in');
         }
         
-        // Restablecer el estado de animación después del tiempo de transición
-        setTimeout(() => {
-            this.state.isAnimating = false;
-        }, this.config.animationDuration);
+        // Actualizar cursor
+        mainImageContainer.style.cursor = 'zoom-in';
+        
+        // Eliminar listeners de movimiento y drag
+        mainImageContainer.removeEventListener('mousemove', this.handleZoomMove);
+        mainImageContainer.removeEventListener('mousedown', this.handleZoomDragStart);
+        mainImageContainer.removeEventListener('mouseup', this.handleZoomDragEnd);
+        mainImageContainer.removeEventListener('mouseleave', this.handleZoomDragEnd);
+        document.removeEventListener('mouseup', this.handleZoomDragEnd);
+        
+        this.config.isZoomActive = false;
+    } else {
+        // Activar zoom
+        mainImageContainer.classList.add('zoomed');
+        
+        // Aplicar zoom inicial centrado
+        mainImage.style.transform = 'scale(2.5)';
+        
+        // Cambiar ícono del zoom
+        const zoomIndicator = mainImageContainer.querySelector('.zoom-indicator i');
+        if (zoomIndicator) {
+            zoomIndicator.classList.remove('bi-zoom-in');
+            zoomIndicator.classList.add('bi-zoom-out');
+        }
+        
+        // Actualizar cursor
+        mainImageContainer.style.cursor = 'grab';
+        
+        // Agregar listener para mover la imagen según la posición del mouse
+        mainImageContainer.addEventListener('mousemove', this.handleZoomMove);
+        
+        // Agregar listeners para arrastrar la imagen
+        mainImageContainer.addEventListener('mousedown', this.handleZoomDragStart);
+        mainImageContainer.addEventListener('mouseup', this.handleZoomDragEnd);
+        mainImageContainer.addEventListener('mouseleave', this.handleZoomDragEnd);
+        
+        this.config.isZoomActive = true;
+        this.state.isDragging = false;
     }
     
-    /**
-     * Maneja el movimiento de la imagen durante el zoom
-     */
-    handleZoomMove(e) {
-        const container = e.currentTarget;
-        const img = container.querySelector('img');
-        
-        if (!img || !container.classList.contains('zoomed')) return;
-        
-        // Cálculo de posición relativa dentro del contenedor
-        const rect = container.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        
-        // Calcular desplazamiento para centrar el punto del cursor
-        const translateX = (0.5 - x) * 100;
-        const translateY = (0.5 - y) * 100;
-        
-        // Aplicar transformación limitando el desplazamiento
-        img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
+    // Restablecer el estado de animación después del tiempo de transición
+    setTimeout(() => {
+        this.state.isAnimating = false;
+    }, this.config.animationDuration);
+}
+    
+   /**
+ * Maneja el movimiento de la imagen durante el zoom (sin arrastrar)
+ */
+handleZoomMove(e) {
+    // Si está en modo arrastre, no procesar el movimiento hover
+    if (this.state.isDragging) return;
+    
+    const container = e.currentTarget;
+    const img = container.querySelector('img');
+    
+    if (!img || !container.classList.contains('zoomed')) return;
+    
+    // Cálculo de posición relativa dentro del contenedor
+    const rect = container.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    // Calcular desplazamiento para centrar el punto del cursor
+    const translateX = (0.5 - x) * 100;
+    const translateY = (0.5 - y) * 100;
+    
+    // Aplicar transformación limitando el desplazamiento
+    img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
+}
+
+/**
+ * Maneja el inicio del arrastre durante el zoom
+ */
+handleZoomDragStart(e) {
+    if (!this.config.isZoomActive) return;
+    
+    const mainImageContainer = document.querySelector('.product-main-image');
+    if (!mainImageContainer) return;
+    
+    // Cambiar cursor a modo "arrastrando"
+    mainImageContainer.style.cursor = 'grabbing';
+    
+    // Activar estado de arrastre
+    this.state.isDragging = true;
+    
+    // Guardar posición inicial del mouse
+    this.state.dragStartX = e.clientX;
+    this.state.dragStartY = e.clientY;
+    
+    // Guardar posición actual de la imagen
+    const img = mainImageContainer.querySelector('img');
+    if (img) {
+        const transform = new DOMMatrix(window.getComputedStyle(img).transform);
+        this.state.currentTranslateX = transform.m41;
+        this.state.currentTranslateY = transform.m42;
     }
+    
+    // Agregar evento para seguir el arrastre
+    document.addEventListener('mousemove', this.handleZoomDragging);
+    document.addEventListener('mouseup', this.handleZoomDragEnd);
+    
+    // Prevenir comportamiento predeterminado
+    e.preventDefault();
+}
+
+/**
+ * Maneja el movimiento durante el arrastre en zoom
+ */
+handleZoomDragging(e) {
+    if (!this.state.isDragging || !this.config.isZoomActive) return;
+    
+    const mainImageContainer = document.querySelector('.product-main-image');
+    const img = mainImageContainer?.querySelector('img');
+    if (!mainImageContainer || !img) return;
+    
+    // Calcular la distancia movida
+    const deltaX = e.clientX - this.state.dragStartX;
+    const deltaY = e.clientY - this.state.dragStartY;
+    
+    // Aplicar transformación con la posición original + el delta
+    const newX = this.state.currentTranslateX + deltaX * 0.5; // Factor de velocidad
+    const newY = this.state.currentTranslateY + deltaY * 0.5; // Factor de velocidad
+    
+    // Limitar el movimiento para que la imagen no se salga demasiado
+    const limitX = mainImageContainer.offsetWidth * 0.8;
+    const limitY = mainImageContainer.offsetHeight * 0.8;
+    
+    const boundedX = Math.max(-limitX, Math.min(limitX, newX));
+    const boundedY = Math.max(-limitY, Math.min(limitY, newY));
+    
+    // Aplicar transformación
+    img.style.transform = `scale(2.5) translate(${boundedX / 2.5}px, ${boundedY / 2.5}px)`;
+}
+
+/**
+ * Maneja el fin del arrastre durante el zoom
+ */
+handleZoomDragEnd(e) {
+    if (!this.config.isZoomActive) return;
+    
+    const mainImageContainer = document.querySelector('.product-main-image');
+    if (!mainImageContainer) return;
+    
+    // Restaurar cursor
+    mainImageContainer.style.cursor = 'grab';
+    
+    // Desactivar estado de arrastre
+    this.state.isDragging = false;
+    
+    // Remover eventos de arrastre global
+    document.removeEventListener('mousemove', this.handleZoomDragging);
+    document.removeEventListener('mouseup', this.handleZoomDragEnd);
+}
     
     /**
      * Cambia la imagen principal en la galería con animación suave
