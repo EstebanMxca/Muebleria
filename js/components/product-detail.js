@@ -365,63 +365,71 @@ async loadRelatedProducts() {
         });
     }
     
-    /**
-     * Muestra un indicador de carga con efecto visual mejorado
-     */
     showLoading(animated = false) {
         const container = document.getElementById('product-detail-container');
         if (container) {
             const animationClass = animated ? 'fade-in' : '';
             container.innerHTML = `
-                <div class="text-center py-5 ${animationClass}">
-                    <div class="spinner">
-                        <div class="spinner-border spinner-border-lg text-primary" role="status">
-                            <span class="visually-hidden">Cargando...</span>
+                <div class="text-center py-4 ${animationClass}">
+                    <div class="elegant-loader">
+                        <div class="loader-ring"></div>
+                        <div class="loader-icon">
+                            <i class="bi bi-house-heart"></i>
                         </div>
-                        <svg class="spinner-track" viewBox="0 0 50 50">
-                            <circle cx="25" cy="25" r="20" fill="none" stroke-width="4" stroke-linecap="round" stroke="rgba(138, 109, 75, 0.1)"></circle>
-                        </svg>
                     </div>
-                    <p class="mt-3 loading-text">Preparando detalles del producto...</p>
+                    <p class="mt-3 loading-text">Cargando detalles del producto</p>
                 </div>
             `;
             
             // Agregar estilos inline para el spinner personalizado
             const style = document.createElement('style');
             style.innerHTML = `
-                .spinner {
+                .elegant-loader {
                     position: relative;
-                    width: 50px;
-                    height: 50px;
+                    width: 60px;
+                    height: 60px;
                     margin: 0 auto;
                 }
-                .spinner-border {
+                
+                .loader-ring {
                     position: absolute;
-                    top: 0;
-                    left: 0;
                     width: 100%;
                     height: 100%;
-                    border-color: var(--primary);
-                    border-right-color: transparent;
+                    border-radius: 50%;
+                    border: 2px solid rgba(166, 124, 82, 0.1);
+                    border-top: 2px solid var(--primary);
+                    animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
                 }
-                .spinner-track {
+                
+                .loader-icon {
                     position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: var(--primary);
+                    font-size: 20px;
+                    opacity: 0.9;
                 }
+                
                 .loading-text {
-                    color: var(--text);
+                    color: var(--primary);
                     font-weight: 500;
-                    opacity: 0.8;
+                    font-size: 0.9rem;
+                    margin-top: 10px;
                 }
-                .fade-in {
-                    animation: fadeIn 0.5s ease-in-out;
+                
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
+                
                 @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                
+                .fade-in {
+                    animation: fadeIn 0.5s ease-out forwards;
                 }
             `;
             document.head.appendChild(style);
@@ -694,9 +702,6 @@ async loadRelatedProducts() {
                                 <a href="${categoryUrl}" class="product-action-btn btn-primary-action">
                                     <i class="bi bi-arrow-left"></i>Volver a ${product.categoria}
                                 </a>
-                                <button type="button" id="cotizarProductoBtn" class="product-action-btn btn-secondary-action">
-                                    <i class="bi bi-clipboard-check"></i>Solicitar cotización
-                                </button>
                             </div>
                             
                             <div class="product-accordion accordion" id="productAccordion">
@@ -780,14 +785,6 @@ async loadRelatedProducts() {
             
             // Configurar eventos para la galería de imágenes
             this.setupImageGallery(productImages);
-            
-            // Configurar evento para el botón de cotización
-            const cotizarBtn = document.getElementById('cotizarProductoBtn');
-            if (cotizarBtn) {
-                cotizarBtn.addEventListener('click', () => {
-                    this.openCotizacionModal();
-                });
-            }
             
             // Inicializar AOS para animaciones si está disponible
             if (typeof AOS !== 'undefined') {
