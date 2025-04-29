@@ -493,11 +493,26 @@ async loadCotizacionModal() {
     }
     
     /**
-     * Carga contenido específico para las páginas de categoría
-     */
-    loadCategoryPageContent() {
-        // La mayor parte de la lógica se maneja en setupCategoryPage del ProductService
+ * Carga contenido específico para las páginas de categoría
+ */
+loadCategoryPageContent() {
+    // La mayor parte de la lógica se maneja en setupCategoryPage del ProductService
+    
+    // Configurar el observer para recomendaciones si el servicio de productos está disponible
+    if (window.productService && typeof window.productService.setupRecommendationsObserver === 'function') {
+        window.productService.setupRecommendationsObserver();
     }
+    
+    // Si hay un loader, iniciar la carga de productos recomendados
+    if (window.loader && typeof window.loader.loadRecommendations === 'function') {
+        const categoryId = this.detectCurrentCategory();
+        if (categoryId) {
+            window.loader.loadRecommendations(categoryId);
+        }
+    }
+    
+    console.log('Contenido específico de categoría inicializado');
+}
     
     /**
      * Carga contenido específico para la página de administración

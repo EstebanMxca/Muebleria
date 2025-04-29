@@ -1,11 +1,23 @@
-<section class="container py-5 related-products-section">
-    <div class="section-header position-relative mb-4 text-center">
-        <h3 class="display-6 fw-bold">También te puede interesar</h3>
-        <span class="section-divider mx-auto"></span>
-        <p class="text-muted">Descubre otras colecciones que complementarán tu hogar</p>
-    </div>
-    
-    <div class="row" id="related-categories-container">
-        <!-- El contenido se generará dinámicamente desde JavaScript -->
+<!-- Sección de recomendaciones mejorada para evitar problemas de carga -->
+<section class="related-products-section py-5 bg-light">
+    <div class="container">
+        <div class="section-header position-relative mb-4 text-center">
+            <h3 class="display-6 fw-bold">También te puede interesar</h3>
+            <div class="accent-line mx-auto"></div>
+            <p class="text-muted mt-3">Descubre otras colecciones que podrían complementar tu espacio</p>
+        </div>
+
+        <!-- Este es el contenedor que recibe las recomendaciones -->
+        <div id="related-categories-container">
+            <!-- Indicador de carga inicial -->
+            <div class="row">
+                <div class="col-12 text-center py-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Cargando recomendaciones...</span>
+                    </div>
+                    <p class="mt-2 small text-muted">Preparando recomendaciones...</p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
