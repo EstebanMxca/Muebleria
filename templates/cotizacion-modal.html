@@ -70,107 +70,113 @@
                         </div>
                     </div>
                     
-                    <!-- Paso 2: Características del Mueble -->
-                    <div class="cotizacion-step" data-step="2">
-                        <h4 class="mb-3">Características deseadas</h4>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select class="form-select" id="estiloMueble">
-                                        <option value="">Selecciona</option>
-                                        <option value="moderno">Moderno</option>
-                                        <option value="contemporáneo">Contemporáneo</option>
-                                        <option value="clásico">Clásico</option>
-                                        <option value="minimalista">Minimalista</option>
-                                        <option value="rústico">Rústico</option>
-                                        <option value="industrial">Industrial</option>
-                                    </select>
-                                    <label for="estiloMueble">Estilo</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select class="form-select" id="materialMueble">
-                                        <option value="">Selecciona</option>
-                                        <option value="madera">Madera</option>
-                                        <option value="metal">Metal</option>
-                                        <option value="vidrio">Vidrio</option>
-                                        <option value="tapizado">Tapizado</option>
-                                        <option value="mixto">Combinación de materiales</option>
-                                    </select>
-                                    <label for="materialMueble">Material principal</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select class="form-select" id="colorMueble">
-                                        <option value="">Selecciona</option>
-                                        <option value="naturales">Tonos naturales</option>
-                                        <option value="oscuros">Tonos oscuros</option>
-                                        <option value="claros">Tonos claros</option>
-                                        <option value="neutros">Neutros</option>
-                                        <option value="vibrantes">Colores vibrantes</option>
-                                    </select>
-                                    <label for="colorMueble">Gama de colores</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="presupuesto" placeholder="Tu presupuesto aproximado">
-                                    <label for="presupuesto">Presupuesto aproximado ($)</label>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <div class="form-floating">
-                                    <textarea class="form-control" id="detallesAdicionales" style="height: 100px" placeholder="Características adicionales"></textarea>
-                                    <label for="detallesAdicionales">Características adicionales o requerimientos especiales</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Paso 3: Información de contacto -->
-                    <div class="cotizacion-step" data-step="3">
-                        <h4 class="mb-3">Tus datos de contacto</h4>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="nombreCliente" placeholder="Tu nombre">
-                                    <label for="nombreCliente">Nombre completo</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control" id="telefonoCliente" placeholder="Tu teléfono">
-                                    <label for="telefonoCliente">Teléfono</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="emailCliente" placeholder="Tu email">
-                                    <label for="emailCliente">Email</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <select class="form-select" id="contactPreferido">
-                                        <option value="whatsapp">WhatsApp</option>
-                                        <option value="telefono">Llamada telefónica</option>
-                                        <option value="email">Email</option>
-                                    </select>
-                                    <label for="contactPreferido">Método de contacto preferido</label>
-                                </div>
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="urgente">
-                                    <label class="form-check-label" for="urgente">
-                                        Necesito la cotización con urgencia (24-48 horas)
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Paso 2: Características del Mueble - Diseño optimizado -->
+<div class="cotizacion-step" data-step="2">
+    <h4 class="mb-3">Características deseadas</h4>
+    <div class="row g-2">
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <select class="form-select required-field" id="estiloMueble">
+                    <option value="">Selecciona</option>
+                    <option value="moderno">Moderno</option>
+                    <option value="contemporáneo">Contemporáneo</option>
+                    <option value="clásico">Clásico</option>
+                    <option value="minimalista">Minimalista</option>
+                    <option value="rústico">Rústico</option>
+                    <option value="industrial">Industrial</option>
+                </select>
+                <label for="estiloMueble">Estilo *</label>
+            </div>
+        </div>
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <select class="form-select required-field" id="materialMueble">
+                    <option value="">Selecciona</option>
+                    <option value="madera">Madera</option>
+                    <option value="metal">Metal</option>
+                    <option value="vidrio">Vidrio</option>
+                    <option value="tapizado">Tapizado</option>
+                    <option value="mixto">Combinación</option>
+                </select>
+                <label for="materialMueble">Material *</label>
+            </div>
+        </div>
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="colorMueble">
+                    <option value="">Selecciona</option>
+                    <option value="naturales">Naturales</option>
+                    <option value="oscuros">Oscuros</option>
+                    <option value="claros">Claros</option>
+                    <option value="neutros">Neutros</option>
+                    <option value="vibrantes">Vibrantes</option>
+                </select>
+                <label for="colorMueble">Colores</label>
+            </div>
+        </div>
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="presupuesto" placeholder="Presupuesto">
+                <label for="presupuesto">Presupuesto ($)</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-floating">
+                <textarea class="form-control" id="detallesAdicionales" style="height: 80px" placeholder="Detalles adicionales"></textarea>
+                <label for="detallesAdicionales">Detalles adicionales</label>
+            </div>
+            <div class="mt-1 text-end">
+                <small class="text-muted">* Campos requeridos</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Paso 3: Información de contacto - Diseño optimizado -->
+<div class="cotizacion-step" data-step="3">
+    <h4 class="mb-3">Tus datos de contacto</h4>
+    <div class="row g-2">
+        <div class="col-12 mb-2">
+            <div class="form-floating">
+                <input type="text" class="form-control required-field" id="nombreCliente" placeholder="Tu nombre">
+                <label for="nombreCliente">Nombre completo *</label>
+            </div>
+        </div>
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <input type="tel" class="form-control required-field" id="telefonoCliente" placeholder="Tu teléfono">
+                <label for="telefonoCliente">Teléfono *</label>
+            </div>
+        </div>
+        <div class="col-6 mb-2">
+            <div class="form-floating">
+                <input type="email" class="form-control" id="emailCliente" placeholder="Tu email">
+                <label for="emailCliente">Email</label>
+            </div>
+        </div>
+        <div class="col-12 mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="contactPreferido">
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="telefono">Llamada telefónica</option>
+                    <option value="email">Email</option>
+                </select>
+                <label for="contactPreferido">Método de contacto</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="urgente">
+                <label class="form-check-label" for="urgente">
+                    Necesito la cotización con urgencia (24-48 horas)
+                </label>
+            </div>
+            <div class="mt-2 text-end">
+                <small class="text-muted">* Campos requeridos</small>
+            </div>
+        </div>
+    </div>
+</div>
                     
                     <!-- Paso 4: Confirmación -->
                     <div class="cotizacion-step" data-step="4">

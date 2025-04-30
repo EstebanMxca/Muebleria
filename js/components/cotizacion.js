@@ -394,36 +394,109 @@ updateNavigationButtons() {
         }
     }
     
-    /**
-     * Valida el paso actual
-     * @returns {boolean} - Verdadero si el paso es válido
-     */
-    validateCurrentStep() {
-        console.log('Validando paso actual:', this.state.currentStep);
-        
-        switch (this.state.currentStep) {
-            case 1:
-                // Validar selección de categoría
-                const isValid = this.state.data.categoria !== '';
-                console.log('Validación categoría:', isValid, 'Categoría:', this.state.data.categoria);
-                return isValid;
-            case 2:
-                // El paso 2 no tiene campos obligatorios
-                console.log('Paso 2: no requiere validación');
-                return true;
-            case 3:
-                // Validar campos de contacto
-                const nombre = document.getElementById('nombreCliente')?.value.trim() || '';
-                const telefono = document.getElementById('telefonoCliente')?.value.trim() || '';
-                const email = document.getElementById('emailCliente')?.value.trim() || '';
+   /**
+ * Valida el paso actual
+ * @returns {boolean} - Verdadero si el paso es válido
+ */
+validateCurrentStep() {
+    console.log('Validando paso actual:', this.state.currentStep);
+    
+    switch (this.state.currentStep) {
+        case 1:
+            // Validar selección de categoría
+            const isValid = this.state.data.categoria !== '';
+            console.log('Validación categoría:', isValid, 'Categoría:', this.state.data.categoria);
+            
+            // Mostrar feedback visual si no es válido
+            if (!isValid) {
+                this.showToast('Por favor, selecciona un tipo de mueble');
                 
-                const contactoValido = nombre !== '' && (telefono !== '' || email !== '');
-                console.log('Validación contacto:', contactoValido, {nombre, telefono, email});
-                return contactoValido;
-            default:
-                return true;
-        }
+                // Efecto de sacudida en móviles para indicar error
+                if (window.innerWidth < 576) {
+                    const categoryContainer = this.elements.modal.querySelector('.row-category-grid');
+                    if (categoryContainer) {
+                        categoryContainer.classList.add('shake-error');
+                        setTimeout(() => {
+                            categoryContainer.classList.remove('shake-error');
+                        }, 600);
+                    }
+                }
+            }
+            
+            return isValid;
+        
+        case 2:
+            // Validar campos requeridos en características
+            const estilo = document.getElementById('estiloMueble')?.value.trim() || '';
+            const material = document.getElementById('materialMueble')?.value.trim() || '';
+            
+            const caracteristicasValidas = estilo !== '' && material !== '';
+            console.log('Validación características:', caracteristicasValidas, {estilo, material});
+            
+            // Destacar campos inválidos
+            this.highlightInvalidFields(['estiloMueble', 'materialMueble']);
+            
+            // Mostrar mensaje si hay error
+            if (!caracteristicasValidas) {
+                this.showToast('Por favor, completa estilo y material');
+            }
+            
+            return caracteristicasValidas;
+            
+        case 3:
+            // Validar campos de contacto
+            const nombre = document.getElementById('nombreCliente')?.value.trim() || '';
+            const telefono = document.getElementById('telefonoCliente')?.value.trim() || '';
+            
+            const contactoValido = nombre !== '' && telefono !== '';
+            console.log('Validación contacto:', contactoValido, {nombre, telefono});
+            
+            // Destacar campos inválidos
+            this.highlightInvalidFields(['nombreCliente', 'telefonoCliente']);
+            
+            // Mostrar mensaje si hay error
+            if (!contactoValido) {
+                this.showToast('Por favor, completa nombre y teléfono');
+            }
+            
+            return contactoValido;
+            
+        default:
+            return true;
     }
+}
+
+/**
+ * Destaca visualmente los campos inválidos
+ * @param {Array} fieldIds - Array con los IDs de los campos a validar
+ */
+highlightInvalidFields(fieldIds) {
+    if (!fieldIds || !Array.isArray(fieldIds)) return;
+    
+    fieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+            const isValid = field.value.trim() !== '';
+            
+            // Añadir/quitar clase de error
+            if (!isValid) {
+                field.classList.add('is-invalid');
+                
+                // Añadir evento para quitar la clase cuando el usuario corrija
+                const removeInvalidClass = function() {
+                    field.classList.remove('is-invalid');
+                    field.removeEventListener('input', removeInvalidClass);
+                    field.removeEventListener('change', removeInvalidClass);
+                };
+                
+                field.addEventListener('input', removeInvalidClass);
+                field.addEventListener('change', removeInvalidClass);
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        }
+    });
+}
     
     /**
      * Recopila los datos del paso actual
