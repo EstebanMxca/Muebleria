@@ -10,7 +10,7 @@ h2, h3 {
 /* Parallax Section */
 .parallax-container {
     height: 400px;
-    background-image: url('assets/img-sucursal/local\ 54.webp');
+    background-image: url('assets/img-sucursal/parallax.webp');
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
