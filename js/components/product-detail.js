@@ -365,78 +365,27 @@ async loadRelatedProducts() {
         });
     }
     
-    showLoading(animated = false) {
-        const container = document.getElementById('product-detail-container');
-        if (container) {
-            const animationClass = animated ? 'fade-in' : '';
-            container.innerHTML = `
-                <div class="text-center py-4 ${animationClass}">
-                    <div class="elegant-loader">
-                        <div class="loader-ring"></div>
-                        <div class="loader-icon">
-                            <i class="bi bi-house-heart"></i>
-                        </div>
+    /**
+ * Muestra un indicador de carga simplificado
+ */
+showLoading(animated = false) {
+    const container = document.getElementById('product-detail-container');
+    if (container) {
+        const animationClass = animated ? 'fade-in' : '';
+        container.innerHTML = `
+            <div class="text-center py-4 ${animationClass}">
+                <div class="simple-loader">
+                    <div class="spinner-border text-primary" style="width: 2rem; height: 2rem;" role="status">
+                        <span class="visually-hidden">Cargando...</span>
                     </div>
-                    <p class="mt-3 loading-text">Cargando detalles del producto</p>
                 </div>
-            `;
-            
-            // Agregar estilos inline para el spinner personalizado
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .elegant-loader {
-                    position: relative;
-                    width: 60px;
-                    height: 60px;
-                    margin: 0 auto;
-                }
-                
-                .loader-ring {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                    border: 2px solid rgba(166, 124, 82, 0.1);
-                    border-top: 2px solid var(--primary);
-                    animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-                }
-                
-                .loader-icon {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    color: var(--primary);
-                    font-size: 20px;
-                    opacity: 0.9;
-                }
-                
-                .loading-text {
-                    color: var(--primary);
-                    font-weight: 500;
-                    font-size: 0.9rem;
-                    margin-top: 10px;
-                }
-                
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                
-                .fade-in {
-                    animation: fadeIn 0.5s ease-out forwards;
-                }
-            `;
-            document.head.appendChild(style);
-        } else {
-            console.error('Contenedor de producto no encontrado para mostrar carga');
-        }
+                <p class="mt-3" style="color: var(--text-light);">Cargando detalles del producto</p>
+            </div>
+        `;
+    } else {
+        console.error('Contenedor de producto no encontrado para mostrar carga');
     }
+}
     
     /**
      * Muestra un mensaje de error con diseño mejorado
