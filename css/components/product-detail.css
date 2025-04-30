@@ -83,10 +83,6 @@ body::before {
   pointer-events: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
-}
-
 /* Container principal del detalle de producto */
 .product-detail-section {
   background-color: var(--light);
