@@ -64,12 +64,18 @@ class NavbarComponent {
     }
     
     /**
-     * Helper para registrar eventos globales que necesitarán limpieza
-     */
-    registerGlobalEvent(target, type, callback, options) {
-        target.addEventListener(type, callback, options);
-        window.navbarCleanupHandlers.push({ target, type, callback });
+ * Helper para registrar eventos globales que necesitarán limpieza
+ */
+registerGlobalEvent(target, type, callback, options) {
+    target.addEventListener(type, callback, options);
+    
+    // Si ya tenemos un array de handlers, usarlo. Si no, crearlo.
+    if (!window.navbarCleanupHandlers) {
+        window.navbarCleanupHandlers = [];
     }
+    
+    window.navbarCleanupHandlers.push({ target, type, callback });
+}
     
     /**
      * Inicializa los elementos del navbar
@@ -338,242 +344,280 @@ class NavbarComponent {
         this.registerGlobalEvent(document, 'click', documentClickHandler);
     }
     
-    /**
-     * Configura específicamente el dropdown de Catálogo con una solución robusta
-     */
-    setupCatalogoDropdown() {
-        console.log('Configurando manejo específico del dropdown de Catálogo');
+   /**
+ * Configura específicamente el dropdown de Catálogo con una solución robusta
+ */
+setupCatalogoDropdown() {
+    console.log('Configurando manejo específico del dropdown de Catálogo');
+    
+    // --------- ENCONTRAR ELEMENTOS POR MÚLTIPLES MÉTODOS ---------
+    
+    // 1. Buscar por ID específico
+    let catalogoDropdown = document.getElementById('catalogo-dropdown');
+    let catalogoBtn = document.getElementById('catalogo-btn');
+    let catalogoMenu = document.getElementById('catalogo-menu');
+    
+    // 2. Si no encuentra por ID, buscar por contenido de texto
+    if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
+        console.log('No se encontraron elementos por ID, buscando por texto "Catálogo"');
         
-        // --------- ENCONTRAR ELEMENTOS POR MÚLTIPLES MÉTODOS ---------
-        
-        // 1. Buscar por ID específico
-        let catalogoDropdown = document.getElementById('catalogo-dropdown');
-        let catalogoBtn = document.getElementById('catalogo-btn');
-        let catalogoMenu = document.getElementById('catalogo-menu');
-        
-        // 2. Si no encuentra por ID, buscar por contenido de texto
-        if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
-            console.log('No se encontraron elementos por ID, buscando por texto "Catálogo"');
-            
-            // Buscar el item del navbar que contenga el texto "Catálogo"
-            const navItems = document.querySelectorAll('.nav-item');
-            for (let item of navItems) {
-                const textContent = item.textContent.trim();
-                if (textContent.includes('Catálogo')) {
-                    catalogoDropdown = item;
-                    catalogoBtn = item.querySelector('.dropdown-toggle, [data-bs-toggle="dropdown"]');
-                    catalogoMenu = item.querySelector('.dropdown-menu');
-                    console.log('Dropdown de catálogo encontrado por texto:', catalogoDropdown);
-                    break;
-                }
+        // Buscar el item del navbar que contenga el texto "Catálogo"
+        const navItems = document.querySelectorAll('.nav-item');
+        for (let item of navItems) {
+            const textContent = item.textContent.trim();
+            if (textContent.includes('Catálogo')) {
+                catalogoDropdown = item;
+                catalogoBtn = item.querySelector('.dropdown-toggle, [data-bs-toggle="dropdown"]');
+                catalogoMenu = item.querySelector('.dropdown-menu');
+                console.log('Dropdown de catálogo encontrado por texto:', catalogoDropdown);
+                break;
             }
         }
+    }
+    
+    // 3. Método de respaldo: buscar por estructura
+    if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
+        console.log('Buscando dropdown por estructura', this.elements.dropdowns);
         
-        // 3. Método de respaldo: buscar por estructura
-        if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
-            console.log('Buscando dropdown por estructura', this.elements.dropdowns);
-            
-            // Buscar cualquier dropdown en el navbar
-            if (this.elements.dropdowns && this.elements.dropdowns.length > 0) {
-                for (let dropdown of this.elements.dropdowns) {
-                    const menu = dropdown.nextElementSibling;
-                    if (menu && menu.classList.contains('dropdown-menu')) {
-                        // Verificar si contiene items que parecen categorías (sala, comedor, etc.)
-                        const menuItems = menu.querySelectorAll('a');
-                        for (let item of menuItems) {
-                            const itemText = item.textContent.trim().toLowerCase();
-                            if (itemText.includes('sala') || 
-                                itemText.includes('comedor') || 
-                                itemText.includes('recámara') || 
-                                itemText.includes('cabecera')) {
-                                
-                                catalogoDropdown = dropdown.closest('.nav-item') || dropdown.parentElement;
-                                catalogoBtn = dropdown;
-                                catalogoMenu = menu;
-                                console.log('Dropdown de catálogo encontrado por estructura:', catalogoDropdown);
-                                break;
-                            }
+        // Buscar cualquier dropdown en el navbar
+        if (this.elements.dropdowns && this.elements.dropdowns.length > 0) {
+            for (let dropdown of this.elements.dropdowns) {
+                const menu = dropdown.nextElementSibling;
+                if (menu && menu.classList.contains('dropdown-menu')) {
+                    // Verificar si contiene items que parecen categorías (sala, comedor, etc.)
+                    const menuItems = menu.querySelectorAll('a');
+                    for (let item of menuItems) {
+                        const itemText = item.textContent.trim().toLowerCase();
+                        if (itemText.includes('sala') || 
+                            itemText.includes('comedor') || 
+                            itemText.includes('recámara') || 
+                            itemText.includes('cabecera')) {
+                            
+                            catalogoDropdown = dropdown.closest('.nav-item') || dropdown.parentElement;
+                            catalogoBtn = dropdown;
+                            catalogoMenu = menu;
+                            console.log('Dropdown de catálogo encontrado por estructura:', catalogoDropdown);
+                            break;
                         }
                     }
-                    
-                    if (catalogoBtn) break;
                 }
-            }
-        }
-        
-        // Verificar si encontramos los elementos
-        if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
-            console.error('No se encontraron elementos del dropdown de Catálogo');
-            return;
-        }
-        
-        // --------- ASIGNAR IDS PARA REFERENCIA FUTURA ---------
-        if (!catalogoDropdown.id) catalogoDropdown.id = 'catalogo-dropdown';
-        if (!catalogoBtn.id) catalogoBtn.id = 'catalogo-btn';
-        if (!catalogoMenu.id) catalogoMenu.id = 'catalogo-menu';
-        
-        console.log('Elementos del dropdown de Catálogo encontrados y con IDs asignados');
-        
-        // --------- REMOVER CONFIGURACIÓN EXISTENTE ---------
-        
-        // 1. Eliminar cualquier instancia de Bootstrap
-        if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
-            const instance = bootstrap.Dropdown.getInstance(catalogoBtn);
-            if (instance) {
-                console.log('Eliminando instancia de Bootstrap Dropdown');
-                instance.dispose();
-            }
-        }
-        
-        // 2. Eliminar atributos de control de Bootstrap
-        catalogoBtn.removeAttribute('data-bs-toggle');
-        catalogoBtn.removeAttribute('data-bs-auto-close');
-        
-        // 3. Clonar para eliminar eventos existentes
-        const newBtn = catalogoBtn.cloneNode(true);
-        if (catalogoBtn.parentNode) {
-            catalogoBtn.parentNode.replaceChild(newBtn, catalogoBtn);
-        }
-        catalogoBtn = newBtn;
-        
-        // --------- REINICIAR ESTADO ---------
-        
-        // Ocultar el menú inicialmente
-        catalogoMenu.classList.remove('show');
-        catalogoBtn.setAttribute('aria-expanded', 'false');
-        catalogoMenu.style.display = '';
-        
-        // --------- APLICAR CONFIGURACIÓN SEGÚN DISPOSITIVO ---------
-        this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
-        
-        // --------- CONFIGURAR EVENTOS ESPECÍFICOS ---------
-        
-        // Función para alternar el menú
-        const toggleCatalogoMenu = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Toggle catalogo menu');
-            
-            const isCurrentlyOpen = catalogoMenu.classList.contains('show');
-            
-            // Cerrar todos los demás dropdowns primero
-            document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
-                if (openMenu !== catalogoMenu) {
-                    openMenu.classList.remove('show');
-                    const openBtn = openMenu.previousElementSibling;
-                    if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
-                    openMenu.style.display = '';
-                }
-            });
-            
-            // Alternar estado
-            if (isCurrentlyOpen) {
-                catalogoMenu.classList.remove('show');
-                catalogoBtn.setAttribute('aria-expanded', 'false');
-                catalogoMenu.style.display = '';
-            } else {
-                // Reconfigurar estilos antes de mostrar
-                this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
                 
-                // Mostrar
-                catalogoMenu.classList.add('show');
-                catalogoBtn.setAttribute('aria-expanded', 'true');
-                
-                // En móvil no establecemos display:block explícitamente
-                if (window.innerWidth >= 992) {
-                    catalogoMenu.style.display = 'block';
-                }
+                if (catalogoBtn) break;
             }
-            
-            return false;
-        };
+        }
+    }
+    
+    // Verificar si encontramos los elementos
+    if (!catalogoDropdown || !catalogoBtn || !catalogoMenu) {
+        console.error('No se encontraron elementos del dropdown de Catálogo');
+        return;
+    }
+    
+    // --------- ASIGNAR IDS PARA REFERENCIA FUTURA ---------
+    if (!catalogoDropdown.id) catalogoDropdown.id = 'catalogo-dropdown';
+    if (!catalogoBtn.id) catalogoBtn.id = 'catalogo-btn';
+    if (!catalogoMenu.id) catalogoMenu.id = 'catalogo-menu';
+    
+    console.log('Elementos del dropdown de Catálogo encontrados y con IDs asignados');
+    
+    // --------- REMOVER CONFIGURACIÓN EXISTENTE ---------
+    
+    // 1. Eliminar cualquier instancia de Bootstrap
+    if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+        const instance = bootstrap.Dropdown.getInstance(catalogoBtn);
+        if (instance) {
+            console.log('Eliminando instancia de Bootstrap Dropdown');
+            instance.dispose();
+        }
+    }
+    
+    // 2. Eliminar atributos de control de Bootstrap
+    catalogoBtn.removeAttribute('data-bs-toggle');
+    catalogoBtn.removeAttribute('data-bs-auto-close');
+    
+    // 3. Clonar para eliminar eventos existentes
+    const newBtn = catalogoBtn.cloneNode(true);
+    if (catalogoBtn.parentNode) {
+        catalogoBtn.parentNode.replaceChild(newBtn, catalogoBtn);
+    }
+    catalogoBtn = newBtn;
+    
+    // --------- REINICIAR ESTADO ---------
+    
+    // Ocultar el menú inicialmente
+    catalogoMenu.classList.remove('show');
+    catalogoBtn.setAttribute('aria-expanded', 'false');
+    catalogoMenu.style.display = '';
+    
+    // --------- APLICAR CONFIGURACIÓN SEGÚN DISPOSITIVO ---------
+    this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
+    
+    // --------- CONFIGURAR EVENTOS ESPECÍFICOS ---------
+    
+    // Función para alternar el menú
+    const toggleCatalogoMenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         
-        // Evento de click/tap
-        catalogoBtn.addEventListener('click', toggleCatalogoMenu);
+        console.log('Toggle catalogo menu');
         
-        // Prevenir eventos fantasma en móviles
-        catalogoBtn.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-        }, {passive: true});
+        const isCurrentlyOpen = catalogoMenu.classList.contains('show');
         
-        // Manejar click fuera para cerrar
-        const closeMenuHandler = (e) => {
-            if (!catalogoDropdown.contains(e.target) && 
-                !e.target.closest('.dropdown-menu') && 
-                catalogoMenu.classList.contains('show')) {
-                
-                catalogoMenu.classList.remove('show');
-                catalogoBtn.setAttribute('aria-expanded', 'false');
-                catalogoMenu.style.display = '';
-            }
-        };
-        
-        // Registrar eventos globales
-        this.registerGlobalEvent(document, 'click', closeMenuHandler);
-        this.registerGlobalEvent(document, 'touchstart', closeMenuHandler, {passive: true});
-        
-        // Cerrar con Escape
-        const escapeHandler = (e) => {
-            if (e.key === 'Escape' && catalogoMenu.classList.contains('show')) {
-                catalogoMenu.classList.remove('show');
-                catalogoBtn.setAttribute('aria-expanded', 'false');
-                catalogoMenu.style.display = '';
-            }
-        };
-        
-        this.registerGlobalEvent(document, 'keydown', escapeHandler);
-        
-        // Manejar resize
-        const resizeHandler = () => {
-            // Reconfigurar estilos
-            this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
-            
-            // Cerrar menú al redimensionar
-            if (catalogoMenu.classList.contains('show')) {
-                catalogoMenu.classList.remove('show');
-                catalogoBtn.setAttribute('aria-expanded', 'false');
-                catalogoMenu.style.display = '';
-            }
-        };
-        
-        this.registerGlobalEvent(window, 'resize', resizeHandler);
-        
-        // Configurar delegación de eventos para los enlaces dentro del menú
-        catalogoMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' || e.target.closest('a')) {
-                // Al hacer clic en un enlace, cerrar el menú
-                setTimeout(() => {
-                    catalogoMenu.classList.remove('show');
-                    catalogoBtn.setAttribute('aria-expanded', 'false');
-                    catalogoMenu.style.display = '';
-                }, 100);
+        // Cerrar todos los demás dropdowns primero
+        document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+            if (openMenu !== catalogoMenu) {
+                openMenu.classList.remove('show');
+                const openBtn = openMenu.previousElementSibling;
+                if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+                openMenu.style.display = '';
             }
         });
         
-        console.log('Dropdown de Catálogo configurado correctamente');
+        // Alternar estado
+        if (isCurrentlyOpen) {
+            catalogoMenu.classList.remove('show');
+            catalogoBtn.setAttribute('aria-expanded', 'false');
+            catalogoMenu.style.display = '';
+        } else {
+            // Reconfigurar estilos antes de mostrar
+            this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
+            
+            // Mostrar
+            catalogoMenu.classList.add('show');
+            catalogoBtn.setAttribute('aria-expanded', 'true');
+            
+            // En móvil no establecemos display:block explícitamente
+            if (window.innerWidth >= 992) {
+                catalogoMenu.style.display = 'block';
+            }
+        }
+        
+        return false;
+    };
+    
+    // Evento de click/tap
+    catalogoBtn.addEventListener('click', toggleCatalogoMenu);
+    
+    // NUEVO: Mejor manejo para dispositivos móviles
+    if (window.innerWidth < 992) {
+        // En móviles, hacer que cada elemento del catálogo cierre el menú
+        const catalogoItems = catalogoMenu.querySelectorAll('.premium-item');
+        
+        catalogoItems.forEach(item => {
+            // Mantener el enlace original
+            const originalHref = item.getAttribute('href');
+            
+            // Agregar manejador de eventos para mejor feedback táctil
+            item.addEventListener('touchstart', function() {
+                this.classList.add('touch-active');
+            }, {passive: true});
+            
+            item.addEventListener('touchend', function() {
+                this.classList.remove('touch-active');
+                
+                // Cerrar el menú desplegable
+                if (catalogoMenu.classList.contains('show')) {
+                    catalogoMenu.classList.remove('show');
+                    catalogoBtn.setAttribute('aria-expanded', 'false');
+                }
+                
+                // Cerrar el menú móvil si está abierto
+                const navbarCollapse = document.querySelector('.navbar-collapse.show');
+                if (navbarCollapse) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                        if (bsCollapse) {
+                            bsCollapse.hide();
+                        }
+                    } else {
+                        navbarCollapse.classList.remove('show');
+                    }
+                }
+            }, {passive: true});
+        });
     }
     
-    /**
-     * Aplica estilos al dropdown de catálogo según el tamaño de la pantalla
-     */
-    applyCatalogoStyles(dropdown, btn, menu) {
-        if (!dropdown || !btn || !menu) return;
+    // Prevenir eventos fantasma en móviles
+    catalogoBtn.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+    }, {passive: true});
+    
+    // Manejar click fuera para cerrar
+    const closeMenuHandler = (e) => {
+        if (!catalogoDropdown.contains(e.target) && 
+            !e.target.closest('.dropdown-menu') && 
+            catalogoMenu.classList.contains('show')) {
+            
+            catalogoMenu.classList.remove('show');
+            catalogoBtn.setAttribute('aria-expanded', 'false');
+            catalogoMenu.style.display = '';
+        }
+    };
+    
+    // Registrar eventos globales
+    this.registerGlobalEvent(document, 'click', closeMenuHandler);
+    this.registerGlobalEvent(document, 'touchstart', closeMenuHandler, {passive: true});
+    
+    // Cerrar con Escape
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape' && catalogoMenu.classList.contains('show')) {
+            catalogoMenu.classList.remove('show');
+            catalogoBtn.setAttribute('aria-expanded', 'false');
+            catalogoMenu.style.display = '';
+        }
+    };
+    
+    this.registerGlobalEvent(document, 'keydown', escapeHandler);
+    
+    // Manejar resize
+    const resizeHandler = () => {
+        // Reconfigurar estilos
+        this.applyCatalogoStyles(catalogoDropdown, catalogoBtn, catalogoMenu);
         
-        if (window.innerWidth >= 992) {
-            // Estilos para desktop
-            dropdown.classList.add('position-static');
-            menu.classList.add('w-100');
-            menu.classList.add('premium-dropdown');
-            menu.style.left = '0';
-            menu.style.right = '0';
-        } else {
-            // Estilos para móvil
-            dropdown.classList.remove('position-static');
-            menu.style.left = '';
-            menu.style.right = '';
+        // Cerrar menú al redimensionar
+        if (catalogoMenu.classList.contains('show')) {
+            catalogoMenu.classList.remove('show');
+            catalogoBtn.setAttribute('aria-expanded', 'false');
+            catalogoMenu.style.display = '';
+        }
+    };
+    
+    this.registerGlobalEvent(window, 'resize', resizeHandler);
+    
+    console.log('Dropdown de Catálogo configurado correctamente');
+}
+    
+   /**
+ * Aplica estilos al dropdown de catálogo según el tamaño de la pantalla
+ */
+applyCatalogoStyles(dropdown, btn, menu) {
+    if (!dropdown || !btn || !menu) return;
+    
+    if (window.innerWidth >= 992) {
+        // Estilos para desktop (mantener igual)
+        dropdown.classList.add('position-static');
+        menu.classList.add('w-100');
+        menu.classList.add('premium-dropdown');
+        menu.style.left = '0';
+        menu.style.right = '0';
+    } else {
+        // NUEVO: Estilos optimizados para móvil
+        dropdown.classList.remove('position-static');
+        menu.style.left = '';
+        menu.style.right = '';
+        
+        // Ajustar el ancho en móviles
+        const navbarCollapse = dropdown.closest('.navbar-collapse');
+        if (navbarCollapse) {
+            const collapseWidth = navbarCollapse.offsetWidth;
+            menu.style.width = (collapseWidth - 20) + 'px';
+            menu.style.maxWidth = '100%';
+            
+            // Asegurar que el menú esté contenido dentro del colapso
+            menu.style.marginLeft = '10px';
         }
     }
+}
     
     /**
      * Configura el botón de cotización
