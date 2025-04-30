@@ -285,60 +285,89 @@ class CotizacionWizard {
     }
     
     /**
-     * Muestra el paso especificado
-     * @param {number} stepNumber - Número de paso a mostrar
-     */
-    showStep(stepNumber) {
-        console.log(`Mostrando paso ${stepNumber}`);
-        // Ocultar todos los pasos
-        if (this.elements.steps) {
-            this.elements.steps.forEach(step => {
-                step.classList.remove('active');
-            });
-        }
-        
-        // Mostrar el paso actual
-        const currentStepElement = this.elements.modal.querySelector(`.cotizacion-step[data-step="${stepNumber}"]`);
-        if (currentStepElement) {
-            currentStepElement.classList.add('active');
-            console.log(`Paso ${stepNumber} activado`);
-        } else {
-            console.error(`No se encontró el elemento del paso ${stepNumber}`);
-        }
-        
-        // Actualizar botones de navegación
-        this.updateNavigationButtons();
+ * Muestra el paso especificado
+ * @param {number} stepNumber - Número de paso a mostrar
+ */
+showStep(stepNumber) {
+    console.log(`Mostrando paso ${stepNumber}`);
+    // Ocultar todos los pasos
+    if (this.elements.steps) {
+        this.elements.steps.forEach(step => {
+            step.classList.remove('active');
+        });
     }
     
-    /**
-     * Actualiza la visibilidad de los botones de navegación según el paso actual
-     */
-    updateNavigationButtons() {
-        console.log(`Actualizando botones de navegación para paso ${this.state.currentStep}`);
-        
-        // Botón anterior
-        if (this.elements.prevBtn) {
-            this.elements.prevBtn.style.display = this.state.currentStep > 1 ? 'inline-block' : 'none';
-        }
-        
-        // Botones siguiente y enviar
-        if (this.elements.nextBtn && this.elements.submitBtn) {
-            if (this.state.currentStep < this.state.maxSteps - 1) {
-                this.elements.nextBtn.style.display = 'inline-block';
-                this.elements.submitBtn.style.display = 'none';
-                console.log('Mostrando botón Siguiente, ocultando Enviar');
-            } else if (this.state.currentStep === this.state.maxSteps - 1) {
-                this.elements.nextBtn.style.display = 'none';
-                this.elements.submitBtn.style.display = 'inline-block';
-                console.log('Mostrando botón Enviar, ocultando Siguiente');
-            } else {
-                this.elements.nextBtn.style.display = 'none';
-                this.elements.submitBtn.style.display = 'none';
-                this.elements.prevBtn.style.display = 'none';
-                console.log('Ocultando todos los botones de navegación');
-            }
+    // Mostrar el paso actual
+    const currentStepElement = this.elements.modal.querySelector(`.cotizacion-step[data-step="${stepNumber}"]`);
+    if (currentStepElement) {
+        currentStepElement.classList.add('active');
+        console.log(`Paso ${stepNumber} activado`);
+    } else {
+        console.error(`No se encontró el elemento del paso ${stepNumber}`);
+    }
+    
+    // Actualizar indicador de progreso en dispositivos móviles
+    const progressDots = this.elements.modal.querySelectorAll('.progress-dot');
+    if (progressDots && progressDots.length > 0) {
+        progressDots.forEach(dot => {
+            const dotStep = parseInt(dot.getAttribute('data-step'));
+            dot.classList.toggle('active', dotStep === stepNumber);
+        });
+    }
+    
+    // Actualizar botones de navegación
+    this.updateNavigationButtons();
+    
+    // Scroll al inicio del modal en dispositivos móviles
+    if (window.innerWidth < 576) {
+        const modalBody = this.elements.modal.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.scrollTop = 0;
         }
     }
+}
+    
+   /**
+ * Actualiza la visibilidad de los botones de navegación según el paso actual
+ */
+updateNavigationButtons() {
+    console.log(`Actualizando botones de navegación para paso ${this.state.currentStep}`);
+    
+    // Botón anterior
+    if (this.elements.prevBtn) {
+        this.elements.prevBtn.style.display = this.state.currentStep > 1 ? 'inline-block' : 'none';
+    }
+    
+    // Botones siguiente y enviar
+    if (this.elements.nextBtn && this.elements.submitBtn) {
+        if (this.state.currentStep < this.state.maxSteps - 1) {
+            this.elements.nextBtn.style.display = 'inline-block';
+            this.elements.submitBtn.style.display = 'none';
+            console.log('Mostrando botón Siguiente, ocultando Enviar');
+            
+            // En el paso 1, desactivar el botón siguiente si no hay categoría seleccionada
+            if (this.state.currentStep === 1) {
+                const isCategorySelected = this.state.data.categoria !== '';
+                this.elements.nextBtn.disabled = !isCategorySelected;
+                this.elements.nextBtn.classList.toggle('btn-secondary', !isCategorySelected);
+                this.elements.nextBtn.classList.toggle('btn-primary', isCategorySelected);
+            } else {
+                this.elements.nextBtn.disabled = false;
+                this.elements.nextBtn.classList.remove('btn-secondary');
+                this.elements.nextBtn.classList.add('btn-primary');
+            }
+        } else if (this.state.currentStep === this.state.maxSteps - 1) {
+            this.elements.nextBtn.style.display = 'none';
+            this.elements.submitBtn.style.display = 'inline-block';
+            console.log('Mostrando botón Enviar, ocultando Siguiente');
+        } else {
+            this.elements.nextBtn.style.display = 'none';
+            this.elements.submitBtn.style.display = 'none';
+            this.elements.prevBtn.style.display = 'none';
+            console.log('Ocultando todos los botones de navegación');
+        }
+    }
+}
     
     /**
      * Navega al paso anterior
@@ -441,26 +470,37 @@ class CotizacionWizard {
     }
     
     /**
-     * Selecciona una categoría
-     * @param {HTMLElement} card - Card de categoría seleccionada
-     */
-    selectCategory(card) {
-        console.log('Seleccionando categoría:', card.getAttribute('data-category'));
-        
-        // Eliminar selección anterior
-        if (this.elements.categoryCards) {
-            this.elements.categoryCards.forEach(c => {
-                c.classList.remove('selected');
-            });
-        }
-        
-        // Marcar selección actual
-        card.classList.add('selected');
-        
-        // Guardar categoría seleccionada
-        this.state.data.categoria = card.getAttribute('data-category') || '';
-        console.log('Categoría seleccionada:', this.state.data.categoria);
+ * Selecciona una categoría
+ * @param {HTMLElement} card - Card de categoría seleccionada
+ */
+selectCategory(card) {
+    console.log('Seleccionando categoría:', card.getAttribute('data-category'));
+    
+    // Eliminar selección anterior
+    if (this.elements.categoryCards) {
+        this.elements.categoryCards.forEach(c => {
+            c.classList.remove('selected');
+        });
     }
+    
+    // Marcar selección actual
+    card.classList.add('selected');
+    
+    // Guardar categoría seleccionada
+    this.state.data.categoria = card.getAttribute('data-category') || '';
+    console.log('Categoría seleccionada:', this.state.data.categoria);
+    
+    // Actualizar estado de botones de navegación
+    this.updateNavigationButtons();
+    
+    // Efecto visual de "seleccionado" para feedback
+    if (window.innerWidth < 576) {
+        card.classList.add('pulse-selected');
+        setTimeout(() => {
+            card.classList.remove('pulse-selected');
+        }, 500);
+    }
+}
     
     /**
      * Envía el formulario

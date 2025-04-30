@@ -4,15 +4,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="cotizacionModalLabel">Cotización Personalizada</h5>
+                <!-- Indicador de progreso para móviles -->
+                <div class="progress-indicator d-md-none">
+                    <span class="progress-dot active" data-step="1"></span>
+                    <span class="progress-dot" data-step="2"></span>
+                    <span class="progress-dot" data-step="3"></span>
+                    <span class="progress-dot" data-step="4"></span>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="cotizacionWizard">
                     <!-- Paso 1: Selección de Categoría -->
                     <div class="cotizacion-step active" data-step="1">
-                        <h4 class="mb-4">¿Qué tipo de mueble estás buscando?</h4>
-                        <div class="row category-selector">
-                            <div class="col-md-4 mb-3">
+                        <h4 class="mb-3">¿Qué tipo de mueble estás buscando?</h4>
+                        <div class="row g-2 row-category-grid">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="salas">
                                     <div class="category-icon">
                                         <i class="bi bi-house-heart"></i>
@@ -20,7 +27,7 @@
                                     <h5>Salas</h5>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="comedores">
                                     <div class="category-icon">
                                         <i class="bi bi-cup-hot"></i>
@@ -28,7 +35,7 @@
                                     <h5>Comedores</h5>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="recamaras">
                                     <div class="category-icon">
                                         <i class="bi bi-moon-stars"></i>
@@ -36,7 +43,7 @@
                                     <h5>Recámaras</h5>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="cabeceras">
                                     <div class="category-icon">
                                         <i class="bi bi-bookmark-heart"></i>
@@ -44,15 +51,15 @@
                                     <h5>Cabeceras</h5>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="mesas-centro">
                                     <div class="category-icon">
                                         <i class="bi bi-square"></i>
                                     </div>
-                                    <h5>Mesas de Centro</h5>
+                                    <h5>Mesas</h5>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-6 col-md-4">
                                 <div class="category-card" data-category="otros">
                                     <div class="category-icon">
                                         <i class="bi bi-grid-3x3-gap"></i>
@@ -65,7 +72,7 @@
                     
                     <!-- Paso 2: Características del Mueble -->
                     <div class="cotizacion-step" data-step="2">
-                        <h4 class="mb-4">Características deseadas</h4>
+                        <h4 class="mb-3">Características deseadas</h4>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
@@ -124,7 +131,7 @@
                     
                     <!-- Paso 3: Información de contacto -->
                     <div class="cotizacion-step" data-step="3">
-                        <h4 class="mb-4">Tus datos de contacto</h4>
+                        <h4 class="mb-3">Tus datos de contacto</h4>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
@@ -188,16 +195,18 @@
                     </div>
                     
                     <!-- Navegación entre pasos -->
-                    <div class="wizard-navigation mt-4">
-                        <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
-                            <i class="bi bi-arrow-left me-2"></i>Anterior
-                        </button>
-                        <button type="button" class="btn btn-primary" id="nextStepBtn">
-                            Siguiente<i class="bi bi-arrow-right ms-2"></i>
-                        </button>
-                        <button type="button" class="btn btn-success" id="submitBtn" style="display: none;">
-                            <i class="bi bi-send me-2"></i>Enviar solicitud
-                        </button>
+                    <div class="wizard-navigation mt-3">
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+                                <i class="bi bi-arrow-left me-1"></i><span class="btn-text">Anterior</span>
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextStepBtn">
+                                <span class="btn-text">Siguiente</span><i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                            <button type="button" class="btn btn-success" id="submitBtn" style="display: none;">
+                                <i class="bi bi-send me-1"></i><span class="btn-text">Enviar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
