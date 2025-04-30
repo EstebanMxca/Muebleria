@@ -63,7 +63,7 @@ class NavbarComponent {
         });
     }
     
-    /**
+/**
  * Helper para registrar eventos globales que necesitarán limpieza
  */
 registerGlobalEvent(target, type, callback, options) {
@@ -344,7 +344,7 @@ registerGlobalEvent(target, type, callback, options) {
         this.registerGlobalEvent(document, 'click', documentClickHandler);
     }
     
-   /**
+/**
  * Configura específicamente el dropdown de Catálogo con una solución robusta
  */
 setupCatalogoDropdown() {
@@ -587,7 +587,7 @@ setupCatalogoDropdown() {
     console.log('Dropdown de Catálogo configurado correctamente');
 }
     
-   /**
+/**
  * Aplica estilos al dropdown de catálogo según el tamaño de la pantalla
  */
 applyCatalogoStyles(dropdown, btn, menu) {
