@@ -2228,7 +2228,7 @@ body.modal-cleanup {
 
 
 
-/* Estilos para la sección Nosotros rediseñada */
+/* Estilos para la sección Nosotros con imagen centrada y sin efectos hover en estadísticas */
 .nosotros-modern {
     padding: 80px 0;
     background-color: #f8f9fa;
@@ -2245,23 +2245,26 @@ body.modal-cleanup {
     position: relative;
 }
 
-/* Columna de imagen */
+/* Columna de imagen - Centrada verticalmente */
 .nosotros-image-col {
-    min-height: 500px;
     position: relative;
+    overflow: hidden;
+    display: flex;           
+    align-items: center;     
+    justify-content: center; 
+    background-color: #fff;  
 }
 
 .nosotros-image-container {
-    height: 100%;
-    width: 100%;
     position: relative;
     overflow: hidden;
+    background-color: #fff;
+    width: 100%;             
 }
 
 .nosotros-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    display: block;
     transition: transform 0.5s ease;
 }
 
@@ -2362,9 +2365,9 @@ body.modal-cleanup {
     margin-bottom: 30px;
 }
 
-/* Estadísticas con diseño horizontal mejorado */
+/* Estadísticas con diseño horizontal mejorado - SIN EFECTOS HOVER */
 .stats-horizontal {
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .stats-row {
@@ -2381,17 +2384,12 @@ body.modal-cleanup {
     border-radius: 10px;
     padding: 15px;
     text-align: center;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid transparent;
+    /* Eliminadas las propiedades de transición y efectos hover */
 }
 
-.stat-block:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    border-color: rgba(166, 124, 82, 0.2);
-    background-color: white;
-}
+/* Eliminado el efecto hover que estaba aquí */
 
 .stat-icon {
     width: 50px;
@@ -2421,99 +2419,6 @@ body.modal-cleanup {
     font-weight: 500;
 }
 
-/* Fila de valores */
-.values-row {
-    background-color: #f9f7f4;
-    padding: 30px 20px;
-    margin-top: 20px;
-}
-
-.value-card-col {
-    padding: 10px;
-}
-
-.value-card {
-    padding: 25px 15px;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    border: 1px solid #f0f0f0;
-    height: 100%;
-    text-align: center;
-}
-
-.value-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    border-color: rgba(166, 124, 82, 0.2);
-}
-
-.value-icon {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(166, 124, 82, 0.1);
-    color: var(--primary);
-    font-size: 1.5rem;
-    border-radius: 50%;
-    margin: 0 auto 15px;
-}
-
-.value-card h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--dark);
-}
-
-.value-card p {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 0;
-    line-height: 1.5;
-}
-
-/* CTA Button */
-.nosotros-cta {
-    margin: 40px 0;
-}
-
-.btn-nosotros {
-    display: inline-flex;
-    align-items: center;
-    background: var(--primary);
-    color: white;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(166, 124, 82, 0.3);
-}
-
-.btn-nosotros span {
-    margin-right: 10px;
-}
-
-.btn-nosotros i {
-    transition: transform 0.3s ease;
-}
-
-.btn-nosotros:hover {
-    background-color: #8E6A45;
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(166, 124, 82, 0.4);
-}
-
-.btn-nosotros:hover i {
-    transform: translateX(5px);
-}
-
 /* Responsive design */
 @media (max-width: 1199.98px) {
     .nosotros-content {
@@ -2523,17 +2428,9 @@ body.modal-cleanup {
     .section-title {
         font-size: 2.2rem;
     }
-    
-    .value-card {
-        padding: 20px 15px;
-    }
 }
 
 @media (max-width: 991.98px) {
-    .nosotros-image-col {
-        min-height: 400px;
-    }
-    
     .nosotros-content {
         padding: 40px 30px;
     }
@@ -2571,10 +2468,6 @@ body.modal-cleanup {
         border-radius: 12px;
     }
     
-    .nosotros-image-col {
-        min-height: 320px;
-    }
-    
     .experience-badge {
         padding: 15px 25px;
     }
@@ -2591,43 +2484,6 @@ body.modal-cleanup {
         font-size: 1.8rem;
     }
     
-    .btn-nosotros {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        max-width: 220px;
-        margin: 0 auto;
-    }
-    
-    .values-row {
-        margin-top: 0;
-        padding: 25px 15px 15px;
-    }
-    
-    .value-card {
-        padding: 15px 10px;
-    }
-    
-    .value-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.3rem;
-        margin-bottom: 10px;
-    }
-    
-    .value-card h3 {
-        font-size: 0.95rem;
-        margin-bottom: 8px;
-    }
-    
-    .value-card p {
-        font-size: 0.8rem;
-        line-height: 1.4;
-    }
-    
-    .nosotros-cta {
-        margin: 30px 0;
-    }
-    
     .stat-block {
         flex: 0 0 calc(33.33% - 10px);
         max-width: calc(33.33% - 10px);
@@ -2637,10 +2493,6 @@ body.modal-cleanup {
 @media (max-width: 575.98px) {
     .nosotros-modern {
         padding: 40px 0 30px;
-    }
-    
-    .nosotros-image-col {
-        min-height: 280px;
     }
     
     .image-overlay {
@@ -2694,17 +2546,7 @@ body.modal-cleanup {
     .stat-label {
         font-size: 0.7rem;
     }
-    
-    .value-card-col {
-        padding: 5px;
-    }
-    
-    .btn-nosotros {
-        width: auto;
-        max-width: 200px;
-    }
 }
-
 
 
 
@@ -2850,7 +2692,7 @@ html.scrolling * {
 /* Mejorar rendimiento de imágenes */
 .product-card img.card-img-top {
     /* Dimensiones estables */
-    height: 250px;
+    height: 300px;
     object-fit: cover;
     
     /* Optimizar para GPU */
