@@ -550,13 +550,98 @@ class NavbarComponent {
                 }, 100);
             }
         });
+
+        // Configurar feedback táctil para elementos del menú
+if (window.innerWidth < 992) {
+    const premiumItems = menu.querySelectorAll('.premium-item');
+    
+    premiumItems.forEach(item => {
+        // Efecto visual al tocar (para dispositivos táctiles)
+        item.addEventListener('touchstart', function(e) {
+            this.classList.add('active-touch');
+        }, {passive: true});
+        
+        item.addEventListener('touchend', function(e) {
+            this.classList.remove('active-touch');
+            
+            // Pequeño retraso antes de la navegación para que se aprecie el efecto visual
+            const href = this.getAttribute('href');
+            const originalEvent = e.target;
+            
+            if (href && !e.defaultPrevented) {
+                e.preventDefault();
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 100);
+            }
+        });
+        
+        item.addEventListener('touchcancel', function(e) {
+            this.classList.remove('active-touch');
+        });
+    });
+    
+    // Mejorar la accesibilidad para usar todo el área del ítem
+    menu.addEventListener('click', function(e) {
+        // Buscar el elemento .premium-item más cercano
+        const item = e.target.closest('.premium-item');
+        
+        if (item) {
+            const href = item.getAttribute('href');
+            if (href) {
+                window.location.href = href;
+            }
+        }
+    });
+}
+
+// Configurar eventos para los elementos de la versión móvil
+if (window.innerWidth < 992) {
+    const categoryLinks = menu.querySelectorAll('.category-link');
+    
+    categoryLinks.forEach(link => {
+        // Efecto visual al tocar (para dispositivos táctiles)
+        link.addEventListener('touchstart', function(e) {
+            this.classList.add('active-touch');
+        }, {passive: true});
+        
+        link.addEventListener('touchend', function(e) {
+            this.classList.remove('active-touch');
+            
+            // Pequeño retraso antes de la navegación para que se aprecie el efecto visual
+            const href = this.getAttribute('href');
+            
+            if (href && !e.defaultPrevented) {
+                e.preventDefault();
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 80);
+            }
+        });
+        
+        link.addEventListener('touchcancel', function(e) {
+            this.classList.remove('active-touch');
+        });
+    });
+    
+    // Añadir un manejador para cerrar el menú al hacer scroll
+    const handleScroll = function() {
+        if (menu.classList.contains('show')) {
+            menu.classList.remove('show');
+            catalogoBtn.setAttribute('aria-expanded', 'false');
+        }
+    };
+    
+    // Usar passive: true para mejor rendimiento
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Guardar en limpiezas globales
+    this.registerGlobalEvent(window, 'scroll', handleScroll, { passive: true });
+}
         
         console.log('Dropdown de Catálogo configurado correctamente');
     }
     
-    /**
-     * Aplica estilos al dropdown de catálogo según el tamaño de la pantalla
-     */
     applyCatalogoStyles(dropdown, btn, menu) {
         if (!dropdown || !btn || !menu) return;
         
@@ -567,12 +652,84 @@ class NavbarComponent {
             menu.classList.add('premium-dropdown');
             menu.style.left = '0';
             menu.style.right = '0';
+            
+            // Asegurar que la vista de escritorio esté visible
+            const desktopView = menu.querySelector('.desktop-view');
+            const mobileView = menu.querySelector('.mobile-view');
+            
+            if (desktopView) desktopView.classList.replace('d-none', 'd-block');
+            if (mobileView) mobileView.classList.replace('d-block', 'd-none');
+            
+            // Restablecer estilos que previenen scroll en versión escritorio
+            menu.style.maxWidth = '';
+            menu.style.overflowX = '';
+            
+            // Restablecer estilos del contenedor
+            const container = menu.querySelector('.container');
+            if (container) {
+                container.style.width = '';
+                container.style.maxWidth = '';
+                container.style.padding = '';
+            }
         } else {
             // Estilos para móvil
             dropdown.classList.remove('position-static');
-            menu.style.left = '';
-            menu.style.right = '';
+            menu.style.left = '1px'; // Ligero margen para evitar desbordamiento
+            menu.style.right = '1px';
+            
+            // Prevenir scroll horizontal
+            menu.style.maxWidth = 'calc(100% - 2px)';
+            menu.style.width = 'calc(100% - 2px)';
+            menu.style.overflowX = 'hidden';
+            
+            // Ajustar el contenedor si existe
+            const container = menu.querySelector('.container');
+            if (container) {
+                container.style.width = '100%';
+                container.style.maxWidth = '100%';
+                container.style.paddingLeft = '10px';
+                container.style.paddingRight = '10px';
+            }
+            
+            // Asegurar que la vista móvil esté visible y correctamente dimensionada
+            const desktopView = menu.querySelector('.desktop-view');
+            const mobileView = menu.querySelector('.mobile-view');
+            
+            if (desktopView) desktopView.classList.replace('d-block', 'd-none');
+            if (mobileView) {
+                mobileView.classList.replace('d-none', 'd-block');
+                mobileView.style.maxWidth = '100%';
+                mobileView.style.overflowX = 'hidden';
+            }
+            
+            // Asegurar que el grid tenga el tamaño correcto
+            const grid = menu.querySelector('.mobile-categories-grid');
+            if (grid) {
+                grid.style.width = '100%';
+                grid.style.margin = '0';
+            }
+            
+            // Asegurar que se muestra correctamente
+            if (menu.classList.contains('show')) {
+                menu.style.display = 'block';
+            }
         }
+        
+        // Verificar después de renderizar si hay scroll horizontal
+        setTimeout(() => {
+            if (window.innerWidth < 992 && document.body.scrollWidth > window.innerWidth) {
+                console.log('Detectado scroll horizontal, aplicando corrección adicional');
+                
+                // Forzar ajuste para prevenir scroll horizontal
+                menu.style.width = 'calc(100% - 4px)';
+                menu.style.left = '2px';
+                menu.style.right = '2px';
+                
+                // Eliminar cualquier margen
+                menu.style.marginLeft = '0';
+                menu.style.marginRight = '0';
+            }
+        }, 50);
     }
     
     /**

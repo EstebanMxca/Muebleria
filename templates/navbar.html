@@ -29,80 +29,157 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" id="catalogo-btn">
                         <span class="link-text">Catálogo</span>
                     </a>
-                    <div class="dropdown-menu premium-dropdown w-100" id="catalogo-menu">
-                        <div class="container">
-                            <div class="row g-4 py-4">
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="salas.html" class="premium-item">
-                                        <div class="item-image">
-                                            <i class="bi bi-house-heart"></i>
-                                        </div>
-                                        <div class="item-content">
-                                            <h6>Salas</h6>
-                                            <p>Elegancia y confort para tu espacio social</p>
-                                        </div>
-                                        <div class="item-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="comedores.html" class="premium-item">
-                                        <div class="item-image">
-                                            <i class="bi bi-cup-hot"></i>
-                                        </div>
-                                        <div class="item-content">
-                                            <h6>Comedores</h6>
-                                            <p>Diseños para compartir momentos especiales</p>
-                                        </div>
-                                        <div class="item-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="recamaras.html" class="premium-item">
-                                        <div class="item-image">
-                                            <i class="bi bi-moon-stars"></i>
-                                        </div>
-                                        <div class="item-content">
-                                            <h6>Recámaras</h6>
-                                            <p>Espacios de descanso con estilo único</p>
-                                        </div>
-                                        <div class="item-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="cabeceras.html" class="premium-item">
-                                        <div class="item-image">
-                                            <i class="bi bi-bookmark-heart"></i>
-                                        </div>
-                                        <div class="item-content">
-                                            <h6>Cabeceras</h6>
-                                            <p>El detalle perfecto para tu habitación</p>
-                                        </div>
-                                        <div class="item-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="mesas-centro.html" class="premium-item">
-                                        <div class="item-image">
-                                            <i class="bi bi-square"></i>
-                                        </div>
-                                        <div class="item-content">
-                                            <h6>Mesas de centro</h6>
-                                            <p>Funcionalidad con diseño contemporáneo</p>
-                                        </div>
-                                        <div class="item-arrow">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                    </a>
+                    <div class="dropdown-menu premium-dropdown" id="catalogo-menu">
+                        <!-- Vista para escritorio - Se mostrará sólo en pantallas grandes -->
+                        <div class="desktop-view d-none d-lg-block">
+                            <div class="container">
+                                <div class="row g-4 py-4">
+                                    <div class="col-lg-3">
+                                        <a href="salas.html" class="premium-item">
+                                            <div class="item-image">
+                                                <i class="bi bi-house-heart"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <h6>Salas</h6>
+                                                <p>Elegancia y confort para tu espacio social</p>
+                                            </div>
+                                            <div class="item-arrow">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a href="comedores.html" class="premium-item">
+                                            <div class="item-image">
+                                                <i class="bi bi-cup-hot"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <h6>Comedores</h6>
+                                                <p>Diseños para compartir momentos especiales</p>
+                                            </div>
+                                            <div class="item-arrow">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a href="recamaras.html" class="premium-item">
+                                            <div class="item-image">
+                                                <i class="bi bi-moon-stars"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <h6>Recámaras</h6>
+                                                <p>Espacios de descanso con estilo único</p>
+                                            </div>
+                                            <div class="item-arrow">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a href="cabeceras.html" class="premium-item">
+                                            <div class="item-image">
+                                                <i class="bi bi-bookmark-heart"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <h6>Cabeceras</h6>
+                                                <p>El detalle perfecto para tu habitación</p>
+                                            </div>
+                                            <div class="item-arrow">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a href="mesas-centro.html" class="premium-item">
+                                            <div class="item-image">
+                                                <i class="bi bi-square"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <h6>Mesas de centro</h6>
+                                                <p>Funcionalidad con diseño contemporáneo</p>
+                                            </div>
+                                            <div class="item-arrow">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <!-- Puedes añadir más categorías aquí para escritorio -->
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- Vista móvil con grid - Solo visible en móviles -->
+                        <div class="mobile-view d-block d-lg-none">
+                            <ul class="mobile-categories-grid">
+                                <li class="category-card">
+                                    <a href="salas.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-house-heart"></i>
+                                        </div>
+                                        <h6 class="category-title">Salas</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="comedores.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-cup-hot"></i>
+                                        </div>
+                                        <h6 class="category-title">Comedores</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="recamaras.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-moon-stars"></i>
+                                        </div>
+                                        <h6 class="category-title">Recámaras</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="cabeceras.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-bookmark-heart"></i>
+                                        </div>
+                                        <h6 class="category-title">Cabeceras</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="mesas-centro.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-square"></i>
+                                        </div>
+                                        <h6 class="category-title">Mesas de centro</h6>
+                                    </a>
+                                </li>
+                                <!-- Ejemplo de cómo agregar más categorías, ya se verán en forma de grid automáticamente -->
+                                <!-- 
+                                <li class="category-card">
+                                    <a href="escritorios.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-pc-display"></i>
+                                        </div>
+                                        <h6 class="category-title">Escritorios</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="estantes.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-bookshelf"></i>
+                                        </div>
+                                        <h6 class="category-title">Estantes</h6>
+                                    </a>
+                                </li>
+                                <li class="category-card">
+                                    <a href="jardin.html" class="category-link">
+                                        <div class="category-icon">
+                                            <i class="bi bi-flower1"></i>
+                                        </div>
+                                        <h6 class="category-title">Jardín</h6>
+                                    </a>
+                                </li>
+                                -->
+                            </ul>
                         </div>
                     </div>
                 </li>
