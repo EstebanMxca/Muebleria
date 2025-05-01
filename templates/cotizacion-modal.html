@@ -9,7 +9,6 @@
                     <span class="progress-dot active" data-step="1"></span>
                     <span class="progress-dot" data-step="2"></span>
                     <span class="progress-dot" data-step="3"></span>
-                    <span class="progress-dot" data-step="4"></span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -70,7 +69,7 @@
                         </div>
                     </div>
                     
-                    <!-- Paso 2: Características del Mueble - Diseño optimizado -->
+                  <!-- Paso 2: Características del Mueble - Diseño optimizado y todos los campos obligatorios -->
 <div class="cotizacion-step" data-step="2">
     <h4 class="mb-3">Características deseadas</h4>
     <div class="row g-2">
@@ -103,7 +102,7 @@
         </div>
         <div class="col-6 mb-2">
             <div class="form-floating">
-                <select class="form-select" id="colorMueble">
+                <select class="form-select required-field" id="colorMueble">
                     <option value="">Selecciona</option>
                     <option value="naturales">Naturales</option>
                     <option value="oscuros">Oscuros</option>
@@ -111,13 +110,13 @@
                     <option value="neutros">Neutros</option>
                     <option value="vibrantes">Vibrantes</option>
                 </select>
-                <label for="colorMueble">Colores</label>
+                <label for="colorMueble">Colores *</label>
             </div>
         </div>
         <div class="col-6 mb-2">
             <div class="form-floating">
-                <input type="text" class="form-control" id="presupuesto" placeholder="Presupuesto">
-                <label for="presupuesto">Presupuesto ($)</label>
+                <input type="text" class="form-control required-field" id="presupuesto" placeholder="Presupuesto">
+                <label for="presupuesto">Presupuesto ($) *</label>
             </div>
         </div>
         <div class="col-12">
@@ -132,20 +131,21 @@
     </div>
 </div>
 
-<!-- Paso 3: Información de contacto - Diseño optimizado -->
+<!-- Paso 3: Información de contacto - Diseño optimizado con validaciones -->
 <div class="cotizacion-step" data-step="3">
     <h4 class="mb-3">Tus datos de contacto</h4>
     <div class="row g-2">
         <div class="col-12 mb-2">
             <div class="form-floating">
-                <input type="text" class="form-control required-field" id="nombreCliente" placeholder="Tu nombre">
-                <label for="nombreCliente">Nombre completo *</label>
+                <input type="text" class="form-control required-field" id="nombreCliente" placeholder="Tu nombre completo" pattern=".+\s.+" title="Ingresa tu nombre completo (nombre y apellido)">
+                <label for="nombreCliente">Nombre completo (nombre y apellido) *</label>
             </div>
+            <small class="text-muted">Ingresa nombre y apellido</small>
         </div>
         <div class="col-6 mb-2">
             <div class="form-floating">
-                <input type="tel" class="form-control required-field" id="telefonoCliente" placeholder="Tu teléfono">
-                <label for="telefonoCliente">Teléfono *</label>
+                <input type="tel" class="form-control required-field" id="telefonoCliente" placeholder="Tu teléfono" pattern="[0-9\s\-\+\(\)]{10,}" title="Ingresa al menos 10 dígitos">
+                <label for="telefonoCliente">Teléfono (mínimo 10 dígitos) *</label>
             </div>
         </div>
         <div class="col-6 mb-2">
@@ -178,28 +178,6 @@
     </div>
 </div>
                     
-                    <!-- Paso 4: Confirmación -->
-                    <div class="cotizacion-step" data-step="4">
-                        <div class="text-center mb-4">
-                            <div class="confirmation-icon">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
-                            <h4 class="mt-3">¡Solicitud recibida!</h4>
-                            <p class="lead">Gracias por tu interés en nuestros productos.</p>
-                            <p>Hemos recibido tu solicitud de cotización y uno de nuestros asesores se pondrá en contacto contigo a la brevedad.</p>
-                            <div class="cotizacion-summary mt-4 p-4 text-start">
-                                <h5>Resumen de tu solicitud:</h5>
-                                <ul class="summary-list mt-3" id="cotizacionResumen">
-                                    <!-- Se llenará dinámicamente -->
-                                </ul>
-                            </div>
-                            <!-- Botón explícito para finalizar -->
-                            <button type="button" class="btn btn-primary mt-3" data-bs-dismiss="modal">
-                                <i class="bi bi-check-circle me-2"></i>Finalizar
-                            </button>
-                        </div>
-                    </div>
-                    
                     <!-- Navegación entre pasos -->
                     <div class="wizard-navigation mt-3">
                         <div class="d-flex justify-content-between">
@@ -210,7 +188,7 @@
                                 <span class="btn-text">Siguiente</span><i class="bi bi-arrow-right ms-1"></i>
                             </button>
                             <button type="button" class="btn btn-success" id="submitBtn" style="display: none;">
-                                <i class="bi bi-send me-1"></i><span class="btn-text">Enviar</span>
+                                <i class="bi bi-whatsapp me-1"></i><span class="btn-text">Enviar por WhatsApp</span>
                             </button>
                         </div>
                     </div>
@@ -219,3 +197,37 @@
         </div>
     </div>
 </div>
+
+<!-- Agregar estilos adicionales para validación -->
+<style>
+    /* Efecto de sacudida para errores en las tarjetas de categoría */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .shake-error {
+        animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    
+    /* Efecto para campos inválidos */
+    .required-field.is-invalid {
+        border-color: #dc3545;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+    
+    /* Efecto de pulso para selección en móviles */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse-selected {
+        animation: pulse 0.5s ease-in-out;
+    }
+</style>

@@ -18,7 +18,7 @@ class CotizacionWizard {
         // Estado del wizard
         this.state = {
             currentStep: 1,
-            maxSteps: 0,
+            maxSteps: 3, // Ahora siempre son 3 pasos
             data: {
                 categoria: '',
                 estilo: '',
@@ -94,8 +94,7 @@ class CotizacionWizard {
     init() {
         console.log('Inicializando el wizard de cotización');
         
-        // Establecer número máximo de pasos
-        this.state.maxSteps = this.elements.steps.length;
+        // La cantidad de pasos ya está fija en 3
         console.log(`Pasos del wizard: ${this.state.maxSteps}`);
         
         // Configurar botones de navegación
@@ -271,6 +270,11 @@ class CotizacionWizard {
             form.reset();
         });
         
+        // Eliminar clases de validación
+        this.elements.modal.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        
         console.log('Wizard reseteado correctamente');
     }
     
@@ -284,7 +288,7 @@ class CotizacionWizard {
         }
     }
     
-    /**
+   /**
  * Muestra el paso especificado
  * @param {number} stepNumber - Número de paso a mostrar
  */
@@ -340,7 +344,8 @@ updateNavigationButtons() {
     
     // Botones siguiente y enviar
     if (this.elements.nextBtn && this.elements.submitBtn) {
-        if (this.state.currentStep < this.state.maxSteps - 1) {
+        if (this.state.currentStep === 1 || this.state.currentStep === 2) {
+            // En los pasos 1 y 2 mostramos "Siguiente"
             this.elements.nextBtn.style.display = 'inline-block';
             this.elements.submitBtn.style.display = 'none';
             console.log('Mostrando botón Siguiente, ocultando Enviar');
@@ -356,11 +361,13 @@ updateNavigationButtons() {
                 this.elements.nextBtn.classList.remove('btn-secondary');
                 this.elements.nextBtn.classList.add('btn-primary');
             }
-        } else if (this.state.currentStep === this.state.maxSteps - 1) {
+        } else if (this.state.currentStep === 3) {
+            // En el paso 3 (último) mostramos "Enviar por WhatsApp"
             this.elements.nextBtn.style.display = 'none';
             this.elements.submitBtn.style.display = 'inline-block';
             console.log('Mostrando botón Enviar, ocultando Siguiente');
         } else {
+            // No debería llegar aquí, pero por seguridad
             this.elements.nextBtn.style.display = 'none';
             this.elements.submitBtn.style.display = 'none';
             this.elements.prevBtn.style.display = 'none';
@@ -429,16 +436,19 @@ validateCurrentStep() {
             // Validar campos requeridos en características
             const estilo = document.getElementById('estiloMueble')?.value.trim() || '';
             const material = document.getElementById('materialMueble')?.value.trim() || '';
+            const color = document.getElementById('colorMueble')?.value.trim() || '';
+            const presupuesto = document.getElementById('presupuesto')?.value.trim() || '';
             
-            const caracteristicasValidas = estilo !== '' && material !== '';
-            console.log('Validación características:', caracteristicasValidas, {estilo, material});
+            // Ahora todos los campos son obligatorios
+            const caracteristicasValidas = estilo !== '' && material !== '' && color !== '' && presupuesto !== '';
+            console.log('Validación características:', caracteristicasValidas, {estilo, material, color, presupuesto});
             
             // Destacar campos inválidos
-            this.highlightInvalidFields(['estiloMueble', 'materialMueble']);
+            this.highlightInvalidFields(['estiloMueble', 'materialMueble', 'colorMueble', 'presupuesto']);
             
             // Mostrar mensaje si hay error
             if (!caracteristicasValidas) {
-                this.showToast('Por favor, completa estilo y material');
+                this.showToast('Por favor, completa todos los campos requeridos (estilo, material, color y presupuesto)');
             }
             
             return caracteristicasValidas;
@@ -448,21 +458,61 @@ validateCurrentStep() {
             const nombre = document.getElementById('nombreCliente')?.value.trim() || '';
             const telefono = document.getElementById('telefonoCliente')?.value.trim() || '';
             
-            const contactoValido = nombre !== '' && telefono !== '';
-            console.log('Validación contacto:', contactoValido, {nombre, telefono});
+            // Validar que el nombre tenga al menos 2 palabras (nombre y apellido)
+            const nombreValido = nombre !== '' && nombre.split(' ').filter(word => word.length > 0).length >= 2;
             
-            // Destacar campos inválidos
-            this.highlightInvalidFields(['nombreCliente', 'telefonoCliente']);
+            // Validar que el teléfono tenga al menos 10 dígitos
+            const telefonoValido = telefono !== '' && telefono.replace(/\D/g, '').length >= 10;
             
-            // Mostrar mensaje si hay error
-            if (!contactoValido) {
-                this.showToast('Por favor, completa nombre y teléfono');
+            const contactoValido = nombreValido && telefonoValido;
+            console.log('Validación contacto:', contactoValido, {nombre, nombreValido, telefono, telefonoValido});
+            
+            // Si hay errores específicos, mostrar mensajes de error específicos
+            if (nombre === '') {
+                this.showToast('Por favor, ingresa tu nombre completo');
+                this.highlightInvalidField('nombreCliente');
+                return false;
+            } else if (!nombreValido) {
+                this.showToast('Por favor, ingresa tu nombre completo (nombre y apellido)');
+                this.highlightInvalidField('nombreCliente');
+                return false;
+            }
+            
+            if (telefono === '') {
+                this.showToast('Por favor, ingresa tu número de teléfono');
+                this.highlightInvalidField('telefonoCliente');
+                return false;
+            } else if (!telefonoValido) {
+                this.showToast('El número de teléfono debe tener al menos 10 dígitos');
+                this.highlightInvalidField('telefonoCliente');
+                return false;
             }
             
             return contactoValido;
             
         default:
             return true;
+    }
+}
+
+/**
+ * Destaca un campo específico como inválido
+ * @param {string} fieldId - ID del campo a destacar
+ */
+highlightInvalidField(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.classList.add('is-invalid');
+        
+        // Añadir evento para quitar la clase cuando el usuario corrija
+        const removeInvalidClass = function() {
+            field.classList.remove('is-invalid');
+            field.removeEventListener('input', removeInvalidClass);
+            field.removeEventListener('change', removeInvalidClass);
+        };
+        
+        field.addEventListener('input', removeInvalidClass);
+        field.addEventListener('change', removeInvalidClass);
     }
 }
 
@@ -476,7 +526,20 @@ highlightInvalidFields(fieldIds) {
     fieldIds.forEach(id => {
         const field = document.getElementById(id);
         if (field) {
-            const isValid = field.value.trim() !== '';
+            // Comprobar si el campo está vacío o no cumple con los requisitos
+            let isValid = false;
+            
+            if (id === 'nombreCliente') {
+                const valor = field.value.trim();
+                isValid = valor !== '' && valor.split(' ').filter(word => word.length > 0).length >= 2;
+            } else if (id === 'telefonoCliente') {
+                isValid = field.value.trim() !== '' && field.value.replace(/\D/g, '').length >= 10;
+            } else if (id === 'colorMueble' || id === 'presupuesto') {
+                // Ahora estos campos son obligatorios también
+                isValid = field.value.trim() !== '';
+            } else {
+                isValid = field.value.trim() !== '';
+            }
             
             // Añadir/quitar clase de error
             if (!isValid) {
@@ -542,7 +605,7 @@ highlightInvalidFields(fieldIds) {
         }
     }
     
-    /**
+   /**
  * Selecciona una categoría
  * @param {HTMLElement} card - Card de categoría seleccionada
  */
@@ -583,119 +646,28 @@ selectCategory(card) {
         if (this.validateCurrentStep()) {
             this.collectStepData();
             
-            // Preparar mensaje para WhatsApp
+            // Crear mensaje para WhatsApp
             const whatsappMessage = this.createWhatsAppMessage();
             
-            // Guardar el mensaje para usar en el botón de WhatsApp
-            this.state.data.whatsappMessage = whatsappMessage;
+            // Abrir directamente WhatsApp con el mensaje
+            const whatsappUrl = `https://wa.me/5561994686?text=${encodeURIComponent(whatsappMessage)}`;
+            window.open(whatsappUrl, '_blank');
             
-            // Avanzar al paso de confirmación
-            this.state.currentStep++;
-            this.showStep(this.state.currentStep);
+            // Cerrar el modal y resetear el formulario
+            if (this.elements.modal && typeof bootstrap !== 'undefined') {
+                const modalInstance = bootstrap.Modal.getInstance(this.elements.modal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            }
             
-            // Actualizar resumen
-            this.updateSummary();
+            // Resetear el wizard para la próxima vez
+            this.resetWizard();
             
-            console.log('Formulario enviado correctamente');
+            console.log('Formulario enviado correctamente y usuario redirigido a WhatsApp');
         } else {
             this.showToast('Por favor, complete todos los campos obligatorios antes de enviar.');
         }
-    }
-    
-    /**
-     * Actualiza el resumen de cotización
-     */
-    updateSummary() {
-        console.log('Actualizando resumen de cotización');
-        const summaryList = document.getElementById('cotizacionResumen');
-        if (!summaryList) {
-            console.error('No se encontró el elemento cotizacionResumen');
-            return;
-        }
-        
-        // Mapeo de categorías a nombres más amigables
-        const categoriasMap = {
-            'salas': 'Sala',
-            'comedores': 'Comedor',
-            'recamaras': 'Recámara',
-            'cabeceras': 'Cabecera',
-            'mesas-centro': 'Mesa de Centro',
-            'otros': 'Otro tipo de mueble'
-        };
-        
-        // Crear HTML para el resumen
-        let summaryHTML = '';
-        
-        // Categoría
-        if (this.state.data.categoria) {
-            const categoriaNombre = categoriasMap[this.state.data.categoria] || this.state.data.categoria;
-            summaryHTML += `<li><strong>Tipo de mueble:</strong> ${categoriaNombre}</li>`;
-        }
-        
-        // Características
-        if (this.state.data.estilo) {
-            summaryHTML += `<li><strong>Estilo:</strong> ${this.state.data.estilo}</li>`;
-        }
-        if (this.state.data.material) {
-            summaryHTML += `<li><strong>Material principal:</strong> ${this.state.data.material}</li>`;
-        }
-        if (this.state.data.color) {
-            summaryHTML += `<li><strong>Colores:</strong> ${this.state.data.color}</li>`;
-        }
-        if (this.state.data.presupuesto) {
-            summaryHTML += `<li><strong>Presupuesto aproximado:</strong> ${this.state.data.presupuesto}</li>`;
-        }
-        if (this.state.data.detallesAdicionales) {
-            summaryHTML += `<li><strong>Detalles adicionales:</strong> ${this.state.data.detallesAdicionales}</li>`;
-        }
-        
-        // Contacto
-        if (this.state.data.nombre) {
-            summaryHTML += `<li><strong>Nombre:</strong> ${this.state.data.nombre}</li>`;
-        }
-        if (this.state.data.telefono) {
-            summaryHTML += `<li><strong>Teléfono:</strong> ${this.state.data.telefono}</li>`;
-        }
-        if (this.state.data.email) {
-            summaryHTML += `<li><strong>Email:</strong> ${this.state.data.email}</li>`;
-        }
-        if (this.state.data.contactoPreferido) {
-            let contactoPref = 'WhatsApp';
-            if (this.state.data.contactoPreferido === 'telefono') contactoPref = 'Llamada telefónica';
-            if (this.state.data.contactoPreferido === 'email') contactoPref = 'Email';
-            summaryHTML += `<li><strong>Método de contacto preferido:</strong> ${contactoPref}</li>`;
-        }
-        if (this.state.data.urgente) {
-            summaryHTML += `<li><strong>Solicitud urgente:</strong> Sí</li>`;
-        }
-        
-        // Actualizar el contenido del resumen
-        summaryList.innerHTML = summaryHTML;
-        
-        // Añadir enlace para ir a WhatsApp
-        const finalizarBtn = this.elements.modal.querySelector('.cotizacion-step[data-step="4"] .btn-primary');
-        if (finalizarBtn) {
-            // Remover botón de WhatsApp existente si lo hay
-            const existingWhatsappBtn = finalizarBtn.nextElementSibling;
-            if (existingWhatsappBtn && existingWhatsappBtn.classList.contains('btn-success')) {
-                existingWhatsappBtn.parentNode.removeChild(existingWhatsappBtn);
-            }
-            
-            // Crear nuevo botón
-            const whatsappButton = document.createElement('a');
-            whatsappButton.href = `https://wa.me/5561994686?text=${encodeURIComponent(this.state.data.whatsappMessage)}`;
-            whatsappButton.className = 'btn btn-success mt-3 ms-2';
-            whatsappButton.target = '_blank';
-            whatsappButton.innerHTML = '<i class="bi bi-whatsapp me-2"></i>Contactar ahora';
-            
-            // Insertar al lado del botón finalizar
-            finalizarBtn.parentNode.insertBefore(whatsappButton, finalizarBtn.nextSibling);
-            console.log('Botón de WhatsApp creado e insertado');
-        } else {
-            console.warn('No se encontró el botón de finalizar');
-        }
-        
-        console.log('Resumen actualizado correctamente');
     }
     
     /**
