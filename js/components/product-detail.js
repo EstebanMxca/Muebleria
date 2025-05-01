@@ -289,7 +289,9 @@ renderRelatedProducts() {
                     <span class="discount-value">-${product.descuento}%</span>
                 </div>` : ''}
             <div class="card-img-top-container">
-                <img src="${imageUrl}" class="card-img-top" alt="${product.nombre}" loading="lazy">
+                <a href="product-detail.html?id=${product.id}" style="display: block; height: 100%;">
+                    <img src="${imageUrl}" class="card-img-top" alt="${product.nombre}" loading="lazy">
+                </a>
             </div>
             ${product.categoria ? 
                 `<span class="product-category">${product.categoria}</span>` : ''}

@@ -466,17 +466,19 @@ renderFeaturedProducts(container, products) {
                 product.descripcion) : 
             'Sin descripción disponible';
             
-       // Generar etiqueta de descuento si aplica
-const discountTag = product.descuento > 0 ? 
-`<div class="discount-splash">
-    <span class="discount-value">-${product.descuento}%</span>
-</div>` : '';
+        // Generar etiqueta de descuento si aplica
+        const discountTag = product.descuento > 0 ? 
+        `<div class="discount-splash">
+            <span class="discount-value">-${product.descuento}%</span>
+        </div>` : '';
         
-        // Retornar HTML de la tarjeta
+        // Retornar HTML de la tarjeta con imagen clickeable
         return `
             <div class="product-card-simple">
                 <div class="product-img">
-                    <img src="${imageUrl}" alt="${product.nombre}" loading="lazy">
+                    <a href="product-detail.html?id=${product.id}" style="display: block; height: 100%;">
+                        <img src="${imageUrl}" alt="${product.nombre}" loading="lazy">
+                    </a>
                     ${discountTag}
                 </div>
                 <div class="product-info">
@@ -534,62 +536,64 @@ getProductImage(product) {
 
 
     
-    /**
-     * Renderiza productos en el contenedor de una categoría
-     */
-    renderProducts(container, products, categoryId) {
-        if (!container) return;
-        
-        // Verificar si hay productos
-        if (!products || products.length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <div class="empty-results">
-                        <i class="bi bi-search fs-1 text-muted mb-3"></i>
-                        <h4>No se encontraron productos</h4>
-                        <p class="text-muted">Intenta con otros filtros o criterios de búsqueda.</p>
-                        <button class="btn btn-outline-primary mt-2" id="resetFilters">
-                            <i class="bi bi-arrow-repeat me-2"></i>Mostrar todos los productos
-                        </button>
-                    </div>
+   /**
+ * Renderiza productos en el contenedor de una categoría
+ */
+renderProducts(container, products, categoryId) {
+    if (!container) return;
+    
+    // Verificar si hay productos
+    if (!products || products.length === 0) {
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <div class="empty-results">
+                    <i class="bi bi-search fs-1 text-muted mb-3"></i>
+                    <h4>No se encontraron productos</h4>
+                    <p class="text-muted">Intenta con otros filtros o criterios de búsqueda.</p>
+                    <button class="btn btn-outline-primary mt-2" id="resetFilters">
+                        <i class="bi bi-arrow-repeat me-2"></i>Mostrar todos los productos
+                    </button>
                 </div>
-            `;
-            
-            // Configurar evento para restablecer filtros
-            const resetButton = document.getElementById('resetFilters');
-            if (resetButton) {
-                resetButton.addEventListener('click', () => {
-                    // Restablecer filtros en elementos UI
-                    const styleFilter = document.getElementById('filterStyle');
-                    const sortSelect = document.getElementById('sortBy');
-                    
-                    if (styleFilter) styleFilter.value = '';
-                    if (sortSelect) sortSelect.value = 'destacado';
-                    
-                    // Recargar productos sin filtros
-                    if (window.loader) {
-                        window.loader.loadCategoryProducts(categoryId, 1, {
-                            style: '',
-                            sort: 'destacado'
-                        });
-                    }
-                });
-            }
-            
-            return;
+            </div>
+        `;
+        
+        // Configurar evento para restablecer filtros
+        const resetButton = document.getElementById('resetFilters');
+        if (resetButton) {
+            resetButton.addEventListener('click', () => {
+                // Restablecer filtros en elementos UI
+                const styleFilter = document.getElementById('filterStyle');
+                const sortSelect = document.getElementById('sortBy');
+                
+                if (styleFilter) styleFilter.value = '';
+                if (sortSelect) sortSelect.value = 'destacado';
+                
+                // Recargar productos sin filtros
+                if (window.loader) {
+                    window.loader.loadCategoryProducts(categoryId, 1, {
+                        style: '',
+                        sort: 'destacado'
+                    });
+                }
+            });
         }
         
-        // Crear fila para productos
-        const productsRow = document.createElement('div');
-        productsRow.className = 'row productos-container';
-        
-        // Generar HTML para cada producto
-        products.forEach(producto => {
-            const productCardHTML = `
+        return;
+    }
+    
+    // Crear fila para productos
+    const productsRow = document.createElement('div');
+    productsRow.className = 'row productos-container';
+    
+    // Generar HTML para cada producto
+    products.forEach(producto => {
+        const productCardHTML = `
     <div class="col-md-4 mb-4">
         <div class="card product-card h-100 position-relative">
             ${this.generateProductTagHTML(producto)}
-            <img src="${producto.imagen_principal || this.config.imagePlaceholder}" class="card-img-top img-fluid" alt="${producto.nombre}">
+            <a href="product-detail.html?id=${producto.id}" style="display: block;">
+                <img src="${producto.imagen_principal || this.config.imagePlaceholder}" class="card-img-top img-fluid" alt="${producto.nombre}">
+            </a>
             ${producto.descuento > 0 ? this.generateNewDiscountBadgeHTML(producto.descuento) : ''}
             <div class="card-body">
                 <h5 class="card-title">${producto.nombre}</h5>
@@ -608,11 +612,6 @@ getProductImage(product) {
         // Limpiar contenedor y agregar productos
         container.innerHTML = '';
         container.appendChild(productsRow);
-        
-        // Generar modales para cada producto
-        products.forEach(producto => {
-            //this.generateProductModal(producto);
-        });
         
         // Configurar eventos para los productos
         this.setupProductEvents(container);

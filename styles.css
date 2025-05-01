@@ -2890,3 +2890,62 @@ html.scrolling * {
         font-size: 1rem;
     }
 }
+
+/* Estilos minimalistas para imágenes clickeables - Solo zoom */
+
+/* Diseños Selectos - product-card-simple */
+.product-card-simple .product-img a {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+}
+
+.product-card-simple .product-img a:hover img {
+    transform: scale(1.05);
+}
+
+/* Productos relacionados - También te puede interesar */
+.card-img-top-container a {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+}
+
+.card-img-top-container a:hover img {
+    transform: scale(1.05);
+}
+
+/* Categorías (salas, comedores, etc.) */
+.product-card > a {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.product-card > a:hover img {
+    transform: scale(1.05);
+}
+
+/* Asegurarse de que las imágenes tengan transición suave */
+.product-card img,
+.card-img-top,
+.product-card-simple .product-img img {
+    transition: transform 0.3s ease;
+}
+
+/* Añadimos un cursor de puntero para todas las imágenes clickeables */
+.product-card a,
+.card-img-top-container a,
+.product-card-simple .product-img a {
+    cursor: pointer;
+}
+
+/* Mantenemos la posición correcta del badge de descuento */
+.discount-splash {
+    z-index: 2; /* Aseguramos que esté por encima */
+}
