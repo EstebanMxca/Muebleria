@@ -11,7 +11,7 @@ git clean -fd
 git pull origin main
 
 echo "⏱️ Actualizando versiones de recursos..."
-./actualizar-versiones.sh
+bash /var/www/muebleria-cabanas/actualizar-versiones.sh
 
 echo "📦 Instalando dependencias si es necesario..."
 cd backend-frontend
