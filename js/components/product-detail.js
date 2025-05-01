@@ -646,7 +646,7 @@ showLoading(animated = false) {
                             ${featuresHtml}
                             
                             <div class="product-actions">
-                                <a href="https://wa.me/1234567890?text=Hola,%20me%20interesa%20el%20producto:%20${encodeURIComponent(product.nombre)}" 
+                                <a href="https://wa.me/5561994686?text=Hola,%20me%20interesa%20el%20producto:%20${encodeURIComponent(product.nombre)}" 
                                    class="product-action-btn btn-whatsapp-action" target="_blank">
                                     <i class="bi bi-whatsapp"></i>Consultar por WhatsApp
                                 </a>

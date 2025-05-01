@@ -683,7 +683,7 @@ selectCategory(card) {
             
             // Crear nuevo botón
             const whatsappButton = document.createElement('a');
-            whatsappButton.href = `https://wa.me/1234567890?text=${encodeURIComponent(this.state.data.whatsappMessage)}`;
+            whatsappButton.href = `https://wa.me/5561994686?text=${encodeURIComponent(this.state.data.whatsappMessage)}`;
             whatsappButton.className = 'btn btn-success mt-3 ms-2';
             whatsappButton.target = '_blank';
             whatsappButton.innerHTML = '<i class="bi bi-whatsapp me-2"></i>Contactar ahora';
