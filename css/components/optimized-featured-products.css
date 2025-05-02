@@ -157,6 +157,11 @@
     .optimized-featured-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
+
+    .section-title {
+        font-size: 1.8rem; /* O el tamaño que desees */
+        text-align: center; /* Opcional: para mejor presentación en móviles */
+    }
     
     .product-title {
         font-size: 16px;
