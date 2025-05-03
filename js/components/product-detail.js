@@ -55,7 +55,7 @@ class ProductDetail {
      * Inicializa la página de detalle del producto con mejoras visuales
      */
     init() {
-        console.log('Inicializando página de detalle de producto con mejoras visuales...');
+        // console.log('Inicializando página de detalle de producto con mejoras visuales...');
         
         // Inyectar variables CSS personalizadas si no existen
         this.injectCustomStyles();
@@ -68,7 +68,7 @@ class ProductDetail {
             return;
         }
         
-        console.log(`Cargando detalles para producto ID: ${productId}`);
+        // console.log(`Cargando detalles para producto ID: ${productId}`);
         
         // Cargar datos del producto con efecto visual mejorado
         this.showLoading(true);
@@ -158,7 +158,7 @@ class ProductDetail {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         
-        console.log('ID extraído de la URL:', id, typeof id);
+        // console.log('ID extraído de la URL:', id, typeof id);
         
         // Adicionar validación
         if (!id) {
@@ -223,7 +223,7 @@ async loadProductDetails(productId) {
         // Usar el servicio de productos para obtener detalles
         const productService = window.productService || new ProductService();
         
-        console.log(`Cargando detalles para producto ID: ${productId}`);
+        // console.log(`Cargando detalles para producto ID: ${productId}`);
         
         // Medir tiempo de carga
         const startTime = performance.now();
@@ -232,7 +232,7 @@ async loadProductDetails(productId) {
         const producto = await productService.getProductDetails(productId);
         
         const endTime = performance.now();
-        console.log(`Tiempo de carga del producto: ${(endTime - startTime).toFixed(2)} ms`);
+        // console.log(`Tiempo de carga del producto: ${(endTime - startTime).toFixed(2)} ms`);
         
         if (!producto || !producto.id) {
             throw new Error('Producto no encontrado');
@@ -489,7 +489,7 @@ showLoading(animated = false) {
         }
         
         const product = this.state.product;
-        console.log('Renderizando producto:', product);
+        // console.log('Renderizando producto:', product);
         
         // Preparar imágenes del producto
         let productImages = [];

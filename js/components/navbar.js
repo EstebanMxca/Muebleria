@@ -639,7 +639,7 @@ if (window.innerWidth < 992) {
     this.registerGlobalEvent(window, 'scroll', handleScroll, { passive: true });
 }
         
-        console.log('Dropdown de Catálogo configurado correctamente');
+        // console.log('Dropdown de Catálogo configurado correctamente');
     }
     
     applyCatalogoStyles(dropdown, btn, menu) {
@@ -718,7 +718,7 @@ if (window.innerWidth < 992) {
         // Verificar después de renderizar si hay scroll horizontal
         setTimeout(() => {
             if (window.innerWidth < 992 && document.body.scrollWidth > window.innerWidth) {
-                console.log('Detectado scroll horizontal, aplicando corrección adicional');
+                // console.log('Detectado scroll horizontal, aplicando corrección adicional');
                 
                 // Forzar ajuste para prevenir scroll horizontal
                 menu.style.width = 'calc(100% - 4px)';
