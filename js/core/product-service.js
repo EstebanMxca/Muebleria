@@ -771,8 +771,7 @@ generateNewDiscountBadgeHTML(descuento) {
             </div>`
         ).join('');
     }
-   
-/**
+   /**
  * Delega la carga de recomendaciones al sistema centralizado
  * @param {string} currentCategory - ID de la categoría actual
  */
@@ -783,12 +782,22 @@ loadRecommendations(currentCategory) {
         return;
     }
     
-    // Fallback si el sistema centralizado no está disponible
-    console.warn('Sistema de recomendaciones no disponible, cargando script');
+    // Verificar si el script ya está cargándose
+    if (document.querySelector('script[data-recommendation-loader="true"]')) {
+        console.log('Script de recomendaciones en proceso de carga');
+        setTimeout(() => {
+            if (window.recommendationSystem) {
+                window.recommendationSystem.loadRecommendations(currentCategory);
+            }
+        }, 500);
+        return;
+    }
     
-    // Intentar cargar el script de recomendaciones
+    // Si no existe, cargar el script e inicializar
+    console.log('Cargando sistema de recomendaciones');
     const script = document.createElement('script');
     script.src = 'js/components/recomendaciones.js';
+    script.dataset.recommendationLoader = "true";
     script.onload = () => {
         if (window.recommendationSystem) {
             window.recommendationSystem.loadRecommendations(currentCategory);
@@ -807,12 +816,22 @@ setupRecommendationsObserver() {
         return;
     }
     
-    // Fallback si el sistema centralizado no está disponible
-    console.warn('Sistema de recomendaciones no disponible, cargando script');
+    // Verificar si el script ya está cargándose
+    if (document.querySelector('script[data-recommendation-loader="true"]')) {
+        console.log('Script de recomendaciones en proceso de carga');
+        setTimeout(() => {
+            if (window.recommendationSystem) {
+                window.recommendationSystem.setupRecommendationsObserver();
+            }
+        }, 500);
+        return;
+    }
     
-    // Intentar cargar el script de recomendaciones
+    // Si no existe, cargar el script e inicializar
+    console.log('Cargando sistema de recomendaciones');
     const script = document.createElement('script');
     script.src = 'js/components/recomendaciones.js';
+    script.dataset.recommendationLoader = "true";
     script.onload = () => {
         if (window.recommendationSystem) {
             window.recommendationSystem.setupRecommendationsObserver();
@@ -820,6 +839,46 @@ setupRecommendationsObserver() {
     };
     document.head.appendChild(script);
 }
+
+// Modificación para setupCategoryPage
+/**
+ * Configura una página de categoría
+ */
+setupCategoryPage() {
+    // Detectar la categoría actual basada en la URL o el ID de contenedor
+    const categoryId = this.detectCurrentCategory();
+    
+    if (categoryId) {
+        console.log(`Configurando página para la categoría: ${categoryId}`);
+        
+        // Cargar productos de la categoría desde la URL o con valores predeterminados
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = parseInt(urlParams.get('page')) || 1;
+        const style = urlParams.get('style') || '';
+        const sort = urlParams.get('sort') || 'destacado';
+        
+        // Sincronizar filtros con parámetros URL
+        this.syncFiltersWithUrl(style, sort);
+        
+        // Si tenemos un cargador, utilizarlo para cargar los productos
+        if (window.loader) {
+            window.loader.loadCategoryProducts(categoryId, page, { style, sort });
+        }
+        
+        // Configurar eventos de filtros
+        this.setupFilterEvents(categoryId);
+        
+        // Reiniciar sistema de recomendaciones si existe, o configurar uno nuevo
+        if (window.recommendationSystem) {
+            window.recommendationSystem.reset();
+        } else {
+            this.setupRecommendationsObserver();
+        }
+    } else {
+        console.warn('No se pudo detectar la categoría actual');
+    }
+}
+
 
 /**
  * Carga productos relacionados basados en la categoría del producto actual

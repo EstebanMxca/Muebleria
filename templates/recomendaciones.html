@@ -22,16 +22,22 @@
     </div>
 </section>
 
-<!-- Cargar el script de recomendaciones después del elemento -->
+<!-- Script simplificado que verifica si ya existe una instancia -->
 <script>
-// Verificar si el sistema de recomendaciones ya está cargado
-if (!window.recommendationSystem) {
-    // Cargar el script si no está disponible
-    (function() {
-        var script = document.createElement('script');
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si el sistema de recomendaciones ya está cargado
+    if (!window.recommendationSystem && !document.querySelector('script[data-recommendation-loader="true"]')) {
+        // Marcar este script como cargador de recomendaciones
+        const script = document.createElement('script');
         script.src = 'js/components/recomendaciones.js';
+        script.dataset.recommendationLoader = "true";
         script.async = true;
         document.head.appendChild(script);
-    })();
-}
+    } else if (window.recommendationSystem) {
+        // Si ya existe, asegurarse de que esté inicializado
+        if (!window.recommendationSystem.initialized) {
+            window.recommendationSystem.init();
+        }
+    }
+});
 </script>
