@@ -828,7 +828,7 @@ setupRecommendationsObserver() {
     }
     
     // Si no existe, cargar el script e inicializar
-    console.log('Cargando sistema de recomendaciones');
+    // console.log('Cargando sistema de recomendaciones');
     const script = document.createElement('script');
     script.src = 'js/components/recomendaciones.js';
     script.dataset.recommendationLoader = "true";
@@ -849,7 +849,7 @@ setupCategoryPage() {
     const categoryId = this.detectCurrentCategory();
     
     if (categoryId) {
-        console.log(`Configurando página para la categoría: ${categoryId}`);
+        // console.log(`Configurando página para la categoría: ${categoryId}`);
         
         // Cargar productos de la categoría desde la URL o con valores predeterminados
         const urlParams = new URLSearchParams(window.location.search);

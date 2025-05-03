@@ -476,14 +476,14 @@ class App {
  * Carga contenido específico para las páginas de categoría
  */
 loadCategoryPageContent() {
-    console.log('Cargando contenido específico para página de categoría');
+    // console.log('Cargando contenido específico para página de categoría');
     
     // Inicializar el sistema de recomendaciones
     if (window.recommendationSystem) {
         console.log('Sistema de recomendaciones disponible, reiniciando');
         window.recommendationSystem.reset();
     } else if (document.querySelector('script[data-recommendation-loader="true"]')) {
-        console.log('Script de recomendaciones en proceso de carga');
+        // console.log('Script de recomendaciones en proceso de carga');
         // El script se encargará de la inicialización
     } else {
         console.log('Sistema de recomendaciones no disponible, cargando script');

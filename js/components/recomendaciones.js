@@ -151,7 +151,7 @@ if (!window.recommendationSystem) {
             // 2. Intentar detectar por ID en el DOM
             for (const categoryId of Object.keys(this.categoriesInfo)) {
                 if (document.getElementById(categoryId)) {
-                    console.log(`Categoría detectada por ID en DOM: ${categoryId}`);
+                    // console.log(`Categoría detectada por ID en DOM: ${categoryId}`);
                     return categoryId;
                 }
             }
@@ -241,7 +241,7 @@ if (!window.recommendationSystem) {
          * @param {string} currentCategory - ID de la categoría actual
          */
         loadRecommendations(currentCategory) {
-            console.log(`Cargando recomendaciones para categoría: ${currentCategory}`);
+            // console.log(`Cargando recomendaciones para categoría: ${currentCategory}`);
             
             // Buscar contenedor
             const container = document.querySelector(this.containerSelector);

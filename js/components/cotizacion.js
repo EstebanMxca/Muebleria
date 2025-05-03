@@ -57,7 +57,7 @@ class CotizacionWizard {
      * Intenta obtener los elementos del DOM
      */
     initElements() {
-        console.log('Intentando inicializar elementos del wizard');
+        // console.log('Intentando inicializar elementos del wizard');
         // Intentar obtener los elementos del DOM
         this.elements.modal = document.getElementById('cotizacionModal');
         if (this.elements.modal) {
@@ -84,7 +84,7 @@ class CotizacionWizard {
                 console.log('Modal de cotización encontrado pero faltan elementos internos');
             }
         } else {
-            console.log('Modal de cotización no encontrado en esta página');
+            // console.log('Modal de cotización no encontrado en esta página');
         }
     }
     

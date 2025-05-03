@@ -451,11 +451,11 @@ class Loader {
             }
             
             const data = await response.json();
-            console.log(`Datos recibidos:`, {
-                totalProductos: data.productos ? data.productos.length : 0,
-                totalPaginas: data.totalPaginas,
-                paginaActual: data.paginaActual
-            });
+            // console.log(`Datos recibidos:`, {
+            //     totalProductos: data.productos ? data.productos.length : 0,
+            //     totalPaginas: data.totalPaginas,
+            //     paginaActual: data.paginaActual
+            // });
             
             // Actualizar estado
             this.state.currentPage = page;
