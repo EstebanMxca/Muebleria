@@ -49,7 +49,7 @@ class NavbarComponent {
         
         window.addEventListener('load', () => {
             if (!this.state.initialized) {
-                console.log('Evento load disparado, intentando inicializar navbar');
+                // console.log('Evento load disparado, intentando inicializar navbar');
                 setTimeout(() => this.initElements(), 100);
             }
         });
@@ -75,13 +75,13 @@ class NavbarComponent {
      * Inicializa los elementos del navbar
      */
     initElements() {
-        console.log('Intentando inicializar elementos del navbar');
+        // console.log('Intentando inicializar elementos del navbar');
         
         // Buscar elemento navbar principal con selector más amplio
         this.elements.navbar = document.querySelector('nav, .navbar, .stunning-navbar, .custom-navbar');
         
         if (this.elements.navbar) {
-            console.log('Navbar encontrado en el DOM:', this.elements.navbar);
+            // console.log('Navbar encontrado en el DOM:', this.elements.navbar);
             
             // Buscar dropdowns de manera más consistente
             this.elements.dropdowns = this.elements.navbar.querySelectorAll('.dropdown-toggle');
@@ -131,7 +131,7 @@ class NavbarComponent {
      * Inicializa el componente
      */
     init() {
-        console.log('Inicializando componente Navbar');
+        // console.log('Inicializando componente Navbar');
         
         // Marcar como inicializado
         this.state.initialized = true;
@@ -160,7 +160,7 @@ class NavbarComponent {
         // Actualizar elementos activos
         this.updateActiveItem();
         
-        console.log('Componente Navbar inicializado correctamente');
+        // console.log('Componente Navbar inicializado correctamente');
         
         // Notificar que el navbar está listo
         document.dispatchEvent(new CustomEvent('navbar:ready', { 
@@ -259,7 +259,7 @@ class NavbarComponent {
             if (dropdown.closest('#catalogo-dropdown') || 
                 dropdown.id === 'catalogo-btn' || 
                 dropdown.textContent.trim().includes('Catálogo')) {
-                console.log('Dropdown de catálogo detectado, se configurará por separado');
+                // console.log('Dropdown de catálogo detectado, se configurará por separado');
                 return;
             }
             
@@ -342,7 +342,7 @@ class NavbarComponent {
      * Configura específicamente el dropdown de Catálogo con una solución robusta
      */
     setupCatalogoDropdown() {
-        console.log('Configurando manejo específico del dropdown de Catálogo');
+        // console.log('Configurando manejo específico del dropdown de Catálogo');
         
         // --------- ENCONTRAR ELEMENTOS POR MÚLTIPLES MÉTODOS ---------
         
@@ -412,7 +412,7 @@ class NavbarComponent {
         if (!catalogoBtn.id) catalogoBtn.id = 'catalogo-btn';
         if (!catalogoMenu.id) catalogoMenu.id = 'catalogo-menu';
         
-        console.log('Elementos del dropdown de Catálogo encontrados y con IDs asignados');
+        // console.log('Elementos del dropdown de Catálogo encontrados y con IDs asignados');
         
         // --------- REMOVER CONFIGURACIÓN EXISTENTE ---------
         
@@ -744,7 +744,7 @@ if (window.innerWidth < 992) {
             return;
         }
         
-        console.log('Configurando botón de cotización');
+        // console.log('Configurando botón de cotización');
         
         // Añadir efecto de hover mejorado
         this.elements.cotizacionBtn.addEventListener('mouseenter', () => {
@@ -774,7 +774,7 @@ if (window.innerWidth < 992) {
             }
         });
         
-        console.log('Botón de cotización configurado correctamente');
+        // console.log('Botón de cotización configurado correctamente');
     }
     
     /**

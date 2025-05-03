@@ -32,7 +32,7 @@ class ContactForm {
     init() {
         // Si no hay formulario en la página, salir
         if (!this.form) {
-            console.log('No se encontró formulario de contacto en esta página');
+            // console.log('No se encontró formulario de contacto en esta página');
             return;
         }
         

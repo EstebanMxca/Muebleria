@@ -769,7 +769,7 @@ selectCategory(card) {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Cargando CotizacionWizard...');
+    // console.log('Cargando CotizacionWizard...');
     window.cotizacionWizard = new CotizacionWizard();
-    console.log('CotizacionWizard creado');
+    // console.log('CotizacionWizard creado');
 });

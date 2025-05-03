@@ -26,7 +26,7 @@ class ProductService {
 
     // Añadir después del constructor en ProductService
 preloadFeaturedProducts() {
-    console.log('Intentando precargar productos destacados...');
+    // console.log('Intentando precargar productos destacados...');
     if (this.cache.featuredProducts) {
         console.log('Ya hay productos destacados en caché');
         return Promise.resolve(this.cache.featuredProducts);
@@ -40,7 +40,7 @@ preloadFeaturedProducts() {
             return response.json();
         })
         .then(data => {
-            console.log('Productos destacados precargados exitosamente');
+            // console.log('Productos destacados precargados exitosamente');
             this.cache.featuredProducts = data;
             return data;
         })
@@ -82,7 +82,7 @@ preloadFeaturedProducts() {
      * Inicializa el servicio de productos
      */
     init() {
-        console.log('Inicializando servicio de productos...');
+        // console.log('Inicializando servicio de productos...');
         
         // Cargar categorías si estamos en cualquier página
         this.loadCategories();

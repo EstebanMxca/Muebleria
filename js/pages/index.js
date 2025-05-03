@@ -31,7 +31,7 @@ class IndexPage {
      * Inicializa la página principal
      */
     init() {
-        console.log('Inicializando página principal...');
+        // console.log('Inicializando página principal...');
         
         // Configurar slider del hero
         if (this.elements.heroSlider) {
@@ -49,7 +49,7 @@ class IndexPage {
             this.setupParallax();
         }
         
-        console.log('Página principal inicializada');
+        // console.log('Página principal inicializada');
     }
     
     /**

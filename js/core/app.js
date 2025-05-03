@@ -23,7 +23,7 @@ class App {
      * Inicializa la aplicación
      */
     init() {
-        console.log('Inicializando aplicación Mueblería Cabañas...');
+        // console.log('Inicializando aplicación Mueblería Cabañas...');
         
         // Evitar inicialización múltiple
         if (this.state.initialized) {
@@ -68,7 +68,7 @@ class App {
             // Marcar como inicializado
             this.state.initialized = true;
             
-            console.log('Aplicación inicializada correctamente');
+            // console.log('Aplicación inicializada correctamente');
         });
     }
     
@@ -90,7 +90,7 @@ class App {
             this.state.pageType = 'other';
         }
         
-        console.log(`Tipo de página detectado: ${this.state.pageType}`);
+        // console.log(`Tipo de página detectado: ${this.state.pageType}`);
     }
     
     /**
@@ -521,17 +521,16 @@ window.app = new App();
 
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM cargado, inicializando aplicación...');
+    // console.log('DOM cargado, inicializando aplicación...');
     window.app = new App();
     window.app.init();
-    console.log('Aplicación inicializada');
+    // console.log('Aplicación inicializada');
 });
-
 
 // Añadir al final de app.js
 document.addEventListener('component:loaded', (event) => {
     if (event.detail && event.detail.component === 'templates/navbar.html') {
-        console.log('Navbar cargado, configurando botón de cotización');
+        // console.log('Navbar cargado, configurando botón de cotización');
         const cotizacionBtn = document.getElementById('cotizacionBtn');
         if (cotizacionBtn) {
             cotizacionBtn.addEventListener('click', (e) => {
