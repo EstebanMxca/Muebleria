@@ -126,7 +126,7 @@ class App {
                 this.openCotizacionModal();
             });
         } else {
-            console.log('Botón de cotización no encontrado');
+            // console.log('Botón de cotización no encontrado');
         }
         
         // Configurar botón de WhatsApp fijo
@@ -480,7 +480,7 @@ loadCategoryPageContent() {
     
     // Inicializar el sistema de recomendaciones
     if (window.recommendationSystem) {
-        console.log('Sistema de recomendaciones disponible, reiniciando');
+        // console.log('Sistema de recomendaciones disponible, reiniciando');
         window.recommendationSystem.reset();
     } else if (document.querySelector('script[data-recommendation-loader="true"]')) {
         // console.log('Script de recomendaciones en proceso de carga');
@@ -540,7 +540,7 @@ document.addEventListener('component:loaded', (event) => {
                 }
             });
         } else {
-            console.error('Botón de cotización no encontrado después de cargar navbar');
+            // console.error('Botón de cotización no encontrado después de cargar navbar');
         }
     }
 });

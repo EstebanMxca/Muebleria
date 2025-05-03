@@ -934,7 +934,7 @@ class Loader {
  */
 async loadFeaturedProducts(container) {
     try {
-        console.log("Iniciando carga optimizada de productos destacados");
+        // console.log("Iniciando carga optimizada de productos destacados");
         
         // Verificar si el contenedor existe
         if (!container) {
@@ -954,7 +954,7 @@ async loadFeaturedProducts(container) {
         
         // Intentar usar caché primero para respuesta inmediata
         if (window.productService && window.productService.cache.featuredProducts) {
-            console.log('Utilizando productos destacados en caché');
+            // console.log('Utilizando productos destacados en caché');
             window.productService.renderFeaturedProducts(container, window.productService.cache.featuredProducts);
             return window.productService.cache.featuredProducts;
         }

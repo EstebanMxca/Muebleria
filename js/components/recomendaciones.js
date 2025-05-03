@@ -184,7 +184,7 @@ if (!window.recommendationSystem) {
             // Buscar el contenedor
             const container = document.querySelector(this.containerSelector);
             if (!container) {
-                console.log('Contenedor de recomendaciones no encontrado');
+                // console.log('Contenedor de recomendaciones no encontrado');
                 
                 // Si hemos superado el límite de intentos, no intentar más
                 if (this.observerSetupAttempts >= this.MAX_OBSERVER_SETUP_ATTEMPTS) {
@@ -246,7 +246,7 @@ if (!window.recommendationSystem) {
             // Buscar contenedor
             const container = document.querySelector(this.containerSelector);
             if (!container) {
-                console.error('Contenedor de recomendaciones no encontrado en el DOM');
+                // console.error('Contenedor de recomendaciones no encontrado en el DOM');
                 
                 // Si no encontramos el contenedor, intentar nuevamente después de un retraso
                 if (this.retryCount < this.retryLimit) {

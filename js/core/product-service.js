@@ -364,10 +364,10 @@ setupCategoryPage() {
      */
     async loadFeaturedProducts(container) {
 
-        console.log("loadFeaturedProducts llamado", { 
-            hasLoader: !!window.loader, 
-            hasLoaderFunction: window.loader && typeof window.loader.loadFeaturedProducts === 'function' 
-        });
+        // console.log("loadFeaturedProducts llamado", { 
+        //     hasLoader: !!window.loader, 
+        //     hasLoaderFunction: window.loader && typeof window.loader.loadFeaturedProducts === 'function' 
+        // });
         // Si tenemos un loader, utilizarlo (prioridad)
         if (window.loader && typeof window.loader.loadFeaturedProducts === 'function') {
             return window.loader.loadFeaturedProducts(container);
@@ -423,7 +423,7 @@ setupCategoryPage() {
  * Renderiza los productos destacados en un contenedor de manera optimizada
  */
 renderFeaturedProducts(container, products) {
-    console.log("Renderizando productos destacados con versión optimizada");
+    // console.log("Renderizando productos destacados con versión optimizada");
     
     // Verificar si hay productos
     if (!products || products.length === 0) {
@@ -513,7 +513,7 @@ renderFeaturedProducts(container, products) {
         }
     });
     
-    console.log('Productos destacados renderizados correctamente');
+    // console.log('Productos destacados renderizados correctamente');
 }
 
 /**

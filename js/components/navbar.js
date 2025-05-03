@@ -203,7 +203,7 @@ class NavbarComponent {
     setupDropdowns() {
         // Código existente para setup de dropdowns
         if (!this.elements.dropdowns || this.elements.dropdowns.length === 0) {
-            console.warn('No se encontraron dropdowns para configurar');
+            // console.warn('No se encontraron dropdowns para configurar');
             return;
         }
         
