@@ -7,9 +7,9 @@
             <p class="text-muted mt-3">Descubre otras colecciones que podrían complementar tu espacio</p>
         </div>
 
-        <!-- Este es el contenedor que recibe las recomendaciones -->
+        <!-- Este es el contenedor que recibe las recomendaciones con ID actualizado -->
         <div id="related-categories-container">
-            <!-- Indicador de carga inicial -->
+            <!-- Indicador de carga inicial mejorado -->
             <div class="row">
                 <div class="col-12 text-center py-4">
                     <div class="spinner-border spinner-border-sm text-primary" role="status">
@@ -21,3 +21,17 @@
         </div>
     </div>
 </section>
+
+<!-- Cargar el script de recomendaciones después del elemento -->
+<script>
+// Verificar si el sistema de recomendaciones ya está cargado
+if (!window.recommendationSystem) {
+    // Cargar el script si no está disponible
+    (function() {
+        var script = document.createElement('script');
+        script.src = 'js/components/recomendaciones.js';
+        script.async = true;
+        document.head.appendChild(script);
+    })();
+}
+</script>

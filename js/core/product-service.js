@@ -772,169 +772,53 @@ generateNewDiscountBadgeHTML(descuento) {
         ).join('');
     }
    
-   /**
- * Carga recomendaciones para una categoría específica
+/**
+ * Delega la carga de recomendaciones al sistema centralizado
+ * @param {string} currentCategory - ID de la categoría actual
  */
 loadRecommendations(currentCategory) {
-    console.log('Cargando recomendaciones para categoría:', currentCategory);
-    
-    // Buscar contenedor de recomendaciones
-    const container = document.getElementById('related-categories-container');
-    if (!container) {
-        console.warn('No se encontró el contenedor de recomendaciones');
+    // Si existe el sistema centralizado de recomendaciones, usarlo
+    if (window.recommendationSystem) {
+        window.recommendationSystem.loadRecommendations(currentCategory);
         return;
     }
     
-    // Información de todas las categorías para recomendaciones
-    const infoCategoria = {
-        'salas': {
-            nombre: 'Salas',
-            descripcion: 'Diseños elegantes para convertir tu sala en un espacio acogedor',
-            imagen: 'assets/img-categorias/sala-ct.webp'
-        },
-        'comedores': {
-            nombre: 'Comedores',
-            descripcion: 'Espacios para compartir momentos especiales con diseños contemporáneos',
-            imagen: 'assets/img-categorias/comedor-ct.webp'
-        },
-        'recamaras': {
-            nombre: 'Recámaras',
-            descripcion: 'Espacios de descanso con estilo que harán de tu habitación un santuario',
-            imagen: 'assets/img-categorias/recamara-ct.webp'
-        },
-        'cabeceras': {
-            nombre: 'Cabeceras',
-            descripcion: 'El toque elegante para tu habitación que transformará tu espacio de descanso',
-            imagen: 'assets/img-categorias/cabecera-ct.webp'
-        },
-        'mesas-centro': {
-            nombre: 'Mesas de Centro',
-            descripcion: 'Complementos perfectos para tu sala que combinan funcionalidad y diseño',
-            imagen: 'assets/img-categorias/mesa-centro-ct.webp'
+    // Fallback si el sistema centralizado no está disponible
+    console.warn('Sistema de recomendaciones no disponible, cargando script');
+    
+    // Intentar cargar el script de recomendaciones
+    const script = document.createElement('script');
+    script.src = 'js/components/recomendaciones.js';
+    script.onload = () => {
+        if (window.recommendationSystem) {
+            window.recommendationSystem.loadRecommendations(currentCategory);
         }
     };
-    
-    // Normalizar el ID de categoría antes de filtrar
-    const normalizedCurrentCategory = this.normalizeCategoryId(currentCategory);
-    console.log('Categoría normalizada:', normalizedCurrentCategory);
-    
-    // Filtrar para no mostrar la categoría actual
-    const categoriasAMostrar = Object.keys(infoCategoria)
-        .filter(cat => cat !== normalizedCurrentCategory)
-        .slice(0, 4);
-    
-    console.log('Categorías a mostrar:', categoriasAMostrar);
-    
-    // Si no hay recomendaciones, salir
-    if (categoriasAMostrar.length === 0) {
-        console.warn('No hay categorías para recomendar');
-        container.innerHTML = '<div class="row"><div class="col-12 text-center py-4"><p>No hay recomendaciones disponibles</p></div></div>';
-        return;
-    }
-    
-    // Mostrar indicador de carga
-    container.innerHTML = `
-        <div class="row">
-            <div class="col-12 text-center py-4">
-                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Cargando recomendaciones...</span>
-                </div>
-                <p class="mt-2 small text-muted">Preparando recomendaciones...</p>
-            </div>
-        </div>
-    `;
-    
-    // Usar setTimeout para permitir que la interfaz se actualice primero
-    setTimeout(() => {
-        // Generar HTML para recomendaciones
-        const recomendacionesHTML = categoriasAMostrar.map((categoria, index) => {
-            const info = infoCategoria[categoria];
-            return `
-                <div class="col-md-3 mb-4">
-                    <div class="related-category-card shadow-sm h-100">
-                        <div class="related-image">
-                            <img src="${info.imagen}" alt="${info.nombre}" class="img-fluid">
-                            <div class="overlay">
-                                <a href="${categoria}.html" class="stretched-link"></a>
-                            </div>
-                        </div>
-                        <div class="related-content p-3">
-                            <h4 class="h5 mb-2">${info.nombre}</h4>
-                            <p class="mb-3 small text-muted">${info.descripcion}</p>
-                            <a href="${categoria}.html" class="btn btn-elegant">Ver colección</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Insertar HTML dentro de una fila
-        container.innerHTML = `<div class="row">${recomendacionesHTML}</div>`;
-        
-        // Reiniciar AOS si está disponible
-        if (typeof AOS !== 'undefined') {
-            setTimeout(() => {
-                AOS.refresh();
-            }, 100);
-        }
-    }, 300); // Pequeño retraso para asegurar la actualización
+    document.head.appendChild(script);
 }
 
 /**
- * Función auxiliar para normalizar IDs de categoría
- * Asegura consistencia entre diferentes formatos
- */
-normalizeCategoryId(categoryId) {
-    // Lista de equivalencias conocidas
-    const equivalencias = {
-        'sala': 'salas',
-        'comedor': 'comedores',
-        'recamara': 'recamaras',
-        'cabecera': 'cabeceras',
-        'mesa-centro': 'mesas-centro',
-        'mesas-de-centro': 'mesas-centro'
-    };
-    
-    // Normalizar ID
-    let normalized = categoryId ? categoryId.toLowerCase() : '';
-    
-    // Verificar equivalencias
-    if (equivalencias[normalized]) {
-        normalized = equivalencias[normalized];
-    }
-    
-    return normalized;
-}
-
-/**
- * Función auxiliar para agregar un observer de intersección
- * que cargue las recomendaciones solo cuando están a punto de ser visibles
+ * Delega la configuración del observer de recomendaciones al sistema centralizado
  */
 setupRecommendationsObserver() {
-    // Buscar el contenedor
-    const container = document.getElementById('related-categories-container');
-    if (!container) return;
+    // Si existe el sistema centralizado de recomendaciones, usarlo
+    if (window.recommendationSystem) {
+        window.recommendationSystem.setupRecommendationsObserver();
+        return;
+    }
     
-    // Crear un observer para cargar solo cuando esté visible
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Cargar recomendaciones cuando esté visible
-                const categoryId = this.detectCurrentCategory();
-                if (categoryId) {
-                    this.loadRecommendations(categoryId);
-                }
-                // Dejar de observar
-                observer.unobserve(container);
-            }
-        });
-    }, {
-        rootMargin: '200px', // Cargar cuando esté a 200px de ser visible
-        threshold: 0.1
-    });
+    // Fallback si el sistema centralizado no está disponible
+    console.warn('Sistema de recomendaciones no disponible, cargando script');
     
-    // Empezar a observar
-    observer.observe(container);
+    // Intentar cargar el script de recomendaciones
+    const script = document.createElement('script');
+    script.src = 'js/components/recomendaciones.js';
+    script.onload = () => {
+        if (window.recommendationSystem) {
+            window.recommendationSystem.setupRecommendationsObserver();
+        }
+    };
+    document.head.appendChild(script);
 }
 
 /**

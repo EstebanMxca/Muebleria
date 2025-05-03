@@ -8,7 +8,8 @@ class App {
         // Componentes principales de la aplicación
         this.components = {
             loader: null,
-            productService: null
+            productService: null,
+            recommendationSystem: null // Nuevo componente centralizado
         };
         
         // Estado de la aplicación
@@ -49,20 +50,20 @@ class App {
             
             // Optimizaciones de rendimiento para scroll
             let scrollTimer;
-window.addEventListener('scroll', () => {
-    // No aplicar scrolling class en páginas de categoría para evitar parpadeo
-    const isCategoryPage = /salas|comedores|recamaras|cabeceras|mesas-centro/.test(window.location.pathname);
-    
-    if (!isCategoryPage) {
-        // Aplicar optimizaciones solo en páginas que no son de categoría
-        document.documentElement.classList.add('scrolling');
-        if (scrollTimer) clearTimeout(scrollTimer);
-        
-        scrollTimer = setTimeout(() => {
-            document.documentElement.classList.remove('scrolling');
-        }, 150); // Tiempo reducido para mejor experiencia
-    }
-}, { passive: true });
+            window.addEventListener('scroll', () => {
+                // No aplicar scrolling class en páginas de categoría para evitar parpadeo
+                const isCategoryPage = /salas|comedores|recamaras|cabeceras|mesas-centro/.test(window.location.pathname);
+                
+                if (!isCategoryPage) {
+                    // Aplicar optimizaciones solo en páginas que no son de categoría
+                    document.documentElement.classList.add('scrolling');
+                    if (scrollTimer) clearTimeout(scrollTimer);
+                    
+                    scrollTimer = setTimeout(() => {
+                        document.documentElement.classList.remove('scrolling');
+                    }, 150); // Tiempo reducido para mejor experiencia
+                }
+            }, { passive: true });
             
             // Marcar como inicializado
             this.state.initialized = true;
@@ -83,6 +84,8 @@ window.addEventListener('scroll', () => {
             this.state.pageType = 'admin';
         } else if (path.match(/salas|comedores|recamaras|cabeceras|mesas-centro/)) {
             this.state.pageType = 'category';
+        } else if (path.includes('product-detail.html')) {
+            this.state.pageType = 'product';
         } else {
             this.state.pageType = 'other';
         }
@@ -102,6 +105,9 @@ window.addEventListener('scroll', () => {
         this.components.loader = new Loader();
         window.loader = this.components.loader;
         
+        // Inicializar sistema de recomendaciones
+        this.components.recommendationSystem = window.recommendationSystem || null;
+        
         // Inicializar componentes específicos según la página
         if (this.state.pageType === 'home' || this.state.pageType === 'category') {
             this.components.productService.init();
@@ -119,7 +125,7 @@ window.addEventListener('scroll', () => {
                 e.preventDefault();
                 this.openCotizacionModal();
             });
-        }else {
+        } else {
             console.log('Botón de cotización no encontrado');
         }
         
@@ -158,119 +164,85 @@ window.addEventListener('scroll', () => {
     /**
      * Abre el modal de cotización
      */
-   /**
- * Abre el modal de cotización
- */
-openCotizacionModal() {
-    console.log('Intentando abrir modal de cotización');
-    
-    // Verificar si el modal ya está en el DOM
-    let modalElement = document.getElementById('cotizacionModal');
-    
-    // Si no existe el modal, intentar cargarlo
-    if (!modalElement) {
-        console.log('Modal no encontrado en el DOM, intentando cargarlo');
-        this.loadCotizacionModal()
-            .then(() => {
-                console.log('Modal cargado correctamente');
-                // Una vez cargado, abrirlo
-                modalElement = document.getElementById('cotizacionModal');
-                this.showModal(modalElement);
-                
-                // Inicializar el wizard después de cargar el modal
-                if (typeof CotizacionWizard !== 'undefined') {
-                    if (!window.cotizacionWizard) {
-                        window.cotizacionWizard = new CotizacionWizard();
-                    } else {
-                        // Si ya existe, intentar reinicializar sus elementos
-                        if (typeof window.cotizacionWizard.initElements === 'function') {
-                            window.cotizacionWizard.initElements();
+    openCotizacionModal() {
+        console.log('Intentando abrir modal de cotización');
+        
+        // Verificar si el modal ya está en el DOM
+        let modalElement = document.getElementById('cotizacionModal');
+        
+        // Si no existe el modal, intentar cargarlo
+        if (!modalElement) {
+            console.log('Modal no encontrado en el DOM, intentando cargarlo');
+            this.loadCotizacionModal()
+                .then(() => {
+                    console.log('Modal cargado correctamente');
+                    // Una vez cargado, abrirlo
+                    modalElement = document.getElementById('cotizacionModal');
+                    this.showModal(modalElement);
+                    
+                    // Inicializar el wizard después de cargar el modal
+                    if (typeof CotizacionWizard !== 'undefined') {
+                        if (!window.cotizacionWizard) {
+                            window.cotizacionWizard = new CotizacionWizard();
+                        } else {
+                            // Si ya existe, intentar reinicializar sus elementos
+                            if (typeof window.cotizacionWizard.initElements === 'function') {
+                                window.cotizacionWizard.initElements();
+                            }
                         }
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error al cargar modal de cotización:', error);
-            });
-        return;
-    }
-    
-    // Si el modal ya existe, simplemente abrirlo
-    console.log('Modal encontrado en el DOM, abriéndolo');
-    this.showModal(modalElement);
-}
-
-/**
- * Muestra un modal utilizando Bootstrap o una implementación manual
- * @param {HTMLElement} modalElement - El elemento del modal a mostrar
- */
-showModal(modalElement) {
-    if (!modalElement) {
-        console.error('No se puede mostrar el modal: elemento no encontrado');
-        return;
-    }
-    
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-        console.log('Usando Bootstrap para mostrar el modal');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    } else {
-        console.error('Bootstrap no está disponible, usando implementación manual');
-        // Intentar mostrar el modal de forma manual
-        modalElement.style.display = 'block';
-        modalElement.classList.add('show');
-        document.body.classList.add('modal-open');
-        
-        // Crear un backdrop manualmente
-        const backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop fade show';
-        document.body.appendChild(backdrop);
-        
-        // Añadir evento para cerrar el modal
-        const closeButtons = modalElement.querySelectorAll('[data-bs-dismiss="modal"]');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modalElement.style.display = 'none';
-                modalElement.classList.remove('show');
-                document.body.classList.remove('modal-open');
-                if (backdrop.parentNode) {
-                    backdrop.parentNode.removeChild(backdrop);
-                }
-            });
-        });
-    }
-}
-
-/**
- * Carga el modal de cotización desde el archivo HTML
- */
-async loadCotizacionModal() {
-    try {
-        // Crear un contenedor para el modal
-        const modalContainer = document.createElement('div');
-        modalContainer.id = 'cotizacionModalContainer';
-        
-        // Cargar contenido del modal desde el archivo HTML
-        const response = await fetch('templates/cotizacion-modal.html');
-        
-        if (!response.ok) {
-            throw new Error(`Error al cargar modal: ${response.status}`);
+                })
+                .catch(error => {
+                    console.error('Error al cargar modal de cotización:', error);
+                });
+            return;
         }
         
-        const html = await response.text();
-        modalContainer.innerHTML = html;
-        document.body.appendChild(modalContainer);
-        
-        // Emitir evento para notificar que el componente se ha cargado
-        document.dispatchEvent(new CustomEvent('components:loaded'));
-        
-        // Devolver true para indicar que la carga fue exitosa
-        return true;
-    } catch (error) {
-        console.error('Error al cargar el modal de cotización:', error);
-        return false;
+        // Si el modal ya existe, simplemente abrirlo
+        console.log('Modal encontrado en el DOM, abriéndolo');
+        this.showModal(modalElement);
     }
-}
+
+    /**
+     * Muestra un modal utilizando Bootstrap o una implementación manual
+     * @param {HTMLElement} modalElement - El elemento del modal a mostrar
+     */
+    showModal(modalElement) {
+        if (!modalElement) {
+            console.error('No se puede mostrar el modal: elemento no encontrado');
+            return;
+        }
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            console.log('Usando Bootstrap para mostrar el modal');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        } else {
+            console.log('Bootstrap no está disponible, usando implementación manual');
+            // Intentar mostrar el modal de forma manual
+            modalElement.style.display = 'block';
+            modalElement.classList.add('show');
+            document.body.classList.add('modal-open');
+            
+            // Crear un backdrop manualmente
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
+            
+            // Añadir evento para cerrar el modal
+            const closeButtons = modalElement.querySelectorAll('[data-bs-dismiss="modal"]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                    if (backdrop.parentNode) {
+                        backdrop.parentNode.removeChild(backdrop);
+                    }
+                });
+            });
+        }
+    }
     
     /**
      * Carga el modal de cotización desde el archivo HTML
@@ -358,6 +330,11 @@ async loadCotizacionModal() {
                             // Incrementar contador
                             loadedCount++;
                             
+                            // Emitir evento para notificar la carga del componente específico
+                            document.dispatchEvent(new CustomEvent('component:loaded', {
+                                detail: { component: file }
+                            }));
+                            
                             // Si se han cargado todos los componentes, emitir evento
                             if (loadedCount === includes.length) {
                                 console.log('Todos los componentes HTML han sido cargados');
@@ -398,6 +375,9 @@ async loadCotizacionModal() {
                 break;
             case 'admin':
                 this.loadAdminPageContent();
+                break;
+            case 'product':
+                this.loadProductDetailContent();
                 break;
         }
         
@@ -493,26 +473,42 @@ async loadCotizacionModal() {
     }
     
     /**
- * Carga contenido específico para las páginas de categoría
- */
-loadCategoryPageContent() {
-    // La mayor parte de la lógica se maneja en setupCategoryPage del ProductService
-    
-    // Configurar el observer para recomendaciones si el servicio de productos está disponible
-    if (window.productService && typeof window.productService.setupRecommendationsObserver === 'function') {
-        window.productService.setupRecommendationsObserver();
-    }
-    
-    // Si hay un loader, iniciar la carga de productos recomendados
-    if (window.loader && typeof window.loader.loadRecommendations === 'function') {
-        const categoryId = this.detectCurrentCategory();
-        if (categoryId) {
-            window.loader.loadRecommendations(categoryId);
+     * Carga contenido específico para las páginas de categoría
+     */
+    loadCategoryPageContent() {
+        console.log('Cargando contenido específico para página de categoría');
+        
+        // Inicializar el sistema de recomendaciones (si está disponible)
+        if (this.components.recommendationSystem) {
+            // El sistema se inicializará a sí mismo, no necesitamos llamar a ningún método aquí
+            console.log('Sistema de recomendaciones disponible');
+        } else {
+            console.log('Sistema de recomendaciones no disponible, cargando script');
+            
+            // Intentar cargar el script de recomendaciones
+            const script = document.createElement('script');
+            script.src = 'js/components/recomendaciones.js';
+            script.onload = () => {
+                console.log('Script de recomendaciones cargado');
+                if (window.recommendationSystem) {
+                    window.recommendationSystem.init();
+                }
+            };
+            document.head.appendChild(script);
         }
     }
     
-    console.log('Contenido específico de categoría inicializado');
-}
+    /**
+     * Carga contenido específico para la página de detalle de producto
+     */
+    loadProductDetailContent() {
+        console.log('Cargando contenido específico para página de detalle de producto');
+        
+        // Inicializar componentes específicos para detalle de producto
+        if (window.productDetail && typeof window.productDetail.init === 'function') {
+            window.productDetail.init();
+        }
+    }
     
     /**
      * Carga contenido específico para la página de administración
