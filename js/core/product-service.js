@@ -784,7 +784,7 @@ loadRecommendations(currentCategory) {
     
     // Verificar si el script ya está cargándose
     if (document.querySelector('script[data-recommendation-loader="true"]')) {
-        console.log('Script de recomendaciones en proceso de carga');
+        // console.log('Script de recomendaciones en proceso de carga');
         setTimeout(() => {
             if (window.recommendationSystem) {
                 window.recommendationSystem.loadRecommendations(currentCategory);

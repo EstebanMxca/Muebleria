@@ -765,7 +765,7 @@ if (window.innerWidth < 992) {
         
         // Configurar evento de clic para el botón de cotización
         this.elements.cotizacionBtn.addEventListener('click', (e) => {
-            console.log('Botón de cotización clickeado');
+            // console.log('Botón de cotización clickeado');
             e.preventDefault();
             if (window.app && typeof window.app.openCotizacionModal === 'function') {
                 window.app.openCotizacionModal();

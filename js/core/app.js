@@ -165,7 +165,7 @@ class App {
      * Abre el modal de cotización
      */
     openCotizacionModal() {
-        console.log('Intentando abrir modal de cotización');
+        // console.log('Intentando abrir modal de cotización');
         
         // Verificar si el modal ya está en el DOM
         let modalElement = document.getElementById('cotizacionModal');
@@ -199,7 +199,7 @@ class App {
         }
         
         // Si el modal ya existe, simplemente abrirlo
-        console.log('Modal encontrado en el DOM, abriéndolo');
+        // console.log('Modal encontrado en el DOM, abriéndolo');
         this.showModal(modalElement);
     }
 
@@ -214,7 +214,7 @@ class App {
         }
         
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-            console.log('Usando Bootstrap para mostrar el modal');
+            // console.log('Usando Bootstrap para mostrar el modal');
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
         } else {

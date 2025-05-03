@@ -47,7 +47,7 @@ class CotizacionWizard {
         // Escuchar evento de mostrar modal
         document.addEventListener('shown.bs.modal', (event) => {
             if (event.target && event.target.id === 'cotizacionModal') {
-                console.log('Modal de cotización mostrado, reinicializando elementos');
+                // console.log('Modal de cotización mostrado, reinicializando elementos');
                 this.initElements();
             }
         });
@@ -61,24 +61,24 @@ class CotizacionWizard {
         // Intentar obtener los elementos del DOM
         this.elements.modal = document.getElementById('cotizacionModal');
         if (this.elements.modal) {
-            console.log('Modal de cotización encontrado en initElements');
+            // console.log('Modal de cotización encontrado en initElements');
             this.elements.steps = this.elements.modal.querySelectorAll('.cotizacion-step');
             this.elements.prevBtn = document.getElementById('prevStepBtn');
             this.elements.nextBtn = document.getElementById('nextStepBtn');
             this.elements.submitBtn = document.getElementById('submitBtn');
             this.elements.categoryCards = this.elements.modal.querySelectorAll('.category-card');
             
-            console.log('Elementos encontrados:', {
-                steps: this.elements.steps.length,
-                prevBtn: !!this.elements.prevBtn,
-                nextBtn: !!this.elements.nextBtn,
-                submitBtn: !!this.elements.submitBtn,
-                categoryCards: this.elements.categoryCards.length
-            });
+            // console.log('Elementos encontrados:', {
+            //     steps: this.elements.steps.length,
+            //     prevBtn: !!this.elements.prevBtn,
+            //     nextBtn: !!this.elements.nextBtn,
+            //     submitBtn: !!this.elements.submitBtn,
+            //     categoryCards: this.elements.categoryCards.length
+            // });
             
             // Si tenemos el modal y los elementos necesarios, inicializar
             if (this.elements.steps && this.elements.steps.length > 0) {
-                console.log('Modal de cotización encontrado, inicializando wizard');
+                // console.log('Modal de cotización encontrado, inicializando wizard');
                 this.init();
             } else {
                 console.log('Modal de cotización encontrado pero faltan elementos internos');
@@ -92,10 +92,10 @@ class CotizacionWizard {
      * Inicializa el wizard de cotización
      */
     init() {
-        console.log('Inicializando el wizard de cotización');
+        // console.log('Inicializando el wizard de cotización');
         
         // La cantidad de pasos ya está fija en 3
-        console.log(`Pasos del wizard: ${this.state.maxSteps}`);
+        // console.log(`Pasos del wizard: ${this.state.maxSteps}`);
         
         // Configurar botones de navegación
         this.setupNavigationButtons();
@@ -109,14 +109,14 @@ class CotizacionWizard {
         // Mostrar el primer paso
         this.showStep(1);
         
-        console.log('Wizard de cotización inicializado correctamente');
+        // console.log('Wizard de cotización inicializado correctamente');
     }
     
     /**
      * Configura los botones de navegación entre pasos
      */
     setupNavigationButtons() {
-        console.log('Configurando botones de navegación');
+        // console.log('Configurando botones de navegación');
         
         // Botón anterior
         if (this.elements.prevBtn) {
@@ -124,7 +124,7 @@ class CotizacionWizard {
                 console.log('Botón anterior clickeado');
                 this.goToPrevStep();
             });
-            console.log('Evento para botón anterior configurado');
+            // console.log('Evento para botón anterior configurado');
         } else {
             console.warn('Botón anterior no encontrado');
         }
@@ -142,7 +142,7 @@ class CotizacionWizard {
                 console.log('Botón siguiente clickeado');
                 this.goToNextStep();
             });
-            console.log('Evento para botón siguiente configurado');
+            // console.log('Evento para botón siguiente configurado');
         } else {
             console.warn('Botón siguiente no encontrado');
         }
@@ -160,7 +160,7 @@ class CotizacionWizard {
                 console.log('Botón enviar clickeado');
                 this.submitForm();
             });
-            console.log('Evento para botón enviar configurado');
+            // console.log('Evento para botón enviar configurado');
         } else {
             console.warn('Botón enviar no encontrado');
         }
@@ -170,7 +170,7 @@ class CotizacionWizard {
      * Configura los eventos de selección de categoría
      */
     setupCategoryCards() {
-        console.log('Configurando tarjetas de categoría');
+        // console.log('Configurando tarjetas de categoría');
         if (this.elements.categoryCards && this.elements.categoryCards.length > 0) {
             this.elements.categoryCards.forEach(card => {
                 // Primero removemos listeners anteriores para evitar duplicados
@@ -187,7 +187,7 @@ class CotizacionWizard {
             
             // Actualizar la referencia a las tarjetas
             this.elements.categoryCards = this.elements.modal.querySelectorAll('.category-card');
-            console.log('Eventos para tarjetas de categoría configurados');
+            // console.log('Eventos para tarjetas de categoría configurados');
         } else {
             console.warn('No se encontraron tarjetas de categoría');
         }
@@ -202,7 +202,7 @@ class CotizacionWizard {
             return;
         }
         
-        console.log('Configurando eventos del modal');
+        // console.log('Configurando eventos del modal');
         
         // Resetear wizard cuando se abre el modal
         this.elements.modal.addEventListener('show.bs.modal', () => {
@@ -216,7 +216,7 @@ class CotizacionWizard {
             this.cleanupModalBackdrop();
         });
         
-        console.log('Eventos del modal configurados correctamente');
+        // console.log('Eventos del modal configurados correctamente');
     }
     
     /**
@@ -293,7 +293,7 @@ class CotizacionWizard {
  * @param {number} stepNumber - Número de paso a mostrar
  */
 showStep(stepNumber) {
-    console.log(`Mostrando paso ${stepNumber}`);
+    // console.log(`Mostrando paso ${stepNumber}`);
     // Ocultar todos los pasos
     if (this.elements.steps) {
         this.elements.steps.forEach(step => {
@@ -335,7 +335,7 @@ showStep(stepNumber) {
  * Actualiza la visibilidad de los botones de navegación según el paso actual
  */
 updateNavigationButtons() {
-    console.log(`Actualizando botones de navegación para paso ${this.state.currentStep}`);
+    // console.log(`Actualizando botones de navegación para paso ${this.state.currentStep}`);
     
     // Botón anterior
     if (this.elements.prevBtn) {
@@ -348,7 +348,7 @@ updateNavigationButtons() {
             // En los pasos 1 y 2 mostramos "Siguiente"
             this.elements.nextBtn.style.display = 'inline-block';
             this.elements.submitBtn.style.display = 'none';
-            console.log('Mostrando botón Siguiente, ocultando Enviar');
+            // console.log('Mostrando botón Siguiente, ocultando Enviar');
             
             // En el paso 1, desactivar el botón siguiente si no hay categoría seleccionada
             if (this.state.currentStep === 1) {
