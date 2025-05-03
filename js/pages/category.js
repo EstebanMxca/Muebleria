@@ -26,7 +26,7 @@ class CategoryPage {
      * Inicializa la página de categoría
      */
     init() {
-        console.log('Inicializando página de categoría...');
+        // console.log('Inicializando página de categoría...');
         
         // Detectar la categoría actual
         this.state.currentCategory = this.detectCurrentCategory();
@@ -35,7 +35,7 @@ class CategoryPage {
             return;
         }
         
-        console.log(`Categoría detectada: ${this.state.currentCategory}`);
+        // console.log(`Categoría detectada: ${this.state.currentCategory}`);
         
         // Obtener estado inicial de la URL
         this.syncStateWithUrl();
@@ -49,7 +49,7 @@ class CategoryPage {
         // Cargar productos iniciales
         this.loadProducts();
         
-        console.log('Página de categoría inicializada');
+        // console.log('Página de categoría inicializada');
     }
     
     /**

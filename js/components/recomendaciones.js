@@ -66,7 +66,7 @@ if (!window.recommendationSystem) {
                 return;
             }
             
-            console.log('Inicializando sistema de recomendaciones');
+            // console.log('Inicializando sistema de recomendaciones');
             
             // Detectar si estamos en una página de categoría
             const currentCategory = this.detectCurrentCategory();
@@ -96,7 +96,7 @@ if (!window.recommendationSystem) {
             
             // Configurar nuevo timeout (15 segundos)
             this.globalTimeout = setTimeout(() => {
-                console.log('Timeout global alcanzado, reiniciando sistema de recomendaciones');
+                // console.log('Timeout global alcanzado, reiniciando sistema de recomendaciones');
                 this.reset();
             }, 15000);
         }
@@ -105,7 +105,7 @@ if (!window.recommendationSystem) {
          * Reinicia el estado del sistema para cambios de página
          */
         reset() {
-            console.log('Reiniciando sistema de recomendaciones');
+            // console.log('Reiniciando sistema de recomendaciones');
             this.retryCount = 0;
             this.observerSetupAttempts = 0;
             
@@ -143,8 +143,8 @@ if (!window.recommendationSystem) {
             
             for (const [urlPattern, categoryId] of Object.entries(this.urlToCategoryMap)) {
                 if (path.includes(urlPattern)) {
-                    console.log(`Categoría detectada por URL: ${categoryId}`);
-                    return categoryId;
+                    // console.log(`Categoría detectada por URL: ${categoryId}`);
+                    // return categoryId;
                 }
             }
             
@@ -233,7 +233,7 @@ if (!window.recommendationSystem) {
             
             // Empezar a observar
             this.observer.observe(container);
-            console.log('Observer de recomendaciones configurado');
+            // console.log('Observer de recomendaciones configurado');
         }
         
         /**

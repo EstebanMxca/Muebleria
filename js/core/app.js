@@ -337,7 +337,7 @@ class App {
                             
                             // Si se han cargado todos los componentes, emitir evento
                             if (loadedCount === includes.length) {
-                                console.log('Todos los componentes HTML han sido cargados');
+                                // console.log('Todos los componentes HTML han sido cargados');
                                 document.dispatchEvent(new CustomEvent('components:loaded'));
                             }
                         } else {

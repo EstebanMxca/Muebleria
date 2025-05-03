@@ -416,7 +416,7 @@ class Loader {
         this.state.isLoading = true;
         this.toggleGlobalLoader(true);
         
-        console.log(`Cargando categoría ${categoryId}, página ${page} con filtros:`, filters);
+        // console.log(`Cargando categoría ${categoryId}, página ${page} con filtros:`, filters);
         
         try {
             // Usar el contenedor de la categoría específica
@@ -442,7 +442,7 @@ class Loader {
             if (filters.style) url += `&style=${encodeURIComponent(filters.style)}`;
             if (filters.sort) url += `&sort=${encodeURIComponent(filters.sort)}`;
             
-            console.log(`Solicitando URL: ${url}`);
+            // console.log(`Solicitando URL: ${url}`);
             
             const response = await fetch(url);
             

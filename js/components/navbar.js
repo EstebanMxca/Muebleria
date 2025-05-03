@@ -42,7 +42,7 @@ class NavbarComponent {
         // Intento adicional después de eventos específicos
         document.addEventListener('components:loaded', () => {
             if (!this.state.initialized) {
-                console.log('Evento components:loaded recibido, intentando inicializar navbar');
+                // console.log('Evento components:loaded recibido, intentando inicializar navbar');
                 setTimeout(() => this.initElements(), 100);
             }
         });
@@ -91,7 +91,7 @@ class NavbarComponent {
             if (!this.state.initialized) {
                 this.init();
             } else {
-                console.log('Navbar ya inicializado, verificando estado del catálogo dropdown');
+                // console.log('Navbar ya inicializado, verificando estado del catálogo dropdown');
                 // Reinicializar específicamente el dropdown de catálogo si es necesario
                 setTimeout(() => this.setupCatalogoDropdown(), 200);
             }
@@ -100,7 +100,7 @@ class NavbarComponent {
             setTimeout(() => {
                 this.elements.navbar = document.querySelector('nav, .navbar, .stunning-navbar, .custom-navbar');
                 if (this.elements.navbar) {
-                    console.log('Navbar encontrado en segundo intento');
+                    // console.log('Navbar encontrado en segundo intento');
                     this.elements.dropdowns = this.elements.navbar.querySelectorAll('.dropdown-toggle');
                     this.elements.cotizacionBtn = document.getElementById('cotizacionBtn');
                     this.init();
@@ -115,7 +115,7 @@ class NavbarComponent {
     cleanupPreviousEvents() {
         // Limpiar manejadores de eventos anteriores
         if (window.navbarCleanupHandlers && window.navbarCleanupHandlers.length > 0) {
-            console.log('Limpiando manejadores de eventos anteriores del navbar');
+            // console.log('Limpiando manejadores de eventos anteriores del navbar');
             window.navbarCleanupHandlers.forEach(handler => {
                 if (handler.target && handler.type && handler.callback) {
                     handler.target.removeEventListener(handler.type, handler.callback);
@@ -453,7 +453,7 @@ class NavbarComponent {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Toggle catalogo menu');
+            // console.log('Toggle catalogo menu');
             
             const isCurrentlyOpen = catalogoMenu.classList.contains('show');
             
