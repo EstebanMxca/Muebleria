@@ -81,7 +81,7 @@ class CotizacionWizard {
                 // console.log('Modal de cotización encontrado, inicializando wizard');
                 this.init();
             } else {
-                console.log('Modal de cotización encontrado pero faltan elementos internos');
+                // console.log('Modal de cotización encontrado pero faltan elementos internos');
             }
         } else {
             // console.log('Modal de cotización no encontrado en esta página');
@@ -121,12 +121,12 @@ class CotizacionWizard {
         // Botón anterior
         if (this.elements.prevBtn) {
             this.elements.prevBtn.addEventListener('click', () => {
-                console.log('Botón anterior clickeado');
+                // console.log('Botón anterior clickeado');
                 this.goToPrevStep();
             });
             // console.log('Evento para botón anterior configurado');
         } else {
-            console.warn('Botón anterior no encontrado');
+            // console.warn('Botón anterior no encontrado');
         }
         
         // Botón siguiente
@@ -139,12 +139,12 @@ class CotizacionWizard {
             this.elements.nextBtn = newNextBtn;
             
             this.elements.nextBtn.addEventListener('click', () => {
-                console.log('Botón siguiente clickeado');
+                // console.log('Botón siguiente clickeado');
                 this.goToNextStep();
             });
             // console.log('Evento para botón siguiente configurado');
         } else {
-            console.warn('Botón siguiente no encontrado');
+            // console.warn('Botón siguiente no encontrado');
         }
         
         // Botón enviar
@@ -157,12 +157,12 @@ class CotizacionWizard {
             this.elements.submitBtn = newSubmitBtn;
             
             this.elements.submitBtn.addEventListener('click', () => {
-                console.log('Botón enviar clickeado');
+                // console.log('Botón enviar clickeado');
                 this.submitForm();
             });
             // console.log('Evento para botón enviar configurado');
         } else {
-            console.warn('Botón enviar no encontrado');
+            // console.warn('Botón enviar no encontrado');
         }
     }
     
@@ -180,7 +180,7 @@ class CotizacionWizard {
                 }
                 
                 newCard.addEventListener('click', () => {
-                    console.log('Categoría clickeada:', newCard.getAttribute('data-category'));
+                    // console.log('Categoría clickeada:', newCard.getAttribute('data-category'));
                     this.selectCategory(newCard);
                 });
             });
@@ -189,7 +189,7 @@ class CotizacionWizard {
             this.elements.categoryCards = this.elements.modal.querySelectorAll('.category-card');
             // console.log('Eventos para tarjetas de categoría configurados');
         } else {
-            console.warn('No se encontraron tarjetas de categoría');
+            // console.warn('No se encontraron tarjetas de categoría');
         }
     }
     
@@ -198,7 +198,7 @@ class CotizacionWizard {
      */
     setupModalEvents() {
         if (!this.elements.modal) {
-            console.error('No se pueden configurar eventos del modal: modal no encontrado');
+            // console.error('No se pueden configurar eventos del modal: modal no encontrado');
             return;
         }
         
@@ -206,13 +206,13 @@ class CotizacionWizard {
         
         // Resetear wizard cuando se abre el modal
         this.elements.modal.addEventListener('show.bs.modal', () => {
-            console.log('Evento show.bs.modal detectado, reseteando wizard');
+            // console.log('Evento show.bs.modal detectado, reseteando wizard');
             this.resetWizard();
         });
         
         // Limpiar estado del modal al cerrar (evitar problemas con Bootstrap)
         this.elements.modal.addEventListener('hidden.bs.modal', () => {
-            console.log('Evento hidden.bs.modal detectado, limpiando modal');
+            // console.log('Evento hidden.bs.modal detectado, limpiando modal');
             this.cleanupModalBackdrop();
         });
         
@@ -237,7 +237,7 @@ class CotizacionWizard {
      * Resetea el wizard a su estado inicial
      */
     resetWizard() {
-        console.log('Reseteando wizard');
+        // console.log('Reseteando wizard');
         // Volver al primer paso
         this.state.currentStep = 1;
         this.showStep(1);
@@ -275,7 +275,7 @@ class CotizacionWizard {
             el.classList.remove('is-invalid');
         });
         
-        console.log('Wizard reseteado correctamente');
+        // console.log('Wizard reseteado correctamente');
     }
     
     /**
@@ -305,9 +305,9 @@ showStep(stepNumber) {
     const currentStepElement = this.elements.modal.querySelector(`.cotizacion-step[data-step="${stepNumber}"]`);
     if (currentStepElement) {
         currentStepElement.classList.add('active');
-        console.log(`Paso ${stepNumber} activado`);
+        // console.log(`Paso ${stepNumber} activado`);
     } else {
-        console.error(`No se encontró el elemento del paso ${stepNumber}`);
+        // console.error(`No se encontró el elemento del paso ${stepNumber}`);
     }
     
     // Actualizar indicador de progreso en dispositivos móviles
@@ -365,13 +365,13 @@ updateNavigationButtons() {
             // En el paso 3 (último) mostramos "Enviar por WhatsApp"
             this.elements.nextBtn.style.display = 'none';
             this.elements.submitBtn.style.display = 'inline-block';
-            console.log('Mostrando botón Enviar, ocultando Siguiente');
+            // console.log('Mostrando botón Enviar, ocultando Siguiente');
         } else {
             // No debería llegar aquí, pero por seguridad
             this.elements.nextBtn.style.display = 'none';
             this.elements.submitBtn.style.display = 'none';
             this.elements.prevBtn.style.display = 'none';
-            console.log('Ocultando todos los botones de navegación');
+            // console.log('Ocultando todos los botones de navegación');
         }
     }
 }
@@ -380,7 +380,7 @@ updateNavigationButtons() {
      * Navega al paso anterior
      */
     goToPrevStep() {
-        console.log(`Retrocediendo del paso ${this.state.currentStep}`);
+        // console.log(`Retrocediendo del paso ${this.state.currentStep}`);
         if (this.state.currentStep > 1) {
             this.state.currentStep--;
             this.showStep(this.state.currentStep);
@@ -391,7 +391,7 @@ updateNavigationButtons() {
      * Navega al paso siguiente
      */
     goToNextStep() {
-        console.log(`Avanzando desde el paso ${this.state.currentStep}`);
+        // console.log(`Avanzando desde el paso ${this.state.currentStep}`);
         if (this.validateCurrentStep()) {
             this.collectStepData();
             this.state.currentStep++;
@@ -406,13 +406,13 @@ updateNavigationButtons() {
  * @returns {boolean} - Verdadero si el paso es válido
  */
 validateCurrentStep() {
-    console.log('Validando paso actual:', this.state.currentStep);
+    // console.log('Validando paso actual:', this.state.currentStep);
     
     switch (this.state.currentStep) {
         case 1:
             // Validar selección de categoría
             const isValid = this.state.data.categoria !== '';
-            console.log('Validación categoría:', isValid, 'Categoría:', this.state.data.categoria);
+            // console.log('Validación categoría:', isValid, 'Categoría:', this.state.data.categoria);
             
             // Mostrar feedback visual si no es válido
             if (!isValid) {
@@ -441,7 +441,7 @@ validateCurrentStep() {
             
             // Ahora todos los campos son obligatorios
             const caracteristicasValidas = estilo !== '' && material !== '' && color !== '' && presupuesto !== '';
-            console.log('Validación características:', caracteristicasValidas, {estilo, material, color, presupuesto});
+            // console.log('Validación características:', caracteristicasValidas, {estilo, material, color, presupuesto});
             
             // Destacar campos inválidos
             this.highlightInvalidFields(['estiloMueble', 'materialMueble', 'colorMueble', 'presupuesto']);
@@ -465,7 +465,7 @@ validateCurrentStep() {
             const telefonoValido = telefono !== '' && telefono.replace(/\D/g, '').length >= 10;
             
             const contactoValido = nombreValido && telefonoValido;
-            console.log('Validación contacto:', contactoValido, {nombre, nombreValido, telefono, telefonoValido});
+            // console.log('Validación contacto:', contactoValido, {nombre, nombreValido, telefono, telefonoValido});
             
             // Si hay errores específicos, mostrar mensajes de error específicos
             if (nombre === '') {
@@ -565,12 +565,12 @@ highlightInvalidFields(fieldIds) {
      * Recopila los datos del paso actual
      */
     collectStepData() {
-        console.log(`Recopilando datos del paso ${this.state.currentStep}`);
+        // console.log(`Recopilando datos del paso ${this.state.currentStep}`);
         
         switch (this.state.currentStep) {
             case 1:
                 // Datos ya recopilados al hacer clic en la categoría
-                console.log('Datos de categoría ya recopilados:', this.state.data.categoria);
+                // console.log('Datos de categoría ya recopilados:', this.state.data.categoria);
                 break;
             case 2:
                 // Recopilar datos de características
@@ -579,13 +579,13 @@ highlightInvalidFields(fieldIds) {
                 this.state.data.color = document.getElementById('colorMueble')?.value || '';
                 this.state.data.presupuesto = document.getElementById('presupuesto')?.value || '';
                 this.state.data.detallesAdicionales = document.getElementById('detallesAdicionales')?.value || '';
-                console.log('Datos de características recopilados:', {
-                    estilo: this.state.data.estilo,
-                    material: this.state.data.material,
-                    color: this.state.data.color,
-                    presupuesto: this.state.data.presupuesto,
-                    detallesAdicionales: this.state.data.detallesAdicionales
-                });
+                // console.log('Datos de características recopilados:', {
+                //     estilo: this.state.data.estilo,
+                //     material: this.state.data.material,
+                //     color: this.state.data.color,
+                //     presupuesto: this.state.data.presupuesto,
+                //     detallesAdicionales: this.state.data.detallesAdicionales
+                // });
                 break;
             case 3:
                 // Recopilar datos de contacto
@@ -594,13 +594,13 @@ highlightInvalidFields(fieldIds) {
                 this.state.data.email = document.getElementById('emailCliente')?.value || '';
                 this.state.data.contactoPreferido = document.getElementById('contactPreferido')?.value || 'whatsapp';
                 this.state.data.urgente = document.getElementById('urgente')?.checked || false;
-                console.log('Datos de contacto recopilados:', {
-                    nombre: this.state.data.nombre,
-                    telefono: this.state.data.telefono,
-                    email: this.state.data.email,
-                    contactoPreferido: this.state.data.contactoPreferido,
-                    urgente: this.state.data.urgente
-                });
+                // console.log('Datos de contacto recopilados:', {
+                //     nombre: this.state.data.nombre,
+                //     telefono: this.state.data.telefono,
+                //     email: this.state.data.email,
+                //     contactoPreferido: this.state.data.contactoPreferido,
+                //     urgente: this.state.data.urgente
+                // });
                 break;
         }
     }
@@ -610,7 +610,7 @@ highlightInvalidFields(fieldIds) {
  * @param {HTMLElement} card - Card de categoría seleccionada
  */
 selectCategory(card) {
-    console.log('Seleccionando categoría:', card.getAttribute('data-category'));
+    // console.log('Seleccionando categoría:', card.getAttribute('data-category'));
     
     // Eliminar selección anterior
     if (this.elements.categoryCards) {
@@ -624,7 +624,7 @@ selectCategory(card) {
     
     // Guardar categoría seleccionada
     this.state.data.categoria = card.getAttribute('data-category') || '';
-    console.log('Categoría seleccionada:', this.state.data.categoria);
+    // console.log('Categoría seleccionada:', this.state.data.categoria);
     
     // Actualizar estado de botones de navegación
     this.updateNavigationButtons();
@@ -642,7 +642,7 @@ selectCategory(card) {
      * Envía el formulario
      */
     submitForm() {
-        console.log('Procesando envío del formulario');
+        // console.log('Procesando envío del formulario');
         if (this.validateCurrentStep()) {
             this.collectStepData();
             
@@ -664,7 +664,7 @@ selectCategory(card) {
             // Resetear el wizard para la próxima vez
             this.resetWizard();
             
-            console.log('Formulario enviado correctamente y usuario redirigido a WhatsApp');
+            // console.log('Formulario enviado correctamente y usuario redirigido a WhatsApp');
         } else {
             this.showToast('Por favor, complete todos los campos obligatorios antes de enviar.');
         }
@@ -675,7 +675,7 @@ selectCategory(card) {
      * @returns {string} - Mensaje formateado para WhatsApp
      */
     createWhatsAppMessage() {
-        console.log('Creando mensaje para WhatsApp');
+        // console.log('Creando mensaje para WhatsApp');
         const categoriasMap = {
             'salas': 'Sala',
             'comedores': 'Comedor',
@@ -705,7 +705,7 @@ selectCategory(card) {
             mensaje += "\nNecesito esta cotización con urgencia (24-48 horas).";
         }
         
-        console.log('Mensaje para WhatsApp creado');
+        // console.log('Mensaje para WhatsApp creado');
         return mensaje;
     }
     
@@ -714,7 +714,7 @@ selectCategory(card) {
      * @param {string} message - Mensaje a mostrar
      */
     showToast(message) {
-        console.log('Mostrando toast:', message);
+        // console.log('Mostrando toast:', message);
         // Crear contenedor de toasts si no existe
         let toastContainer = document.querySelector('.toast-container');
         if (!toastContainer) {
